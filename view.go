@@ -172,9 +172,9 @@ func (a *app) changesPanel(c *ui.Context) {
 		}
 		// Dragged as the room the staged changes need, few or thousands.
 		ui.SplitVerticalPercent(c.Key("changes"), &a.stagedPct, func() {
-			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Staged(), true, true) })
+			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Staged(), true) })
 		}, func() {
-			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Changes(), false, true) })
+			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Changes(), false) })
 		}).Grow(1).Basis(0)
 		// The message at the bottom, where it shows however many files
 		// changed, as VS Code's source control has it.
@@ -199,9 +199,8 @@ func (a *app) changesPanel(c *ui.Context) {
 }
 
 // changeSection lists the staged changes or the others, those the filter
-// shows, filling the room left when fill, else as tall as its rows, as a
-// workspace's repositories stack them.
-func (a *app) changeSection(c *ui.Context, title string, staged, fill bool) {
+// shows, filling the room left.
+func (a *app) changeSection(c *ui.Context, title string, staged bool) {
 	t := c.Theme()
 	changes := a.changes(staged)
 	list, sel, row := &a.unstagedList, &a.unstagedSel, &a.unstagedRow
@@ -218,11 +217,6 @@ func (a *app) changeSection(c *ui.Context, title string, staged, fill bool) {
 	// A fixed height, so the header doesn't move as its button comes and
 	// goes; the button stays while git runs, doing nothing then.
 	head := ui.Row(c).Height(32).Padding(4, 8, 0, 10).Gap(6).AlignItems(ui.Center)
-	if !staged && !fill && len(a.staged) > 0 {
-		// A line between the staged changes above and these, as a split
-		// draws one between them filled.
-		head.BorderWidth(1, 0, 0, 0).BorderColor(t.Border)
-	}
 	head.Children(func() {
 		ui.Text(c, title).Bold().TextColor(t.TextMuted)
 		count := fmt.Sprint(len(changes))
@@ -307,11 +301,7 @@ func (a *app) changeSection(c *ui.Context, title string, staged, fill bool) {
 			}
 		})
 	})
-	if fill {
-		l.Grow(1).Basis(0)
-	} else {
-		l.Height(float32(n * 24))
-	}
+	l.Grow(1).Basis(0)
 	if l.Changed() && *row >= 0 && *row < n {
 		// One change is chosen at a time, of both lists.
 		a.chooseChange(at(*row), staged)

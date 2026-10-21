@@ -9,6 +9,7 @@ import (
 	"slices"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 
@@ -141,6 +142,8 @@ func TestWorkspace(t *testing.T) {
 	printIdx := slices.IndexFunc(ws.apps, func(a *app) bool { return a.repo.Name() == "printcraft" })
 	ws.opened[ws.apps[printIdx].repo.Dir] = true
 	tt.Frame()
+	tt.Advance(300 * time.Millisecond) // the panel's opening animation, done
+	tt.Frame()
 	if err := tt.Click("page.ts"); err != nil {
 		t.Fatal(err)
 	}
@@ -164,6 +167,8 @@ func TestWorkspace(t *testing.T) {
 	// Folded away, its changes don't show.
 	art := ws.apps[slices.IndexFunc(ws.apps, func(a *app) bool { return a.repo.Name() == "artcraft" })]
 	ws.opened = map[string]bool{art.repo.Dir: true} // one open at a time
+	tt.Frame()
+	tt.Advance(300 * time.Millisecond) // the panel's opening animation, done
 	tt.Frame()
 	if !tt.HasText("brush.ts") {
 		t.Fatal("an unfolded repository's changes don't show")

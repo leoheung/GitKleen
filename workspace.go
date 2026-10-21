@@ -321,23 +321,23 @@ func (ws *workspace) view(c *ui.Context) { ws.apps[ws.active].view(c) }
 // open shows its changes in the list's place.
 func (ws *workspace) sidebar(c *ui.Context) {
 	filterBar(c, &ws.filter, loc.FilterRepos(), loc.AddRepo(), ws.addRepo)
-	ui.Scroll(c).Fill().Children(func() {
-		// An open repository takes the list's place; the list is back
-		// as it is folded.
-		if o := slices.IndexFunc(ws.apps, func(a *app) bool { return ws.opened[a.repo.Dir] }); o >= 0 {
-			ws.section(c, o, ws.apps[o], true)
-			return
-		}
-		var shown []int
-		for i, a := range ws.apps {
-			if ws.filter == "" || strings.Contains(strings.ToLower(a.repo.Name()), strings.ToLower(ws.filter)) {
-				shown = append(shown, i)
+	// An open repository takes the list's place, its changes panel
+	// filling the room below its name; the list is back as it is folded.
+	if o := slices.IndexFunc(ws.apps, func(a *app) bool { return ws.opened[a.repo.Dir] }); o >= 0 {
+		ws.section(c, o, ws.apps[o], true)
+	} else {
+		ui.Scroll(c).Fill().Children(func() {
+			var shown []int
+			for i, a := range ws.apps {
+				if ws.filter == "" || strings.Contains(strings.ToLower(a.repo.Name()), strings.ToLower(ws.filter)) {
+					shown = append(shown, i)
+				}
 			}
-		}
-		for n, i := range shown {
-			ws.section(c, i, ws.apps[i], n == len(shown)-1) // the last one ends the list, without a line
-		}
-	})
+			for n, i := range shown {
+				ws.section(c, i, ws.apps[i], n == len(shown)-1) // the last one ends the list, without a line
+			}
+		})
+	}
 	c.OnShortcut(ui.Cmd, ui.KeyEnter, ws.apps[ws.active].commit)
 }
 
@@ -397,17 +397,19 @@ func (ws *workspace) addRepos(repos []*git.Repo) {
 }
 
 // section is a repository of the workspace: its name and its actions,
-// then, when it is the one open, its changes and, under them, its
-// message and its sync. Opening it takes the list's place; folding it
-// brings the list back. Working in it makes it the one the history and
-// the diffs show.
+// then, when it is the one open, the changes panel of a window of its
+// own in the list's place. Opening it takes the list's place; folding
+// it brings the list back. Working in it makes it the one the history
+// and the diffs show.
 func (ws *workspace) section(c *ui.Context, i int, a *app, last bool) {
 	t := c.Theme()
 	st := a.status
 	dir := a.repo.Dir
 	open := ws.opened[dir]
 	sec := ui.Column(c.Key(dir))
-	if !last {
+	if open {
+		sec.Fill() // the changes panel is all of the room the list had
+	} else if !last {
 		sec.BorderWidth(0, 0, 1, 0).BorderColor(t.Border) // a line under the repository, between the others
 	}
 	sec.Children(func() {
@@ -443,23 +445,16 @@ func (ws *workspace) section(c *ui.Context, i int, a *app, last bool) {
 				ui.Spinner(c).Size(12, 12)
 			}
 		})
-		p.Panel(func() {
-			if len(a.staged) > 0 {
-				a.changeSection(c, loc.Staged(), true, false)
+		if open {
+			// A window's own changes panel: the tabs, the changes and
+			// the message under them, growing into view as the
+			// repository opens.
+			panel := ui.Column(c).ClipY().Grow(1).Basis(0)
+			if prog := p.Progress(); prog < 1 {
+				panel.MaxHeightPercent(100 * prog) // only the room it has grown into shows
 			}
-			if len(a.unstaged) > 0 {
-				a.changeSection(c, loc.Changes(), false, false)
-			}
-			ui.Column(c).Gap(6).Padding(4, 10, 8, 10).BorderWidth(1, 0, 0, 0).BorderColor(t.Border).Children(func() {
-				// A line, growing with what is typed, as VS Code's.
-				ui.TextArea(c, &a.message).Placeholder(loc.MessagePlaceholder(shortcut("↩"))).Label(loc.Message()).Lines(1, 6).MinHeight(0)
-				if st.Upstream != "" && counts(st) != "" {
-					if ui.Button(c, loc.SyncChanges(counts(st))).FillWidth().Disabled(a.busy != "").Clicked() {
-						a.sync()
-					}
-				}
-			})
-		})
+			panel.Children(func() { a.leftPanel(c) })
+		}
 	})
 	if sec.Pressed() || sec.FocusWithin() {
 		ws.activate(i)
@@ -477,26 +472,6 @@ func counts(st git.Status) string {
 		parts = append(parts, fmt.Sprintf("%d↑", st.Ahead))
 	}
 	return strings.Join(parts, " ")
-}
-
-// sync brings the upstream's commits in, as git is set to pull, then
-// sends the branch's, as VS Code's Sync Changes does.
-func (a *app) sync() {
-	a.run(loc.OpSync(), func(ctx context.Context) error {
-		if a.status.Behind > 0 {
-			if err := a.repo.Pull(ctx, git.PullConfigured); err != nil {
-				return err
-			}
-		}
-		st, err := a.repo.Status(ctx)
-		if err != nil {
-			return err
-		}
-		if st.Ahead > 0 {
-			return a.repo.Push(ctx, st, false)
-		}
-		return nil
-	}, nil)
 }
 
 // appAt is the window's repository at a location, of a window of its own

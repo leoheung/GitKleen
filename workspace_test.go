@@ -163,7 +163,7 @@ func TestWorkspace(t *testing.T) {
 	}
 	// Folded away, its changes don't show.
 	art := ws.apps[slices.IndexFunc(ws.apps, func(a *app) bool { return a.repo.Name() == "artcraft" })]
-	ws.opened[art.repo.Dir] = true
+	ws.opened = map[string]bool{art.repo.Dir: true} // one open at a time
 	tt.Frame()
 	if !tt.HasText("brush.ts") {
 		t.Fatal("an unfolded repository's changes don't show")

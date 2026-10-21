@@ -316,11 +316,18 @@ func (ws *workspace) activate(i int) {
 
 func (ws *workspace) view(c *ui.Context) { ws.apps[ws.active].view(c) }
 
-// sidebar is each repository's changes, one under the other, under the
-// filter narrowing them to the names matching and the way to add one.
+// sidebar is the repositories, one under the other under the filter
+// narrowing them to the names matching, and the way to add one. One
+// open shows its changes in the list's place.
 func (ws *workspace) sidebar(c *ui.Context) {
 	filterBar(c, &ws.filter, loc.FilterRepos(), loc.AddRepo(), ws.addRepo)
 	ui.Scroll(c).Fill().Children(func() {
+		// An open repository takes the list's place; the list is back
+		// as it is folded.
+		if o := slices.IndexFunc(ws.apps, func(a *app) bool { return ws.opened[a.repo.Dir] }); o >= 0 {
+			ws.section(c, o, ws.apps[o])
+			return
+		}
 		for i, a := range ws.apps {
 			if ws.filter != "" && !strings.Contains(strings.ToLower(a.repo.Name()), strings.ToLower(ws.filter)) {
 				continue
@@ -368,7 +375,6 @@ func (ws *workspace) addRepos(repos []*git.Repo) {
 		a.ws = ws
 		a.win = ws.win
 		ws.apps = append([]*app{a}, ws.apps...) // on top
-		ws.opened[r.Dir] = true                 // just added, its changes at hand
 		if r.Host() == "" {
 			_ = mygo.App.AddRecentDocument(r.Dir)
 		}
@@ -378,7 +384,8 @@ func (ws *workspace) addRepos(repos []*git.Repo) {
 		added = true
 	}
 	if added {
-		ws.active = 0 // work in the one on top, laid out as a new window is
+		ws.active = 0                                          // work in the one on top, laid out as a new window is
+		ws.opened = map[string]bool{ws.apps[0].repo.Dir: true} // its changes at hand, alone
 	} else if len(repos) > 0 {
 		if j := slices.IndexFunc(ws.apps, func(a *app) bool { return a.repo.Location() == repos[0].Location() }); j >= 0 {
 			ws.activate(j)
@@ -387,8 +394,10 @@ func (ws *workspace) addRepos(repos []*git.Repo) {
 }
 
 // section is a repository of the workspace: its name and its actions,
-// then, unless folded, its changes and, under them, its message and its
-// sync. Working in it makes it the one the history and the diffs show.
+// then, when it is the one open, its changes and, under them, its
+// message and its sync. Opening it takes the list's place; folding it
+// brings the list back. Working in it makes it the one the history and
+// the diffs show.
 func (ws *workspace) section(c *ui.Context, i int, a *app) {
 	t := c.Theme()
 	st := a.status
@@ -396,6 +405,10 @@ func (ws *workspace) section(c *ui.Context, i int, a *app) {
 	open := ws.opened[dir]
 	sec := ui.Column(c.Key(dir)).BorderWidth(0, 0, 1, 0).BorderColor(t.Border)
 	sec.Children(func() {
+		// The collapsible's hidden trigger keeps the panel's opening
+		// animation across frames; the chevron opens and folds it.
+		p := ui.CollapsibleBase(c, &open)
+		p.Trigger.Height(0)
 		head := ui.Row(c).Height(30).Padding(0, 6, 0, 4).Gap(5).AlignItems(ui.Center)
 		if i == ws.active {
 			head.Background(t.Selection.Alpha(0.5))
@@ -406,7 +419,11 @@ func (ws *workspace) section(c *ui.Context, i int, a *app) {
 				chevron = "chevron-down"
 			}
 			if iconButton(c, chevron, a.repo.Name()) {
-				ws.opened[dir] = !open
+				if open {
+					delete(ws.opened, dir)
+				} else {
+					ws.opened = map[string]bool{dir: true} // one repository at a time
+				}
 			}
 			ui.Icon(c, icons["repo"]).Size(13, 13)
 			ui.Text(c, a.repo.Name()).Bold().SingleLine().Grow(1).Basis(0).Tooltip(a.repo.Location())
@@ -420,23 +437,22 @@ func (ws *workspace) section(c *ui.Context, i int, a *app) {
 				ui.Spinner(c).Size(12, 12)
 			}
 		})
-		if !open {
-			return
-		}
-		if len(a.staged) > 0 {
-			a.changeSection(c, loc.Staged(), true, false)
-		}
-		if len(a.unstaged) > 0 {
-			a.changeSection(c, loc.Changes(), false, false)
-		}
-		ui.Column(c).Gap(6).Padding(4, 10, 8, 10).BorderWidth(1, 0, 0, 0).BorderColor(t.Border).Children(func() {
-			// A line, growing with what is typed, as VS Code's.
-			ui.TextArea(c, &a.message).Placeholder(loc.MessagePlaceholder(shortcut("↩"))).Label(loc.Message()).Lines(1, 6).MinHeight(0)
-			if st.Upstream != "" && counts(st) != "" {
-				if ui.Button(c, loc.SyncChanges(counts(st))).FillWidth().Disabled(a.busy != "").Clicked() {
-					a.sync()
-				}
+		p.Panel(func() {
+			if len(a.staged) > 0 {
+				a.changeSection(c, loc.Staged(), true, false)
 			}
+			if len(a.unstaged) > 0 {
+				a.changeSection(c, loc.Changes(), false, false)
+			}
+			ui.Column(c).Gap(6).Padding(4, 10, 8, 10).BorderWidth(1, 0, 0, 0).BorderColor(t.Border).Children(func() {
+				// A line, growing with what is typed, as VS Code's.
+				ui.TextArea(c, &a.message).Placeholder(loc.MessagePlaceholder(shortcut("↩"))).Label(loc.Message()).Lines(1, 6).MinHeight(0)
+				if st.Upstream != "" && counts(st) != "" {
+					if ui.Button(c, loc.SyncChanges(counts(st))).FillWidth().Disabled(a.busy != "").Clicked() {
+						a.sync()
+					}
+				}
+			})
 		})
 	})
 	if sec.Pressed() || sec.FocusWithin() {

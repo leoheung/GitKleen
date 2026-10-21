@@ -325,14 +325,17 @@ func (ws *workspace) sidebar(c *ui.Context) {
 		// An open repository takes the list's place; the list is back
 		// as it is folded.
 		if o := slices.IndexFunc(ws.apps, func(a *app) bool { return ws.opened[a.repo.Dir] }); o >= 0 {
-			ws.section(c, o, ws.apps[o])
+			ws.section(c, o, ws.apps[o], true)
 			return
 		}
+		var shown []int
 		for i, a := range ws.apps {
-			if ws.filter != "" && !strings.Contains(strings.ToLower(a.repo.Name()), strings.ToLower(ws.filter)) {
-				continue
+			if ws.filter == "" || strings.Contains(strings.ToLower(a.repo.Name()), strings.ToLower(ws.filter)) {
+				shown = append(shown, i)
 			}
-			ws.section(c, i, a)
+		}
+		for n, i := range shown {
+			ws.section(c, i, ws.apps[i], n == len(shown)-1) // the last one ends the list, without a line
 		}
 	})
 	c.OnShortcut(ui.Cmd, ui.KeyEnter, ws.apps[ws.active].commit)
@@ -398,12 +401,15 @@ func (ws *workspace) addRepos(repos []*git.Repo) {
 // message and its sync. Opening it takes the list's place; folding it
 // brings the list back. Working in it makes it the one the history and
 // the diffs show.
-func (ws *workspace) section(c *ui.Context, i int, a *app) {
+func (ws *workspace) section(c *ui.Context, i int, a *app, last bool) {
 	t := c.Theme()
 	st := a.status
 	dir := a.repo.Dir
 	open := ws.opened[dir]
-	sec := ui.Column(c.Key(dir)).BorderWidth(0, 0, 1, 0).BorderColor(t.Border)
+	sec := ui.Column(c.Key(dir))
+	if !last {
+		sec.BorderWidth(0, 0, 1, 0).BorderColor(t.Border) // a line under the repository, between the others
+	}
 	sec.Children(func() {
 		// The collapsible's hidden trigger keeps the panel's opening
 		// animation across frames; the chevron opens and folds it.

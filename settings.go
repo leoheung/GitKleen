@@ -19,22 +19,24 @@ import (
 // settings are the choices kept between launches, shared by the windows,
 // in a JSON file.
 type settings struct {
-	Editor           string   `json:"editor"`          // the command opening files, "" for the system's app
-	Language         string   `json:"language"`        // the language chosen, "" for the system's
-	Theme            string   `json:"theme,omitempty"` // the appearance chosen, "" for the system's: light or dark
-	Unified          bool     `json:"unified"`
-	IgnoreWhitespace bool     `json:"ignoreWhitespace"`
-	SidebarW         float32  `json:"sidebarW"`
-	LogH             float32  `json:"logH"`
-	FilesW           float32  `json:"filesW"`
-	Proxy            string   `json:"proxy,omitempty"`      // the downloads', "" for the system's
-	Remotes          []string `json:"remotes,omitempty"`    // repositories on other computers opened lately, host:dir
-	SSHKeys          []string `json:"sshKeys,omitempty"`    // private keys tried for git's remote operations
-	SSHDefault       string   `json:"sshDefault,omitempty"` // the key tried first, one of sshKeys
+	Editor           string           `json:"editor"`          // the command opening files, "" for the system's app
+	Language         string           `json:"language"`        // the language chosen, "" for the system's
+	Theme            mygo.ThemeSource `json:"theme,omitempty"` // the appearance chosen, "" for the system's
+	Unified          bool             `json:"unified"`
+	IgnoreWhitespace bool             `json:"ignoreWhitespace"`
+	SidebarW         float32          `json:"sidebarW"`
+	LogH             float32          `json:"logH"`
+	FilesW           float32          `json:"filesW"`
+	BranchesW        float32          `json:"branchesW"`            // the branches' column's width
+	StagedPct        float32          `json:"stagedPct"`            // of the changes' room, the staged changes'
+	Proxy            string           `json:"proxy,omitempty"`      // the downloads', "" for the system's
+	Remotes          []string         `json:"remotes,omitempty"`    // repositories on other computers opened lately, host:dir
+	SSHKeys          []string         `json:"sshKeys,omitempty"`    // private keys tried for git's remote operations
+	SSHDefault       string           `json:"sshDefault,omitempty"` // the key tried first, one of sshKeys
 	path             string
 }
 
-var prefs = &settings{SidebarW: 300, LogH: 360, FilesW: 260, StagedPct: 30}
+var prefs = &settings{SidebarW: 300, BranchesW: 200, LogH: 360, FilesW: 260, StagedPct: 30}
 
 func loadSettings() {
 	dir, err := os.UserConfigDir()
@@ -44,6 +46,9 @@ func loadSettings() {
 	prefs.path = filepath.Join(dir, "MyGit", "settings.json")
 	if data, err := os.ReadFile(prefs.path); err == nil {
 		_ = json.Unmarshal(data, prefs)
+	}
+	if prefs.BranchesW <= 0 {
+		prefs.BranchesW = 200 // an old version saved 0 before it was set
 	}
 	_ = sysproxy.Set(prefs.Proxy)
 	applyTheme(prefs.Theme) // the app starts in it
@@ -122,44 +127,8 @@ func (d *settingsDialog) view(c *ui.Context, withShortcuts bool, closed func()) 
 						prefs.Editor = choice
 					}
 				}
-			}
-			if choice == choices[len(choices)-1] {
-				ui.TextInput(c, &prefs.Editor).Placeholder(loc.EditorCommandPlaceholder()).Label(loc.EditorCommand())
-			}
-			ui.Text(c, loc.EditorLineHint()).FontSize(11).TextColor(t.TextMuted)
-			ui.Text(c, loc.Language()).Bold().TextColor(t.TextMuted)
-			languageSelect(c)
-			ui.Text(c, loc.Appearance()).Bold().TextColor(t.TextMuted)
-			appearanceSelect(c)
-			ui.Text(c, loc.DiffSection()).Bold().TextColor(t.TextMuted)
-			ui.Checkbox(c, &prefs.Unified, loc.DiffUnified())
-			ui.Checkbox(c, &prefs.IgnoreWhitespace, loc.IgnoreWhitespace())
-			ui.Text(c, loc.SshKeys()).Bold().TextColor(t.TextMuted)
-			ui.Text(c, loc.SshKeysHint()).FontSize(11).TextColor(t.TextMuted).Wrap()
-			for _, k := range prefs.SSHKeys {
-				key := k
-				ui.Row(c.Key(key)).Gap(8).AlignItems(ui.Center).Children(func() {
-					ui.Radio(c, &prefs.SSHDefault, key, filepath.Base(key))
-					ui.Text(c, key).FontSize(11).TextColor(t.TextMuted).Grow(1).Basis(0)
-					if prefs.SSHDefault == key {
-						ui.Badge(c, loc.SshDefault())
-					}
-					ui.Button(c, loc.SshKeyRemove()).OnClick(func() { removeSSHKey(key) })
-				})
-			}
-			ui.Row(c).Gap(8).Children(func() {
-				if ui.Button(c, loc.SshLoadHome()).Clicked() {
-					loadHomeKeys()
-				}
-				if ui.Button(c, loc.SshAddKey()).Clicked() {
-					addSSHKeyFile()
-				}
-			})
-			ui.Text(c, loc.NetworkSection()).Bold().TextColor(t.TextMuted)
-			if ui.TextInput(c, &prefs.Proxy).Placeholder(loc.ProxyPlaceholder()).Label(loc.Proxy()).Changed() {
-				d.proxyErr = ""
-				if err := sysproxy.Set(prefs.Proxy); err != nil {
-					d.proxyErr = loc.ProxyInvalid()
+				if choice == choices[len(choices)-1] {
+					ui.TextInput(c, &prefs.Editor).Placeholder(loc.EditorCommandPlaceholder()).Label(loc.EditorCommand())
 				}
 				ui.Text(c, loc.EditorLineHint()).FontSize(11).TextColor(t.TextMuted)
 				ui.Text(c, loc.Language()).Bold().TextColor(t.TextMuted)
@@ -169,6 +138,27 @@ func (d *settingsDialog) view(c *ui.Context, withShortcuts bool, closed func()) 
 				ui.Text(c, loc.DiffSection()).Bold().TextColor(t.TextMuted)
 				ui.Checkbox(c, &prefs.Unified, loc.DiffUnified())
 				ui.Checkbox(c, &prefs.IgnoreWhitespace, loc.IgnoreWhitespace())
+				ui.Text(c, loc.SshKeys()).Bold().TextColor(t.TextMuted)
+				ui.Text(c, loc.SshKeysHint()).FontSize(11).TextColor(t.TextMuted).Wrap()
+				for _, k := range prefs.SSHKeys {
+					key := k
+					ui.Row(c.Key(key)).Gap(8).AlignItems(ui.Center).Children(func() {
+						ui.Radio(c, &prefs.SSHDefault, key, filepath.Base(key))
+						ui.Text(c, key).FontSize(11).TextColor(t.TextMuted).Grow(1).Basis(0)
+						if prefs.SSHDefault == key {
+							ui.Badge(c, loc.SshDefault())
+						}
+						ui.Button(c, loc.SshKeyRemove()).OnClick(func() { removeSSHKey(key) })
+					})
+				}
+				ui.Row(c).Gap(8).Children(func() {
+					if ui.Button(c, loc.SshLoadHome()).Clicked() {
+						loadHomeKeys()
+					}
+					if ui.Button(c, loc.SshAddKey()).Clicked() {
+						addSSHKeyFile()
+					}
+				})
 				ui.Text(c, loc.NetworkSection()).Bold().TextColor(t.TextMuted)
 				if ui.TextInput(c, &prefs.Proxy).Placeholder(loc.ProxyPlaceholder()).Label(loc.Proxy()).Changed() {
 					d.proxyErr = ""
@@ -235,7 +225,7 @@ func shortcuts() []keyBinding {
 // for every window at once.
 func themeSelect(c *ui.Context) {
 	sources := []mygo.ThemeSource{mygo.ThemeSystem, mygo.ThemeLight, mygo.ThemeDark}
-	labels := []string{loc.ThemeSystem(), loc.ThemeLight(), loc.ThemeDark()}
+	labels := []string{loc.AppearanceAuto(), loc.AppearanceLight(), loc.AppearanceDark()}
 	choice := labels[max(slices.Index(sources, prefs.Theme), 0)]
 	if ui.Select(c.Key("theme"), &choice, labels).Label(loc.Appearance()).Changed() {
 		prefs.Theme = sources[slices.Index(labels, choice)]
@@ -267,43 +257,6 @@ func languageSelect(c *ui.Context) {
 		prefs.Language = tag
 		prefs.save()
 		mygo.App.SetLocale(tag)
-	}
-}
-
-// appearanceSelect picks the appearance the app shows: the system's, or
-// light or dark whatever it is.
-func appearanceSelect(c *ui.Context) {
-	labels := []string{loc.AppearanceAuto(), loc.AppearanceLight(), loc.AppearanceDark()}
-	values := []string{"", "light", "dark"}
-	choice := labels[max(slices.Index(values, prefs.Theme), 0)]
-	if ui.Select(c.Key("appearance"), &choice, labels).Label(loc.Appearance()).Changed() {
-		prefs.Theme = values[slices.Index(labels, choice)]
-		prefs.save()
-		invalidateAllWindows()
-	}
-}
-
-// applyTheme makes the window the appearance set, when one is, instead of
-// the system's. Call it before building any widget.
-func applyTheme(c *ui.Context) {
-	switch prefs.Theme {
-	case "light":
-		c.SetTheme(ui.LightTheme())
-	case "dark":
-		c.SetTheme(ui.DarkTheme())
-	}
-}
-
-// invalidateAllWindows redraws every window, as a choice that changes
-// them all was made.
-func invalidateAllWindows() {
-	for _, a := range allApps() {
-		a.win.Invalidate()
-	}
-	for _, w := range []*welcome{welcomeWin, credAsker} {
-		if w != nil && w.win != nil {
-			w.win.Invalidate()
-		}
 	}
 }
 

@@ -641,21 +641,22 @@ func TestDropNotARepo(t *testing.T) {
 	}
 }
 
-func TestBranchesPopoverAndKeys(t *testing.T) {
+func TestBranchesColumn(t *testing.T) {
 	tt := newTester(t)
-	tt.click(t, "分支")
-	if !tt.a.branchesOpen || !tt.HasText("本地分支") || !tt.HasText("feature") {
+	// The column is always there, listing the local branches.
+	if !tt.HasText(loc.BranchesLocal()) || !tt.HasText("feature") || !tt.HasText("main") {
 		t.Fatalf("texts %q", tt.Texts())
 	}
-	tt.Type("feat")
-	tt.Frame()
-	if tt.HasText("main") && !tt.HasText("⎇ main ▾") {
-		t.Fatalf("main still listed: %q", tt.Texts())
+	// And it has room: the history sits past it, not over it.
+	col, ok := tt.Find(loc.BranchesLocal())
+	log, ok2 := tt.Find("4 个提交")
+	if !ok || !ok2 || log.X < col.X+100 {
+		t.Fatalf("column %+v, history %+v", col, log)
 	}
-	tt.Key(0, ui.KeyEnter)
+	tt.click(t, "feature")
 	tt.settle()
-	if tt.a.status.Branch != "feature" || tt.a.branchesOpen {
-		t.Fatalf("branch %q, open %v", tt.a.status.Branch, tt.a.branchesOpen)
+	if tt.a.status.Branch != "feature" {
+		t.Fatalf("branch %q", tt.a.status.Branch)
 	}
 	// Space stages the change chosen in the list.
 	tt.click(t, "notes.txt")
@@ -795,38 +796,29 @@ func TestChooseAfterAChangeIsGone(t *testing.T) {
 	}
 }
 
-// What a branch's menu in the branches' popover does closes the popover:
-// switching, as the rest.
-func TestBranchMenuClosesPopover(t *testing.T) {
+// What a branch's menu in the column does: switching to it, and its
+// history.
+func TestBranchMenu(t *testing.T) {
 	tt := newTester(t)
-	// The popover's first local branch, under its heading: "feature" is
-	// in the history too.
-	firstBranch := func() {
-		t.Helper()
-		r, ok := tt.Find(loc.BranchesLocal())
-		if !ok {
-			t.Fatalf("texts %q", tt.Texts())
-		}
-		tt.ClickAt(r.X+30, r.Y+r.H+16)
-		tt.Frame()
+	if err := tt.RightClick("feature"); err != nil {
+		t.Fatalf("%v; texts %q", err, tt.Texts())
 	}
-	tt.click(t, "分支")
-	firstBranch()
 	if err := tt.ChooseMenuItem(loc.BranchSwitch()); err != nil {
 		t.Fatalf("%v; menu %q", err, tt.Menu())
 	}
 	tt.settle()
-	if tt.a.branchesOpen || tt.a.status.Branch != "feature" {
-		t.Fatalf("open %v, branch %q", tt.a.branchesOpen, tt.a.status.Branch)
+	if tt.a.status.Branch != "feature" {
+		t.Fatalf("branch %q", tt.a.status.Branch)
 	}
-	tt.click(t, "分支")
-	firstBranch()
+	if err := tt.RightClick("feature"); err != nil {
+		t.Fatalf("%v; texts %q", err, tt.Texts())
+	}
 	if err := tt.ChooseMenuItem(loc.BranchHistory()); err != nil {
 		t.Fatalf("%v; menu %q", err, tt.Menu())
 	}
 	tt.settle()
-	if tt.a.branchesOpen || tt.a.scope.Ref == "" {
-		t.Errorf("open %v, scope %+v", tt.a.branchesOpen, tt.a.scope)
+	if tt.a.scope.Ref == "" {
+		t.Errorf("scope %+v", tt.a.scope)
 	}
 }
 

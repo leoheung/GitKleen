@@ -20,7 +20,6 @@ import (
 const rowHeight = 26
 
 func (a *app) view(c *ui.Context) {
-	applyTheme(c)
 	t := c.Theme()
 	root := ui.Column(c).Fill().FontSize(12)
 	root.Children(func() {
@@ -57,7 +56,11 @@ func (a *app) view(c *ui.Context) {
 				a.leftPanel(c)
 			}
 		}, func() {
-			ui.SplitVertical(c, &a.logH, func() { a.logView(c) }, func() { a.detailView(c) }).Fill()
+			ui.Split(c, &a.branchesW, func() {
+				a.branchesPanel(c)
+			}, func() {
+				ui.SplitVertical(c, &a.logH, func() { a.logView(c) }, func() { a.detailView(c) }).Fill()
+			}).Grow(1)
 		}).Grow(1)
 		if root.FileDragOver() {
 			dropHint(c)
@@ -114,14 +117,6 @@ func (a *app) toolbar(c *ui.Context) {
 		ui.Text(c, a.repo.Name()).FontSize(13).Bold().Tooltip(a.repo.Location())
 		if !a.local() {
 			a.remoteBadge(c)
-		}
-		branch := st.Branch
-		if branch == "" {
-			branch = loc.Detached()
-		}
-		a.branchesButton(c, "⎇ "+branch+" ▾")
-		if st.Upstream != "" {
-			ui.Text(c, fmt.Sprintf("%s  ↑%d ↓%d", st.Upstream, st.Ahead, st.Behind)).TextColor(t.TextMuted)
 		}
 		ui.Box(c).Grow(1)
 		if a.busy != "" {

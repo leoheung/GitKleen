@@ -309,7 +309,7 @@ func (ws *workspace) activate(i int) {
 		return
 	}
 	from, to := ws.apps[ws.active], ws.apps[i]
-	to.sidebarW, to.logH, to.filesW, to.stagedPct = from.sidebarW, from.logH, from.filesW, from.stagedPct
+	to.sidebarW, to.branchesW, to.logH, to.filesW, to.stagedPct = from.sidebarW, from.branchesW, from.logH, from.filesW, from.stagedPct
 	ws.active = i
 }
 
@@ -399,8 +399,8 @@ func (ws *workspace) addRepos(repos []*git.Repo) {
 	}
 }
 
-// section is a repository of the workspace: its name, its branch and its
-// actions, then, unless folded, its message, its sync and its changes.
+// section is a repository of the workspace: its name and its actions,
+// then, unless folded, its message, its sync and its changes.
 // Working in it makes it the one the history and the diffs show.
 func (ws *workspace) section(c *ui.Context, i int, a *app) {
 	t := c.Theme()
@@ -422,12 +422,7 @@ func (ws *workspace) section(c *ui.Context, i int, a *app) {
 				ws.opened[dir] = !open
 			}
 			ui.Icon(c, icons["repo"]).Size(13, 13)
-			ui.Text(c, a.repo.Name()).Bold().SingleLine().Shrink(0).Tooltip(a.repo.Location())
-			branch := st.Branch
-			if branch == "" {
-				branch = loc.Detached()
-			}
-			ui.Text(c, "⎇ "+branch).FontSize(11).TextColor(t.TextMuted).SingleLine().Grow(1).Basis(0)
+			ui.Text(c, a.repo.Name()).Bold().SingleLine().Grow(1).Basis(0).Tooltip(a.repo.Location())
 			if n := counts(st); n != "" {
 				ui.Text(c, n).FontSize(11).TextColor(t.TextMuted).Shrink(0)
 			}
@@ -437,17 +432,6 @@ func (ws *workspace) section(c *ui.Context, i int, a *app) {
 			if a.busy != "" {
 				ui.Spinner(c).Size(12, 12)
 			}
-			if iconButton(c, "check", loc.Commit()) {
-				ws.activate(i)
-				a.commit()
-			}
-			if iconButton(c, "refresh", loc.Refresh()) {
-				a.refresh()
-			}
-			iconMenu(c, "more", loc.Repository(), func(m *ui.Menu) {
-				ws.activate(i)
-				a.repoMenu(m)
-			})
 		})
 		if !open {
 			return

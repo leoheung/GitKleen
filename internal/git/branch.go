@@ -2,6 +2,7 @@ package git
 
 import (
 	"context"
+	"strconv"
 	"strings"
 )
 
@@ -12,6 +13,51 @@ func (r *Repo) Branches(ctx context.Context) ([]string, error) {
 		return nil, err
 	}
 	return strings.Fields(out), nil
+}
+
+// BranchTrack is a local branch, its upstream and how far apart.
+type BranchTrack struct {
+	Name, Upstream string
+	Ahead, Behind  int
+}
+
+// Tracks lists the local branches with their upstream's counts.
+func (r *Repo) Tracks(ctx context.Context) ([]BranchTrack, error) {
+	out, err := r.Git(ctx, "for-each-ref", "--format=%(refname:short)%00%(upstream:short)%00%(upstream:track)", "refs/heads")
+	if err != nil {
+		return nil, err
+	}
+	var tracks []BranchTrack
+	for _, line := range strings.Split(strings.TrimRight(out, "\n"), "\n") {
+		if line == "" {
+			continue
+		}
+		f := strings.SplitN(line, "\x00", 3)
+		if len(f) != 3 {
+			continue
+		}
+		tr := BranchTrack{Name: f[0], Upstream: f[1]}
+		tr.Ahead, tr.Behind = parseTrack(f[2])
+		tracks = append(tracks, tr)
+	}
+	return tracks, nil
+}
+
+// parseTrack reads "ahead N" and "behind N" of a track, as
+// "(ahead 1, behind 2)" or "[behind 3]".
+func parseTrack(s string) (ahead, behind int) {
+	f := strings.FieldsFunc(s, func(r rune) bool {
+		return r == '(' || r == ')' || r == '[' || r == ']' || r == ',' || r == ' '
+	})
+	for i := 0; i+1 < len(f); i += 2 {
+		switch f[i] {
+		case "ahead":
+			ahead, _ = strconv.Atoi(f[i+1])
+		case "behind":
+			behind, _ = strconv.Atoi(f[i+1])
+		}
+	}
+	return ahead, behind
 }
 
 // Switch checks a local branch out.

@@ -52,6 +52,8 @@ type app struct {
 	status                   git.Status
 	branches                 []string
 	remotes                  []string // the remotes' branches
+	tracks                   map[string]git.BranchTrack
+	foldFolders              map[string]bool // the branch folders the column folds
 	op                       git.Operation
 	stashes                  []git.Stash
 	stashList                ui.ListState
@@ -74,28 +76,27 @@ type app struct {
 	unfolded map[string]bool // generated files whose diffs were asked for, by foldKey
 	viewed   map[string]bool // files marked viewed, by viewKey
 
-	confirm      confirmation
-	branchesOpen bool   // the branches' popover
-	branchFilter string // its search
-	prompt       prompt
-	rebase       rebasePlan
-	push         pushPlan
-	cred         credPrompt
-	remotes2     remotesPlan // the remotes dialog
-	settings     settingsDialog
-	palette      palette   // ⌘P's files and ⌘K's commands
-	comments     []comment // the review's, to copy as Markdown
-	composer     composer
-	goingOn      bool // asked whether to save first, the user said no
-	pulls        pullsPlan
-	submit       submitPlan
-	pullReviews  map[int]*pullReview // the pull requests opened, with their reviews
+	confirm     confirmation
+	prompt      prompt
+	rebase      rebasePlan
+	push        pushPlan
+	cred        credPrompt
+	remotes2    remotesPlan // the remotes dialog
+	settings    settingsDialog
+	palette     palette   // ⌘P's files and ⌘K's commands
+	comments    []comment // the review's, to copy as Markdown
+	composer    composer
+	goingOn     bool // asked whether to save first, the user said no
+	pulls       pullsPlan
+	submit      submitPlan
+	pullReviews map[int]*pullReview // the pull requests opened, with their reviews
 
 	busy      string // the operation running, as the toolbar says it
 	errMsg    string
 	notice    string // news that isn't an error, as an update check's
 	trustDir  string // a repository another user owns, dropped, to trust
 	sidebarW  float32
+	branchesW float32 // the branches' column's width
 	logH      float32
 	filesW    float32
 	stagedPct float32 // of the changes' room, the staged changes'
@@ -134,8 +135,8 @@ type detail struct {
 
 func newApp(repo *git.Repo) *app {
 	return &app{repo: repo, online: make(chan struct{}, 1), logSel: -1, stagedSel: -1, unstagedSel: -1, stashSel: -1,
-		sidebarW: prefs.SidebarW, logH: prefs.LogH, filesW: prefs.FilesW, stagedPct: prefs.StagedPct,
-		unfolded: map[string]bool{}, viewed: map[string]bool{}, pullReviews: map[int]*pullReview{}}
+		sidebarW: prefs.SidebarW, branchesW: prefs.BranchesW, logH: prefs.LogH, filesW: prefs.FilesW, stagedPct: prefs.StagedPct,
+		unfolded: map[string]bool{}, viewed: map[string]bool{}, foldFolders: map[string]bool{}, pullReviews: map[int]*pullReview{}}
 }
 
 func (a *app) start() {
@@ -158,7 +159,7 @@ func (a *app) start() {
 			})
 		}
 		a.win.OnClosed(func() { // the next window opens as this one was laid out
-			prefs.SidebarW, prefs.LogH, prefs.FilesW, prefs.StagedPct = a.sidebarW, a.logH, a.filesW, a.stagedPct
+			prefs.SidebarW, prefs.BranchesW, prefs.LogH, prefs.FilesW, prefs.StagedPct = a.sidebarW, a.branchesW, a.logH, a.filesW, a.stagedPct
 			prefs.save()
 		})
 		a.watch()
@@ -249,6 +250,7 @@ type snapshot struct {
 	status   git.Status
 	branches []string
 	remotes  []string
+	tracks   []git.BranchTrack // the local branches' upstreams and counts
 	refs     string
 	op       git.Operation
 	stashes  []git.Stash
@@ -271,12 +273,13 @@ func (a *app) refresh() {
 		}
 		b, _ := a.repo.Branches(ctx)
 		rb, _ := a.repo.RemoteBranches(ctx)
+		tr, _ := a.repo.Tracks(ctx)
 		stashes, _ := a.repo.Stashes(ctx)
 		paths := make([]string, len(st.Changes))
 		for i, c := range st.Changes {
 			paths[i] = c.Path
 		}
-		return snapshot{st, b, rb, a.repo.Refs(ctx), a.repo.Operation(ctx), stashes, a.repo.Generated(ctx, paths)}, nil
+		return snapshot{st, b, rb, tr, a.repo.Refs(ctx), a.repo.Operation(ctx), stashes, a.repo.Generated(ctx, paths)}, nil
 	}, func(s snapshot, err error) {
 		a.refreshing = false
 		if a.again {
@@ -294,6 +297,10 @@ func (a *app) refresh() {
 		a.genMarked = s.marked
 		a.setStatus(s.status)
 		a.branches, a.remotes, a.op, a.stashes = s.branches, s.remotes, s.op, s.stashes
+		a.tracks = make(map[string]git.BranchTrack, len(s.tracks))
+		for _, tr := range s.tracks {
+			a.tracks[tr.Name] = tr
+		}
 		a.stashSel = min(a.stashSel, len(a.stashes)-1)
 		if s.refs != a.refs || a.commits == nil && !a.loading {
 			a.refs = s.refs

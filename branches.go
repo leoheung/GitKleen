@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/egoist/mygo"
@@ -95,86 +97,128 @@ func (a *app) remoteItems(m *ui.Menu, rb string) {
 	}
 }
 
-// chose reports the item chosen, closing the branches' popover then, as
-// whatever its branches' menus do is done with it.
+// chose reports the item chosen, as whatever the branches' menus do is
+// done with it.
 func (a *app) chose(it *ui.MenuItem) bool {
-	if !it.Chosen() {
-		return false
-	}
-	a.branchesOpen = false
-	return true
+	return it.Chosen()
 }
 
 func (a *app) switchTo(b string) {
 	a.run(loc.OpSwitchTo(b), func(ctx context.Context) error { return a.repo.Switch(ctx, b) }, nil)
 }
 
-// branchesButton opens the branches' popover, as IntelliJ's: a search,
-// a new branch, and the local and remote branches the search matches,
-// each with its menu. Enter switches to the first local one.
-func (a *app) branchesButton(c *ui.Context, label string) {
-	b := ui.Button(c, label).Label(loc.Branches())
-	if b.Clicked() {
-		a.branchesOpen, a.branchFilter = !a.branchesOpen, ""
-	}
-	ui.Popover(c, b, &a.branchesOpen, func() {
-		t := c.Theme()
-		q := strings.ToLower(strings.TrimSpace(a.branchFilter))
-		match := func(name string) bool { return q == "" || strings.Contains(strings.ToLower(name), q) }
-		var local, remote []string
-		for _, n := range a.branches {
-			if match(n) {
-				local = append(local, n)
+// branchesPanel is the branches' column beside the workspace: the branch
+// checked out with its upstream on top, a new branch, the local branches
+// in folders by their names' first segment, and the remote ones under
+// them. A row's click switches to its branch, its menu acts on it.
+func (a *app) branchesPanel(c *ui.Context) {
+	t := c.Theme()
+	ui.Column(c).Fill().Children(func() {
+		// What the toolbar kept: the branch checked out, its upstream
+		// and how far apart they are.
+		ui.Column(c).Padding(10, 12, 8, 12).Gap(2).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
+			branch := a.status.Branch
+			if branch == "" {
+				branch = loc.Detached()
 			}
-		}
-		for _, n := range a.remotes {
-			if match(n) {
-				remote = append(remote, n)
+			ui.Text(c, "⎇ "+branch).Bold().SingleLine()
+			if st := a.status; st.Upstream != "" {
+				ui.Text(c, fmt.Sprintf("%s  ↑%d ↓%d", st.Upstream, st.Ahead, st.Behind)).FontSize(11).TextColor(t.TextMuted).SingleLine()
 			}
-		}
-		ui.Column(c).Width(320).Gap(4).Children(func() {
-			in := ui.TextInput(c, &a.branchFilter).Placeholder(loc.BranchSearch()).Label(loc.BranchSearch()).AutoFocus()
-			if in.Submitted() && len(local) > 0 && local[0] != a.status.Branch {
-				a.branchesOpen = false
-				a.switchTo(local[0])
-			}
+		})
+		ui.Scroll(c).Gap(1).Children(func() {
 			if branchRow(c, loc.BranchNew(), false) {
-				a.branchesOpen = false
 				a.newBranch("")
 			}
-			ui.Scroll(c).MaxHeight(420).Gap(1).Children(func() {
-				section := func(title string, names []string, items func(*ui.Menu, string)) {
-					if len(names) == 0 {
-						return
+			section := func(title string, n int) {
+				ui.Row(c).Gap(6).Padding(8, 8, 2, 8).AlignItems(ui.Center).Children(func() {
+					ui.Text(c, title).FontSize(11).Bold().TextColor(t.TextMuted)
+					ui.Badge(c, fmt.Sprint(n))
+				})
+			}
+			section(loc.BranchesLocal(), len(a.branches))
+			// The local branches, in folders by their names' first
+			// segment, the folders mixed with the plain branches by name.
+			byFolder := map[string][]string{}
+			plain := map[string]bool{}
+			var keys []string
+			for _, n := range a.branches {
+				if folder, _, ok := strings.Cut(n, "/"); ok {
+					if byFolder[folder] == nil {
+						keys = append(keys, folder)
 					}
-					ui.Text(c, title).FontSize(11).Bold().TextColor(t.TextMuted).Padding(8, 8, 2, 8)
-					for _, n := range names {
-						ui.Box(c.Key(title + n)).Children(func() {
-							branchMenuRow(c, n, n == a.status.Branch, func(m *ui.Menu) { items(m, n) })
-						})
+					byFolder[folder] = append(byFolder[folder], n)
+				} else {
+					keys = append(keys, n)
+					plain[n] = true
+				}
+			}
+			slices.Sort(keys)
+			for _, key := range keys {
+				if plain[key] {
+					a.branchLine(c, key, 0)
+					continue
+				}
+				open := !a.foldFolders[key]
+				ui.Collapsible(c, key, &open, func() {
+					for _, n := range byFolder[key] {
+						a.branchLine(c, n, 12)
 					}
-				}
-				section(loc.BranchesLocal(), local, a.branchItems)
-				section(loc.BranchesRemote(), remote, a.remoteItems)
-				if len(local)+len(remote) == 0 {
-					ui.Text(c, loc.BranchesNone()).TextColor(t.TextMuted).Padding(8)
-				}
-			})
+				})
+				a.foldFolders[key] = !open
+			}
+			section(loc.BranchesRemote(), len(a.remotes))
+			for _, n := range a.remotes {
+				ui.Box(c.Key(n)).Children(func() {
+					branchMenuRow(c, n, false, func(m *ui.Menu) { a.remoteItems(m, n) })
+				})
+			}
+			if len(a.branches)+len(a.remotes) == 0 {
+				ui.Text(c, loc.BranchesNone()).TextColor(t.TextMuted).Padding(8)
+			}
 		})
 	})
 }
 
-// branchRow is a row of the branches' popover, the current branch's
-// checked; it reports a click.
-func branchRow(c *ui.Context, name string, current bool) bool {
-	return branchRowElement(c, name, current).Clicked()
+// branchLine is a local branch's row in the column, indented in a
+// folder, with how far it is from its upstream at the end. A click
+// switches to it, its menu acts on it.
+func (a *app) branchLine(c *ui.Context, name string, indent float32) {
+	ui.Row(c.Key(name)).Padding(0, 0, 0, indent).Children(func() {
+		e := branchRowElement(c, name, name == a.status.Branch, trackText(a.tracks[name]))
+		if e.Clicked() {
+			a.switchTo(name)
+		}
+		e.ContextMenu(func(m *ui.Menu) { a.branchItems(m, name) })
+	})
 }
 
-func branchRowElement(c *ui.Context, name string, current bool) ui.Element {
+// trackText is how far a branch is from its upstream, for its row's end.
+func trackText(tr git.BranchTrack) string {
+	var parts []string
+	if tr.Ahead > 0 {
+		parts = append(parts, fmt.Sprintf("↑%d", tr.Ahead))
+	}
+	if tr.Behind > 0 {
+		parts = append(parts, fmt.Sprintf("↓%d", tr.Behind))
+	}
+	return strings.Join(parts, " ")
+}
+
+// branchRow is a row of the branches' column, the current branch's
+// checked; it reports a click.
+func branchRow(c *ui.Context, name string, current bool) bool {
+	return branchRowElement(c, name, current, "").Clicked()
+}
+
+func branchRowElement(c *ui.Context, name string, current bool, tail string) ui.Element {
 	t := c.Theme()
 	row := ui.ButtonBase(c).Height(26).PaddingX(8).Gap(6).Radius(5).AlignItems(ui.Center).Label(name)
 	if row.Hovered() {
 		row.Background(t.Text.Alpha(0.08))
+	}
+	if current {
+		row.Background(t.Accent.Alpha(0.14))
 	}
 	row.Children(func() {
 		mark := ""
@@ -183,8 +227,8 @@ func branchRowElement(c *ui.Context, name string, current bool) ui.Element {
 		}
 		ui.Text(c, mark).Width(12).TextColor(t.Accent)
 		ui.Text(c, name).SingleLine().Grow(1).Basis(0)
-		if current {
-			ui.Text(c, loc.BranchCurrent()).FontSize(11).TextColor(t.TextMuted)
+		if tail != "" {
+			ui.Text(c, tail).FontSize(11).TextColor(t.TextMuted).SingleLine()
 		}
 	})
 	return row
@@ -192,7 +236,7 @@ func branchRowElement(c *ui.Context, name string, current bool) ui.Element {
 
 // branchMenuRow is a branch's row, whose click opens its menu.
 func branchMenuRow(c *ui.Context, name string, current bool, items func(*ui.Menu)) {
-	branchRowElement(c, name, current).Menu(items)
+	branchRowElement(c, name, current, "").Menu(items)
 }
 
 // mergeItems merge a branch into the current one, or rebase the current

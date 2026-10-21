@@ -1690,6 +1690,16 @@ func (msgs Messages) SearchHistory() string {
 	return Catalog.Format(msgs.locale, "searchHistory", nil)
 }
 
+// FilterChanges says "Filter changes"
+// in the language the app shows.
+func FilterChanges() string { return In(i18n.Locale()).FilterChanges() }
+
+// FilterChanges says "Filter changes"
+// in the language of msgs.
+func (msgs Messages) FilterChanges() string {
+	return Catalog.Format(msgs.locale, "filterChanges", nil)
+}
+
 // ClearSearch says "Clear search"
 // in the language the app shows.
 func ClearSearch() string { return In(i18n.Locale()).ClearSearch() }

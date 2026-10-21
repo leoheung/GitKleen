@@ -117,7 +117,6 @@ func recentRepos() []string {
 }
 
 func (w *welcome) view(c *ui.Context) {
-	applyTheme(c)
 	defer w.cloneView(c)
 	defer w.connectView(c)
 	defer w.cred.view(c)

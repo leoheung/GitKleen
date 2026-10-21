@@ -492,6 +492,7 @@
   "branchesShown": "Branches shown",
   "searchPlaceholder": "Search messages, authors, hashes  {shortcut}",
   "searchHistory": "Search history",
+  "filterChanges": "Filter changes",
   "clearSearch": "Clear search",
   "menuFile": "File",
   "menuOpenRepo": "Open Repository…",

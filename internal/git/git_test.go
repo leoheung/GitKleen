@@ -508,3 +508,21 @@ func TestInBatches(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+// parseTrack reads the counts of a branch's track, as git prints them.
+func TestParseTrack(t *testing.T) {
+	for _, tt := range []struct {
+		s             string
+		ahead, behind int
+	}{
+		{"", 0, 0},
+		{"[ahead 1]", 1, 0},
+		{"[behind 3]", 0, 3},
+		{"[ahead 2, behind 5]", 2, 5},
+		{"(gone)", 0, 0},
+	} {
+		if ahead, behind := parseTrack(tt.s); ahead != tt.ahead || behind != tt.behind {
+			t.Errorf("parseTrack(%q) = %d, %d, want %d, %d", tt.s, ahead, behind, tt.ahead, tt.behind)
+		}
+	}
+}

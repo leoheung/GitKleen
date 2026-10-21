@@ -387,8 +387,8 @@ func (ws *workspace) addRepos(repos []*git.Repo) {
 }
 
 // section is a repository of the workspace: its name and its actions,
-// then, unless folded, its message, its sync and its changes.
-// Working in it makes it the one the history and the diffs show.
+// then, unless folded, its changes and, under them, its message and its
+// sync. Working in it makes it the one the history and the diffs show.
 func (ws *workspace) section(c *ui.Context, i int, a *app) {
 	t := c.Theme()
 	st := a.status
@@ -423,7 +423,13 @@ func (ws *workspace) section(c *ui.Context, i int, a *app) {
 		if !open {
 			return
 		}
-		ui.Column(c).Gap(6).Padding(4, 10, 8, 10).Children(func() {
+		if len(a.staged) > 0 {
+			a.changeSection(c, loc.Staged(), true, false)
+		}
+		if len(a.unstaged) > 0 {
+			a.changeSection(c, loc.Changes(), false, false)
+		}
+		ui.Column(c).Gap(6).Padding(4, 10, 8, 10).BorderWidth(1, 0, 0, 0).BorderColor(t.Border).Children(func() {
 			// A line, growing with what is typed, as VS Code's.
 			ui.TextArea(c, &a.message).Placeholder(loc.MessagePlaceholder(shortcut("↩"))).Label(loc.Message()).Lines(1, 6).MinHeight(0)
 			if st.Upstream != "" && counts(st) != "" {
@@ -432,12 +438,6 @@ func (ws *workspace) section(c *ui.Context, i int, a *app) {
 				}
 			}
 		})
-		if len(a.staged) > 0 {
-			a.changeSection(c, loc.Staged(), true, false)
-		}
-		if len(a.unstaged) > 0 {
-			a.changeSection(c, loc.Changes(), false, false)
-		}
 	})
 	if sec.Pressed() || sec.FocusWithin() {
 		ws.activate(i)

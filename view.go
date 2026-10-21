@@ -167,9 +167,18 @@ func (a *app) toolbar(c *ui.Context) {
 func (a *app) changesPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Grow(1).Basis(0).Children(func() {
-		// The message on top, as VS Code has it, where it shows however
-		// many files changed.
-		ui.Column(c).Gap(8).Padding(10).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
+		if len(a.staged)+len(a.unstaged) > 0 || a.filter.query != "" {
+			a.filterField(c)
+		}
+		// Dragged as the room the staged changes need, few or thousands.
+		ui.SplitVerticalPercent(c.Key("changes"), &a.stagedPct, func() {
+			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Staged(), true, true) })
+		}, func() {
+			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Changes(), false, true) })
+		}).Grow(1).Basis(0)
+		// The message at the bottom, where it shows however many files
+		// changed, as VS Code's source control has it.
+		ui.Column(c).Gap(8).Padding(10).BorderWidth(1, 0, 0, 0).BorderColor(t.Border).Children(func() {
 			ui.TextArea(c, &a.message).Placeholder(loc.MessagePlaceholder(shortcut("↩"))).Label(loc.Message()).Lines(2, 8)
 			ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
 				if ui.Checkbox(c, &a.amend, loc.Amend()).Changed() {
@@ -185,15 +194,6 @@ func (a *app) changesPanel(c *ui.Context) {
 				}
 			})
 		})
-		if len(a.staged)+len(a.unstaged) > 0 || a.filter.query != "" {
-			a.filterField(c)
-		}
-		// Dragged as the room the staged changes need, few or thousands.
-		ui.SplitVerticalPercent(c.Key("changes"), &a.stagedPct, func() {
-			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Staged(), true, true) })
-		}, func() {
-			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Changes(), false, true) })
-		}).Grow(1).Basis(0)
 	})
 	c.OnShortcut(ui.Cmd, ui.KeyEnter, a.commit)
 }

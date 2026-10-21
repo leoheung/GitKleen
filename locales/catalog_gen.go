@@ -1700,6 +1700,26 @@ func (msgs Messages) FilterChanges() string {
 	return Catalog.Format(msgs.locale, "filterChanges", nil)
 }
 
+// FilterRepos says "Filter repositories…"
+// in the language the app shows.
+func FilterRepos() string { return In(i18n.Locale()).FilterRepos() }
+
+// FilterRepos says "Filter repositories…"
+// in the language of msgs.
+func (msgs Messages) FilterRepos() string {
+	return Catalog.Format(msgs.locale, "filterRepos", nil)
+}
+
+// FilterBranches says "Filter branches…"
+// in the language the app shows.
+func FilterBranches() string { return In(i18n.Locale()).FilterBranches() }
+
+// FilterBranches says "Filter branches…"
+// in the language of msgs.
+func (msgs Messages) FilterBranches() string {
+	return Catalog.Format(msgs.locale, "filterBranches", nil)
+}
+
 // ClearSearch says "Clear search"
 // in the language the app shows.
 func ClearSearch() string { return In(i18n.Locale()).ClearSearch() }

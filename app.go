@@ -54,6 +54,7 @@ type app struct {
 	remotes                  []string // the remotes' branches
 	tracks                   map[string]git.BranchTrack
 	foldFolders              map[string]bool // the branch folders the column folds
+	branchFilter             string          // the column's filter, by the branches' names
 	op                       git.Operation
 	stashes                  []git.Stash
 	stashList                ui.ListState

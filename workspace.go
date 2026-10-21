@@ -26,6 +26,7 @@ type workspace struct {
 	apps      []*app // a repository each
 	active    int
 	opened    map[string]bool // the repositories unfolded, by folder; folded until opened
+	filter    string          // the list's filter, by the repositories' names
 	win       *mygo.Window
 }
 
@@ -315,33 +316,19 @@ func (ws *workspace) activate(i int) {
 
 func (ws *workspace) view(c *ui.Context) { ws.apps[ws.active].view(c) }
 
-// sidebar is each repository's changes, one under the other, with the
-// way to add one on top.
+// sidebar is each repository's changes, one under the other, under the
+// filter narrowing them to the names matching and the way to add one.
 func (ws *workspace) sidebar(c *ui.Context) {
+	filterBar(c, &ws.filter, loc.FilterRepos(), loc.AddRepo(), ws.addRepo)
 	ui.Scroll(c).Fill().Children(func() {
-		ws.addRow(c)
 		for i, a := range ws.apps {
+			if ws.filter != "" && !strings.Contains(strings.ToLower(a.repo.Name()), strings.ToLower(ws.filter)) {
+				continue
+			}
 			ws.section(c, i, a)
 		}
 	})
 	c.OnShortcut(ui.Cmd, ui.KeyEnter, ws.apps[ws.active].commit)
-}
-
-// addRow offers to add a repository to the top of the list.
-func (ws *workspace) addRow(c *ui.Context) {
-	t := c.Theme()
-	row := ui.ButtonBase(c.Key("addRepo")).Padding(8, 10).Gap(10).Radius(8).AlignItems(ui.Center).
-		Cursor(ui.CursorPointer).Label(loc.AddRepo())
-	if row.Hovered() {
-		row.Background(t.SurfaceHover)
-	}
-	row.Children(func() {
-		ui.Icon(c, icons["plus"]).Size(14, 14)
-		ui.Text(c, loc.AddRepo()).SingleLine()
-	})
-	if row.Clicked() {
-		ws.addRepo()
-	}
 }
 
 // addRepo opens a window of the page a repository is opened by, which

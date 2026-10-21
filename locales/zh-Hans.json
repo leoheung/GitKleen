@@ -166,6 +166,8 @@
   "searchPlaceholder": "搜索说明、作者、哈希  {shortcut}",
   "searchHistory": "搜索历史",
   "filterChanges": "过滤更改",
+  "filterRepos": "过滤仓库…",
+  "filterBranches": "过滤分支…",
   "clearSearch": "清除搜索",
   "menuFile": "文件",
   "menuOpenRepo": "打开仓库…",

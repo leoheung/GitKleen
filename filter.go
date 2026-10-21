@@ -78,6 +78,22 @@ func rowOf(rows []int, i int) int {
 	return -1
 }
 
+// filterBar is a column's top row: an input filtering its list, taking
+// most of the row, and a button adding to the list at its end.
+func filterBar(c *ui.Context, query *string, placeholder, addLabel string, add func()) {
+	t := c.Theme()
+	ui.Row(c).Padding(6, 8).Gap(6).AlignItems(ui.Center).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
+		ui.Row(c).Height(26).Grow(1).Gap(6).PaddingX(8).Radius(6).AlignItems(ui.Center).
+			Background(t.Surface).Border(1, t.Border).Children(func() {
+			ui.Icon(c, icons["search"]).Size(13, 13).TextColor(t.TextMuted)
+			ui.TextInputBase(c, query).Placeholder(placeholder).Label(placeholder).Grow(1)
+		})
+		if iconButton(c, "plus", addLabel) {
+			add()
+		}
+	})
+}
+
 // filterField is the changes' filter: an input with a magnifier, as the
 // history's search, and a button clearing it.
 func (a *app) filterField(c *ui.Context) {

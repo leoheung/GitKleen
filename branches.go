@@ -108,9 +108,10 @@ func (a *app) switchTo(b string) {
 }
 
 // branchesPanel is the branches' column beside the workspace: the branch
-// checked out with its upstream on top, a new branch, the local branches
-// in folders by their names' first segment, and the remote ones under
-// them. A row's click switches to its branch, its menu acts on it.
+// checked out with its upstream on top, the filter narrowing the list and
+// the way to add a branch, the local branches in folders by their names'
+// first segment, and the remote ones under them. A row's click switches
+// to its branch, its menu acts on it.
 func (a *app) branchesPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Fill().Children(func() {
@@ -126,33 +127,48 @@ func (a *app) branchesPanel(c *ui.Context) {
 				ui.Text(c, fmt.Sprintf("%s  ↑%d ↓%d", st.Upstream, st.Ahead, st.Behind)).FontSize(11).TextColor(t.TextMuted).SingleLine()
 			}
 		})
+		filterBar(c, &a.branchFilter, loc.FilterBranches(), loc.BranchNew(), func() { a.newBranch("") })
+		local, remote := matchFilter(a.branches, a.branchFilter), matchFilter(a.remotes, a.branchFilter)
 		ui.Scroll(c).Gap(1).Children(func() {
-			if branchRow(c, loc.BranchNew(), false) {
-				a.newBranch("")
-			}
 			section := func(title string, n int, top float32) {
 				ui.Row(c).Gap(6).Padding(top, 8, 2, 8).AlignItems(ui.Center).Children(func() {
 					ui.Text(c, title).FontSize(11).Bold().TextColor(t.TextMuted)
 					ui.Badge(c, fmt.Sprint(n))
 				})
 			}
-			section(loc.BranchesLocal(), len(a.branches), 8)
+			section(loc.BranchesLocal(), len(local), 8)
 			// The local branches, in folders by their names' first
 			// segment, the folders mixed with the plain branches by name.
-			a.groupRows(c, a.branches, 0, func(c *ui.Context, name, show string, indent float32) {
+			a.groupRows(c, local, 0, func(c *ui.Context, name, show string, indent float32) {
 				a.branchLine(c, name, show, indent)
 			})
-			section(loc.BranchesRemote(), len(a.remotes), 44)
+			section(loc.BranchesRemote(), len(remote), 44)
 			// The remote branches, in folders the same way, without
 			// their remote's name in front.
-			a.groupRows(c, a.remotes, 1, func(c *ui.Context, name, show string, indent float32) {
+			a.groupRows(c, remote, 1, func(c *ui.Context, name, show string, indent float32) {
 				branchMenuRow(c.Key(name), name, show, false, indent, func(m *ui.Menu) { a.remoteItems(m, name) })
 			})
-			if len(a.branches)+len(a.remotes) == 0 {
+			if len(local)+len(remote) == 0 {
 				ui.Text(c, loc.BranchesNone()).TextColor(t.TextMuted).Padding(8)
 			}
 		})
 	})
+}
+
+// matchFilter narrows branch names to those the filter matches, in lower
+// case; all of them while it is empty.
+func matchFilter(names []string, q string) []string {
+	if q == "" {
+		return names
+	}
+	q = strings.ToLower(q)
+	var out []string
+	for _, n := range names {
+		if strings.Contains(strings.ToLower(n), q) {
+			out = append(out, n)
+		}
+	}
+	return out
 }
 
 // groupRows lists the branches in folders by their names' first segment,
@@ -243,12 +259,6 @@ func trackText(tr git.BranchTrack) string {
 		parts = append(parts, fmt.Sprintf("↓%d", tr.Behind))
 	}
 	return strings.Join(parts, " ")
-}
-
-// branchRow is a row of the branches' column, the current branch's
-// checked; it reports a click.
-func branchRow(c *ui.Context, name string, current bool) bool {
-	return branchRowElement(c, name, name, current, "", 0).Clicked()
 }
 
 func branchRowElement(c *ui.Context, name, show string, current bool, tail string, indent float32) ui.Element {

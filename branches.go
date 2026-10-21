@@ -130,49 +130,24 @@ func (a *app) branchesPanel(c *ui.Context) {
 			if branchRow(c, loc.BranchNew(), false) {
 				a.newBranch("")
 			}
-			section := func(title string, n int) {
-				ui.Row(c).Gap(6).Padding(8, 8, 2, 8).AlignItems(ui.Center).Children(func() {
+			section := func(title string, n int, top float32) {
+				ui.Row(c).Gap(6).Padding(top, 8, 2, 8).AlignItems(ui.Center).Children(func() {
 					ui.Text(c, title).FontSize(11).Bold().TextColor(t.TextMuted)
 					ui.Badge(c, fmt.Sprint(n))
 				})
 			}
-			section(loc.BranchesLocal(), len(a.branches))
+			section(loc.BranchesLocal(), len(a.branches), 8)
 			// The local branches, in folders by their names' first
 			// segment, the folders mixed with the plain branches by name.
-			byFolder := map[string][]string{}
-			plain := map[string]bool{}
-			var keys []string
-			for _, n := range a.branches {
-				if folder, _, ok := strings.Cut(n, "/"); ok {
-					if byFolder[folder] == nil {
-						keys = append(keys, folder)
-					}
-					byFolder[folder] = append(byFolder[folder], n)
-				} else {
-					keys = append(keys, n)
-					plain[n] = true
-				}
-			}
-			slices.Sort(keys)
-			for _, key := range keys {
-				if plain[key] {
-					a.branchLine(c, key, 0)
-					continue
-				}
-				open := !a.foldFolders[key]
-				ui.Collapsible(c, key, &open, func() {
-					for _, n := range byFolder[key] {
-						a.branchLine(c, n, 12)
-					}
-				})
-				a.foldFolders[key] = !open
-			}
-			section(loc.BranchesRemote(), len(a.remotes))
-			for _, n := range a.remotes {
-				ui.Box(c.Key(n)).Children(func() {
-					branchMenuRow(c, n, false, func(m *ui.Menu) { a.remoteItems(m, n) })
-				})
-			}
+			a.groupRows(c, a.branches, 0, func(c *ui.Context, name, show string, indent float32) {
+				a.branchLine(c, name, show, indent)
+			})
+			section(loc.BranchesRemote(), len(a.remotes), 44)
+			// The remote branches, in folders the same way, without
+			// their remote's name in front.
+			a.groupRows(c, a.remotes, 1, func(c *ui.Context, name, show string, indent float32) {
+				branchMenuRow(c.Key(name), name, show, false, indent, func(m *ui.Menu) { a.remoteItems(m, name) })
+			})
 			if len(a.branches)+len(a.remotes) == 0 {
 				ui.Text(c, loc.BranchesNone()).TextColor(t.TextMuted).Padding(8)
 			}
@@ -180,17 +155,82 @@ func (a *app) branchesPanel(c *ui.Context) {
 	})
 }
 
-// branchLine is a local branch's row in the column, indented in a
-// folder, with how far it is from its upstream at the end. A click
-// switches to it, its menu acts on it.
-func (a *app) branchLine(c *ui.Context, name string, indent float32) {
-	ui.Row(c.Key(name)).Padding(0, 0, 0, indent).Children(func() {
-		e := branchRowElement(c, name, name == a.status.Branch, trackText(a.tracks[name]))
-		if e.Clicked() {
-			a.switchTo(name)
+// groupRows lists the branches in folders by their names' first segment,
+// dropping leading segments first (a remote's name), the folders mixed
+// with the plain branches by name. row draws a branch's row, indented
+// under a folder.
+func (a *app) groupRows(c *ui.Context, names []string, drop int, row func(c *ui.Context, name, show string, indent float32)) {
+	byFolder := map[string][]string{}
+	plain := map[string][]string{}
+	rests := map[string]string{} // the names without their leading segments
+	var keys []string
+	for _, n := range names {
+		rest := n
+		for i := 0; i < drop; i++ {
+			if _, r, ok := strings.Cut(rest, "/"); ok {
+				rest = r
+			}
 		}
-		e.ContextMenu(func(m *ui.Menu) { a.branchItems(m, name) })
+		rests[n] = rest
+		if folder, _, ok := strings.Cut(rest, "/"); ok {
+			if byFolder[folder] == nil {
+				keys = append(keys, folder)
+			}
+			byFolder[folder] = append(byFolder[folder], n)
+		} else {
+			keys = append(keys, rest)
+			plain[rest] = append(plain[rest], n)
+		}
+	}
+	slices.Sort(keys)
+	for _, key := range keys {
+		if ns := plain[key]; ns != nil {
+			for _, n := range ns {
+				row(c.Key(n), n, key, 0)
+			}
+			continue
+		}
+		fold := fmt.Sprint(drop, "/", key) // the local and the remote folders fold apart
+		a.folderRow(c.Key("folder "+fold), fold, key, len(byFolder[key]))
+		if !a.foldFolders[fold] {
+			for _, n := range byFolder[key] {
+				row(c.Key(n), n, strings.TrimPrefix(rests[n], key+"/"), 12)
+			}
+		}
+	}
+}
+
+// folderRow is a folder of branches in the column: the first segment of
+// their names, with the arrow that shows or hides them. It has no
+// background, as a heading.
+func (a *app) folderRow(c *ui.Context, fold, name string, n int) {
+	t := c.Theme()
+	folded := a.foldFolders[fold]
+	row := ui.ButtonBase(c).Height(26).PaddingX(8).Gap(6).AlignItems(ui.Center).Label(name)
+	row.Children(func() {
+		chevron := "chevron-down"
+		if folded {
+			chevron = "chevron-right"
+		}
+		ui.Icon(c, icons[chevron]).Size(14, 14)
+		ui.Text(c, name).SingleLine().Grow(1).Basis(0)
+		ui.Text(c, fmt.Sprint(n)).FontSize(11).TextColor(t.TextMuted)
 	})
+	if row.Clicked() {
+		a.foldFolders[fold] = !folded
+	}
+}
+
+// branchLine is a local branch's row in the column, indented in a
+// folder, with how far it is from its upstream at the end. show is its
+// name without the folder's, as the folder names it above. A click
+// switches to it, its menu acts on it.
+func (a *app) branchLine(c *ui.Context, name, show string, indent float32) {
+	e := branchRowElement(c.Key(name), name, show, name == a.status.Branch, trackText(a.tracks[name]), indent)
+	if e.Clicked() {
+		a.switchTo(name)
+	}
+	e.ContextMenu(func(m *ui.Menu) { a.branchItems(m, name) })
 }
 
 // trackText is how far a branch is from its upstream, for its row's end.
@@ -208,12 +248,12 @@ func trackText(tr git.BranchTrack) string {
 // branchRow is a row of the branches' column, the current branch's
 // checked; it reports a click.
 func branchRow(c *ui.Context, name string, current bool) bool {
-	return branchRowElement(c, name, current, "").Clicked()
+	return branchRowElement(c, name, name, current, "", 0).Clicked()
 }
 
-func branchRowElement(c *ui.Context, name string, current bool, tail string) ui.Element {
+func branchRowElement(c *ui.Context, name, show string, current bool, tail string, indent float32) ui.Element {
 	t := c.Theme()
-	row := ui.ButtonBase(c).Height(26).PaddingX(8).Gap(6).Radius(5).AlignItems(ui.Center).Label(name)
+	row := ui.ButtonBase(c).Height(26).PaddingX(8).PaddingStart(8 + indent).Gap(6).Radius(5).AlignItems(ui.Center).Label(name)
 	if row.Hovered() {
 		row.Background(t.Text.Alpha(0.08))
 	}
@@ -226,7 +266,7 @@ func branchRowElement(c *ui.Context, name string, current bool, tail string) ui.
 			mark = "✓"
 		}
 		ui.Text(c, mark).Width(12).TextColor(t.Accent)
-		ui.Text(c, name).SingleLine().Grow(1).Basis(0)
+		ui.Text(c, show).SingleLine().Grow(1).Basis(0)
 		if tail != "" {
 			ui.Text(c, tail).FontSize(11).TextColor(t.TextMuted).SingleLine()
 		}
@@ -235,8 +275,8 @@ func branchRowElement(c *ui.Context, name string, current bool, tail string) ui.
 }
 
 // branchMenuRow is a branch's row, whose click opens its menu.
-func branchMenuRow(c *ui.Context, name string, current bool, items func(*ui.Menu)) {
-	branchRowElement(c, name, current, "").Menu(items)
+func branchMenuRow(c *ui.Context, name, show string, current bool, indent float32, items func(*ui.Menu)) {
+	branchRowElement(c, name, show, current, "", indent).Menu(items)
 }
 
 // mergeItems merge a branch into the current one, or rebase the current

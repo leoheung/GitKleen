@@ -25,7 +25,6 @@ type settings struct {
 	Unified          bool             `json:"unified"`
 	IgnoreWhitespace bool             `json:"ignoreWhitespace"`
 	SidebarW         float32          `json:"sidebarW"`
-	LogH             float32          `json:"logH"`
 	FilesW           float32          `json:"filesW"`
 	BranchesW        float32          `json:"branchesW"`            // the branches' column's width
 	StagedPct        float32          `json:"stagedPct"`            // of the changes' room, the staged changes'
@@ -36,7 +35,7 @@ type settings struct {
 	path             string
 }
 
-var prefs = &settings{SidebarW: 300, BranchesW: 200, LogH: 360, FilesW: 260, StagedPct: 30}
+var prefs = &settings{SidebarW: 300, BranchesW: 200, FilesW: 260, StagedPct: 30}
 
 func loadSettings() {
 	dir, err := os.UserConfigDir()

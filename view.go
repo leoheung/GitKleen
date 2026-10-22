@@ -58,19 +58,24 @@ func (a *app) view(c *ui.Context) {
 			})
 		}
 		a.operationBar(c)
-		ui.Split(c, &a.sidebarW, func() {
-			if a.ws != nil {
-				a.ws.sidebar(c)
-			} else {
-				a.leftPanel(c)
-			}
-		}, func() {
-			ui.Split(c, &a.branchesW, func() {
-				a.branchesPanel(c)
+		ui.Box(c).Grow(1).Children(func() {
+			ui.Split(c, &a.sidebarW, func() {
+				if a.ws != nil {
+					a.ws.sidebar(c)
+				} else {
+					a.leftPanel(c)
+				}
 			}, func() {
-				ui.SplitVertical(c, &a.logH, func() { a.logView(c) }, func() { a.detailView(c) }).Fill()
-			}).Grow(1)
-		}).Grow(1)
+				ui.Split(c, &a.branchesW, func() {
+					a.branchesPanel(c)
+				}, func() {
+					a.logView(c)
+				}).Grow(1)
+			}).Fill()
+			if a.drawer {
+				a.drawerView(c)
+			}
+		})
 		if root.FileDragOver() {
 			dropHint(c)
 		}
@@ -431,12 +436,34 @@ func changeName(code byte) string {
 	return ""
 }
 
+// drawerView is the drawer at the window's right: what was chosen last,
+// a commit's files and the diff of one, or the diff of a change, at half
+// the window's width.
+func (a *app) drawerView(c *ui.Context) {
+	t := c.Theme()
+	w, _ := c.Size()
+	panel := ui.Column(c).Absolute().Top(0).Right(0).Bottom(0).Width(w/2).
+		Background(t.Surface).BorderWidth(0, 0, 0, 1).BorderColor(t.Border)
+	panel.Children(func() {
+		ui.Row(c).Padding(4, 8).AlignItems(ui.Center).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
+			ui.Box(c).Grow(1)
+			if ui.Button(c, loc.Close()).Clicked() {
+				a.drawer = false
+			}
+		})
+		a.detailView(c)
+	})
+	if panel.OverlayShortcut(0, ui.KeyEscape) {
+		a.drawer = false
+	}
+}
+
 // detailView is the diff of what was chosen last: a commit, with its files
 // beside, or a change.
 func (a *app) detailView(c *ui.Context) {
 	t := c.Theme()
 	d := &a.detail
-	ui.Column(c).Fill().BorderWidth(1, 0, 0, 0).BorderColor(t.Border).Children(func() {
+	ui.Column(c).Fill().Children(func() {
 		switch {
 		case d.commit != nil:
 			if d.pr != nil {

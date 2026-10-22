@@ -98,13 +98,13 @@ type app struct {
 	trustDir  string // a repository another user owns, dropped, to trust
 	sidebarW  float32
 	branchesW float32 // the branches' column's width
-	logH      float32
+	drawer    bool    // the diff's drawer, at the window's right
 	filesW    float32
 	stagedPct float32 // of the changes' room, the staged changes'
 }
 
-// detail is what the bottom of the window shows: a commit's files and the
-// diff of one, or the diff of a change.
+// detail is what the drawer at the window's right shows: a commit's files
+// and the diff of one, or the diff of a change.
 type detail struct {
 	commit *git.Commit // nil for a change
 	change *git.Change
@@ -136,7 +136,7 @@ type detail struct {
 
 func newApp(repo *git.Repo) *app {
 	return &app{repo: repo, online: make(chan struct{}, 1), logSel: -1, stagedSel: -1, unstagedSel: -1, stashSel: -1,
-		sidebarW: prefs.SidebarW, branchesW: prefs.BranchesW, logH: prefs.LogH, filesW: prefs.FilesW, stagedPct: prefs.StagedPct,
+		sidebarW: prefs.SidebarW, branchesW: prefs.BranchesW, filesW: prefs.FilesW, stagedPct: prefs.StagedPct,
 		unfolded: map[string]bool{}, viewed: map[string]bool{}, foldFolders: map[string]bool{}, pullReviews: map[int]*pullReview{}}
 }
 
@@ -160,7 +160,7 @@ func (a *app) start() {
 			})
 		}
 		a.win.OnClosed(func() { // the next window opens as this one was laid out
-			prefs.SidebarW, prefs.BranchesW, prefs.LogH, prefs.FilesW, prefs.StagedPct = a.sidebarW, a.branchesW, a.logH, a.filesW, a.stagedPct
+			prefs.SidebarW, prefs.BranchesW, prefs.FilesW, prefs.StagedPct = a.sidebarW, a.branchesW, a.filesW, a.stagedPct
 			prefs.save()
 		})
 		a.watch()
@@ -456,6 +456,7 @@ func (a *app) showStash(s git.Stash) {
 // showPatch loads the files of a commit's patch, which load reads, and
 // its message.
 func (a *app) showPatch(c git.Commit, load func(ctx context.Context) (string, error)) {
+	a.drawer = true // the drawer shows it, and opens again on the same commit
 	if a.detail.commit != nil && a.detail.commit.Hash == c.Hash && a.detail.blame == nil {
 		return
 	}
@@ -521,6 +522,7 @@ func (a *app) loadPatch(load func(ctx context.Context) (string, error)) {
 
 // showFile shows the diff of a file of the commit shown.
 func (a *app) showFile(i int) {
+	a.drawer = true
 	d := &a.detail
 	d.fileSel = i
 	d.folded = d.generated[i] && !a.unfolded[foldKey(d.commit.Hash, fileName(d.files[i]))]
@@ -554,6 +556,7 @@ func (a *app) unfold() {
 // moves on, the diff stays, with its selection, scroll and edits, while
 // the texts are the same.
 func (a *app) showChange(c git.Change, staged bool) {
+	a.drawer = true
 	if c.Conflict {
 		if a.detail.merge == nil || a.detail.merge.path != c.Path {
 			a.showConflict(c)

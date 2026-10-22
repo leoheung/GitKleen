@@ -35,6 +35,7 @@ type app struct {
 	logList   ui.ListState
 	logSel    int
 	logChosen ui.Selection[any] // the commits chosen, two to compare
+	chosen    ui.Selection[any] // the tag or stash row chosen, one across the panels
 	logGen    int               // the load running; the batches of older ones are dropped
 	loading   bool
 	refs      string // the refs the history was read at, to reload it when they move
@@ -152,6 +153,19 @@ func (a *app) start() {
 	a.stagedList.Selected, a.unstagedList.Selected = &a.stagedRow, &a.unstagedRow
 	a.stashList.Selected = &a.stashSel
 	a.tagList.Selected = &a.tagSel
+	a.tagList.Selection, a.stashList.Selection = &a.chosen, &a.chosen
+	a.tagList.Key = func(i int) any { // the rows the filter shows
+		if tags := matchTags(a.tags, a.tagFilter); i < len(tags) {
+			return tags[i].Name
+		}
+		return i
+	}
+	a.stashList.Key = func(i int) any {
+		if stashes := matchStash(a.stashes, a.stashFilter); i < len(stashes) {
+			return stashes[i].Ref
+		}
+		return i
+	}
 	a.fileList.Selected = &a.detail.fileSel
 	if a.win != nil {
 		a.update = a.win.Update
@@ -452,6 +466,15 @@ func (a *app) showCompare(label, from, to string) {
 // comparing tells whether a commit shown is a comparison of two.
 func comparing(c *git.Commit) bool { return strings.Contains(c.Hash, "..") }
 
+// choose marks the one row of a tag or a stash chosen, its diff showing,
+// and unchooses whatever was chosen before, across the panels.
+func (a *app) choose(key any) {
+	a.chosen.Clear()
+	if key != nil {
+		a.chosen.Add(key)
+	}
+}
+
 // showStash shows a stash's files as a commit's.
 func (a *app) showStash(s git.Stash) {
 	if a.leaving(func() { a.showStash(s) }) {
@@ -461,6 +484,7 @@ func (a *app) showStash(s git.Stash) {
 	a.logChosen.Clear()
 	c := git.Commit{Hash: s.Hash, Time: s.Time, Subject: s.Subject, Refs: []string{s.Ref}}
 	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.StashShow(ctx, s.Ref) })
+	a.choose(s.Ref)
 }
 
 // showTag goes to the commit a tag points at, in the history; where it
@@ -473,6 +497,7 @@ func (a *app) showTag(t git.Tag) {
 			a.logChosen.Add(t.Hash)
 			a.logList.ScrollIntoView(row)
 			a.showCommit(ci)
+			a.choose(t.Name)
 			return
 		}
 	}
@@ -482,11 +507,13 @@ func (a *app) showTag(t git.Tag) {
 	}
 	c := git.Commit{Hash: t.Hash, Time: t.Time, Subject: t.Subject, Refs: []string{t.Name}}
 	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, t.Hash, prefs.IgnoreWhitespace) })
+	a.choose(t.Name)
 }
 
 // showPatch loads the files of a commit's patch, which load reads, and
 // its message.
 func (a *app) showPatch(c git.Commit, load func(ctx context.Context) (string, error)) {
+	a.choose(nil)   // no tag or stash row is chosen over a diff of its own
 	a.drawer = true // the drawer shows it, and opens again on the same commit
 	if a.detail.commit != nil && a.detail.commit.Hash == c.Hash && a.detail.blame == nil {
 		return

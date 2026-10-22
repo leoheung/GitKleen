@@ -281,12 +281,20 @@ func TestStashFlow(t *testing.T) {
 	if len(tt.a.stashes) != 1 || len(tt.a.unstaged) != 0 {
 		t.Fatalf("stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
 	}
-	tt.click(t, "Merge the feature")     // a commit chosen in the history
+	r, ok := tt.Find("Merge the feature")
+	if !ok {
+		t.Fatal("no row shows Merge the feature")
+	}
+	tt.ClickAt(r.X+20, r.Y+r.H/2) // a commit chosen in the history
+	tt.settle()
+	if tt.a.logSel < 0 || tt.a.logChosen.Len() != 1 {
+		t.Fatalf("the click didn't choose the commit: logSel %d, logChosen %d", tt.a.logSel, tt.a.logChosen.Len())
+	}
 	tt.click(t, loc.StashTab())          // the stash list shows in its tab
 	tt.click(t, tt.a.stashes[0].Subject) // the row shows its diff, the history unchosen
 	tt.settle()
-	if tt.a.logSel != -1 || tt.a.logChosen.Len() != 0 {
-		t.Fatalf("logSel %d, logChosen %d", tt.a.logSel, tt.a.logChosen.Len())
+	if tt.a.logSel != -1 || tt.a.logChosen.Len() != 0 || !tt.a.chosen.Has(tt.a.stashes[0].Ref) {
+		t.Fatalf("logSel %d, logChosen %d, chosen %d", tt.a.logSel, tt.a.logChosen.Len(), tt.a.chosen.Len())
 	}
 	if d := tt.a.detail; d.commit == nil || len(d.files) != 1 || d.files[0].NewName != "notes.txt" {
 		t.Fatalf("stash detail %+v", d)
@@ -336,8 +344,19 @@ func TestTagsTab(t *testing.T) {
 	if !tt.a.logChosen.Has(tt.a.commits[tt.a.commitAt(tt.a.logSel)].Hash) {
 		t.Fatalf("logChosen doesn't hold the tag's commit")
 	}
-	tt.click(t, "Write main") // elsewhere in the history
-	tt.click(t, "v1")         // the same tag again jumps back
+	if !tt.a.chosen.Has("v1") {
+		t.Fatalf("chosen %d doesn't hold v1", tt.a.chosen.Len())
+	}
+	r, ok := tt.Find("Write main")
+	if !ok {
+		t.Fatal("no row shows Write main")
+	}
+	tt.ClickAt(r.X+20, r.Y+r.H/2) // the drawer covers the row's right half
+	tt.settle()
+	if tt.a.chosen.Len() != 0 {
+		t.Fatalf("chosen %d still holds the tag: logSel %d", tt.a.chosen.Len(), tt.a.logSel)
+	}
+	tt.click(t, "v1") // the same tag again jumps back
 	if tt.a.logSel < 0 || tt.a.commits[tt.a.commitAt(tt.a.logSel)].Subject != "Merge the feature" {
 		t.Fatalf("logSel %d doesn't point at the tag's commit", tt.a.logSel)
 	}

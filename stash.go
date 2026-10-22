@@ -20,7 +20,7 @@ func (a *app) stashPanel(c *ui.Context) {
 		l := ui.List(c.Key("stash"), &a.stashList, len(stashes), func(i int) {
 			s := stashes[i]
 			row := ui.ButtonBase(c.Key(s.Ref)).Padding(6, 10).Label(s.Subject).Justify(ui.SpaceBetween)
-			if i == a.stashSel {
+			if a.chosen.Has(s.Ref) {
 				// the accent the list draws under it, hidden by an opaque soft blue
 				row.Background(t.Accent.Alpha(0.14).Over(t.Surface)).TextColor(t.Text)
 			}

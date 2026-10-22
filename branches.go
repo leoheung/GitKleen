@@ -163,7 +163,7 @@ func (a *app) tagsPanel(c *ui.Context) {
 		l := ui.List(c.Key("tags"), &a.tagList, len(tags), func(i int) {
 			tg := tags[i]
 			row := ui.ButtonBase(c.Key(tg.Name)).Padding(6, 10).Label(tg.Name).Justify(ui.SpaceBetween)
-			if i == a.tagSel {
+			if a.chosen.Has(tg.Name) {
 				// the accent the list draws under it, hidden by an opaque soft blue
 				row.Background(t.Accent.Alpha(0.14).Over(t.Surface)).TextColor(t.Text)
 			}

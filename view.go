@@ -143,14 +143,14 @@ func (a *app) toolbar(c *ui.Context) {
 			if !a.local() {
 				a.remoteBadge(c)
 			}
-			ui.Icon(c, icons["chevron-right"]).Size(14, 14) // the branches follow the repository's name
-			ui.Column(c).Gap(1).Children(func() {
+			ui.Icon(c, icons["chevron-right"]).Size(18, 18).TextColor(headerFg) // the branches follow the repository's name
+			ui.Column(c).Gap(1).AlignItems(ui.Center).Children(func() {
 				name := st.Branch
 				if name == "" {
 					name = "-" // a detached HEAD has no branch
 				}
 				ui.Text(c, name).Bold().TextColor(headerFg).SingleLine()
-				ui.Icon(c, icons["chevron-down"]).Size(10, 10)
+				ui.Icon(c, icons["chevron-down"]).Size(18, 18).TextColor(headerFg)
 				up := st.Upstream
 				if up == "" {
 					up = "-" // no remote branch tracks this one

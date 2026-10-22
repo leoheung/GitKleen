@@ -28,6 +28,7 @@ var (
 )
 
 func (a *app) view(c *ui.Context) {
+	hideScrollbars(c)
 	t := c.Theme()
 	root := ui.Column(c).Fill().FontSize(12)
 	root.Children(func() {

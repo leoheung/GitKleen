@@ -58,6 +58,14 @@ func loadSettings() {
 // as it waits for the app's main thread.
 var applyTheme = mygo.Theme.SetSource
 
+// hideScrollbars keeps the scroll bars of scrolling lists out of sight:
+// they show over a list's rows at its right as it scrolls.
+func hideScrollbars(c *ui.Context) {
+	t := *c.Theme() // the frame's theme, which follows the system
+	t.Scrollbar = ui.Color{}
+	c.SetTheme(&t)
+}
+
 func (s *settings) save() {
 	if s.path == "" {
 		return // tests

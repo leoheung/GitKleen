@@ -246,6 +246,7 @@
   "changesTab": "更改",
   "stashTab": "Stash ({count})",
   "stashChanges": "Stash 当前更改…",
+  "stashChange": "Stash 这个更改…",
   "stashTitle": "Stash 当前更改",
   "stashUntracked": "包括未跟踪的文件",
   "stashNone": "没有 stash",

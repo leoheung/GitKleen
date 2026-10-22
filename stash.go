@@ -58,6 +58,21 @@ func (a *app) stashChanges() {
 	a.prompt.value = "WIP"
 }
 
+// stashChange asks for a stash's message, then stashes the one change,
+// leaving the others be.
+func (a *app) stashChange(c git.Change) {
+	if a.savingFirst(func() { a.stashChange(c) }) {
+		return
+	}
+	a.prompt = prompt{open: true, title: loc.StashTitle(), button: loc.OpStash(),
+		ok: func(msg, _ string) {
+			a.run(loc.OpStash(), func(ctx context.Context) error {
+				return a.repo.StashPush(ctx, msg, c.Work == '?', c.Path)
+			}, nil)
+		}}
+	a.prompt.value = "WIP"
+}
+
 func (a *app) stashMenu(m *ui.Menu, s git.Stash) {
 	if m.Item(loc.StashApply()).Chosen() {
 		a.run(loc.OpApply(s.Ref), func(ctx context.Context) error { return a.repo.StashApply(ctx, s.Ref, false) }, nil)

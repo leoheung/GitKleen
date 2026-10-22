@@ -281,6 +281,7 @@ func TestStashFlow(t *testing.T) {
 		t.Fatalf("stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
 	}
 	tt.a.showStash(tt.a.stashes[0]) // the stash list shows elsewhere, not yet
+	tt.settle()
 	if d := tt.a.detail; d.commit == nil || len(d.files) != 1 || d.files[0].NewName != "notes.txt" {
 		t.Fatalf("stash detail %+v", d)
 	}
@@ -289,6 +290,20 @@ func TestStashFlow(t *testing.T) {
 	tt.settle()
 	if len(tt.a.stashes) != 0 || len(tt.a.unstaged) != 1 {
 		t.Fatalf("after pop: stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
+	}
+}
+
+func TestStashOneChange(t *testing.T) {
+	tt := newTester(t)
+	tt.write(t, map[string]string{"main.go": "package main\n\nfunc main() {}\n\nfunc extra() {}\n"})
+	if len(tt.a.unstaged) != 2 { // main.go and notes.txt
+		t.Fatalf("unstaged %v", tt.a.unstaged)
+	}
+	tt.click(t, "notes.txt") // the row's buttons come with its choice
+	tt.click(t, loc.StashChange())
+	tt.click(t, loc.OpStash())
+	if len(tt.a.stashes) != 1 || len(tt.a.unstaged) != 1 || tt.a.unstaged[0].Path != "main.go" {
+		t.Fatalf("stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
 	}
 }
 

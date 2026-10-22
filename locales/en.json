@@ -625,6 +625,7 @@
     }
   },
   "stashChanges": "Stash Changes…",
+  "stashChange": "Stash This Change…",
   "stashTitle": "Stash changes",
   "stashUntracked": "Include untracked files",
   "stashNone": "No stashes",

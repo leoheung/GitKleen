@@ -330,6 +330,9 @@ func (a *app) changeSection(c *ui.Context, title string, staged bool) {
 				if !staged && !ch.Conflict && iconButton(c, "undo", loc.DiscardChanges()) {
 					a.discard(ch)
 				}
+				if !staged && !ch.Conflict && iconButton(c, "save-to-local", loc.StashChange()) {
+					a.stashChange(ch)
+				}
 				icon, label := "plus", loc.Stage()
 				if staged {
 					icon, label = "minus", loc.Unstage()

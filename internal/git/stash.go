@@ -33,14 +33,19 @@ func (r *Repo) Stashes(ctx context.Context) ([]Stash, error) {
 }
 
 // StashPush stashes the working tree's and the index's changes, the
-// untracked files too when asked.
-func (r *Repo) StashPush(ctx context.Context, message string, untracked bool) error {
+// untracked files too when asked, or only the ones under paths when some
+// are given.
+func (r *Repo) StashPush(ctx context.Context, message string, untracked bool, paths ...string) error {
 	args := []string{"stash", "push"}
 	if message != "" {
 		args = append(args, "-m", message)
 	}
 	if untracked {
 		args = append(args, "--include-untracked")
+	}
+	if len(paths) > 0 {
+		args = append(args, "--")
+		args = append(args, paths...)
 	}
 	_, err := r.Git(ctx, args...)
 	return err

@@ -2500,6 +2500,16 @@ func (msgs Messages) StashChanges() string {
 	return Catalog.Format(msgs.locale, "stashChanges", nil)
 }
 
+// StashChange says "Stash This Change…"
+// in the language the app shows.
+func StashChange() string { return In(i18n.Locale()).StashChange() }
+
+// StashChange says "Stash This Change…"
+// in the language of msgs.
+func (msgs Messages) StashChange() string {
+	return Catalog.Format(msgs.locale, "stashChange", nil)
+}
+
 // StashTitle says "Stash changes"
 // in the language the app shows.
 func StashTitle() string { return In(i18n.Locale()).StashTitle() }

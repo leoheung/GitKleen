@@ -310,7 +310,7 @@ func (ws *workspace) activate(i int) {
 		return
 	}
 	from, to := ws.apps[ws.active], ws.apps[i]
-	to.sidebarW, to.branchesW, to.filesW, to.stagedPct = from.sidebarW, from.branchesW, from.filesW, from.stagedPct
+	to.sidebarW, to.branchesW, to.filesW, to.changesPct = from.sidebarW, from.branchesW, from.filesW, from.changesPct
 	ws.active = i
 }
 
@@ -446,14 +446,14 @@ func (ws *workspace) section(c *ui.Context, i int, a *app, last bool) {
 			}
 		})
 		if open {
-			// A window's own changes panel: the tabs, the changes and
-			// the message under them, growing into view as the
+			// A window's own changes panel: the changes and the
+			// message under them, growing into view as the
 			// repository opens.
 			panel := ui.Column(c).ClipY().Grow(1).Basis(0)
 			if prog := p.Progress(); prog < 1 {
 				panel.MaxHeightPercent(100 * prog) // only the room it has grown into shows
 			}
-			panel.Children(func() { a.leftPanel(c) })
+			panel.Children(func() { a.changesPanel(c) })
 		}
 	})
 	if sec.Pressed() || sec.FocusWithin() {

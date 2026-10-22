@@ -275,22 +275,17 @@ func TestResetHardAsks(t *testing.T) {
 
 func TestStashFlow(t *testing.T) {
 	tt := newTester(t)
-	tt.click(t, "Stash (0)")
-	tt.click(t, "Stash 当前更改…")
-	tt.click(t, "Stash")
+	tt.click(t, loc.StashChanges()) // the button in the changes' header
+	tt.click(t, loc.OpStash())
 	if len(tt.a.stashes) != 1 || len(tt.a.unstaged) != 0 {
 		t.Fatalf("stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
 	}
-	tt.click(t, tt.a.stashes[0].Subject)
+	tt.a.showStash(tt.a.stashes[0]) // the stash list shows elsewhere, not yet
 	if d := tt.a.detail; d.commit == nil || len(d.files) != 1 || d.files[0].NewName != "notes.txt" {
 		t.Fatalf("stash detail %+v", d)
 	}
-	if err := tt.RightClick(tt.a.stashes[0].Subject); err != nil {
-		t.Fatal(err)
-	}
-	if err := tt.ChooseMenuItem("弹出（应用并删除）"); err != nil {
-		t.Fatal(err)
-	}
+	s := tt.a.stashes[0]
+	tt.a.run(loc.OpPop(s.Ref), func(ctx context.Context) error { return tt.a.repo.StashApply(ctx, s.Ref, true) }, nil)
 	tt.settle()
 	if len(tt.a.stashes) != 0 || len(tt.a.unstaged) != 1 {
 		t.Fatalf("after pop: stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)

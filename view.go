@@ -63,7 +63,7 @@ func (a *app) view(c *ui.Context) {
 				if a.ws != nil {
 					a.ws.sidebar(c)
 				} else {
-					a.leftPanel(c)
+					a.changesPanel(c)
 				}
 			}, func() {
 				ui.Split(c, &a.branchesW, func() {
@@ -218,15 +218,15 @@ func (a *app) toolbar(c *ui.Context) {
 // commit message under them.
 func (a *app) changesPanel(c *ui.Context) {
 	t := c.Theme()
-	ui.Column(c).Grow(1).Basis(0).Children(func() {
+	ui.Column(c).Fill().Children(func() {
 		if len(a.staged)+len(a.unstaged) > 0 || a.filter.query != "" {
 			a.filterField(c)
 		}
-		// Dragged as the room the staged changes need, few or thousands.
-		ui.SplitVerticalPercent(c.Key("changes"), &a.stagedPct, func() {
-			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Staged(), true) })
-		}, func() {
+		// Dragged as the room the changes need, few or thousands.
+		ui.SplitVerticalPercent(c.Key("changes"), &a.changesPct, func() {
 			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Changes(), false) })
+		}, func() {
+			ui.Column(c).Fill().Children(func() { a.changeSection(c, loc.Staged(), true) })
 		}).Grow(1).Basis(0)
 		// The message at the bottom, where it shows however many files
 		// changed, as VS Code's source control has it.
@@ -277,14 +277,21 @@ func (a *app) changeSection(c *ui.Context, title string, staged bool) {
 		}
 		ui.Badge(c, count)
 		ui.Box(c).Grow(1)
+		idle := a.busy == ""
 		if n > 0 {
-			idle := a.busy == ""
 			if staged {
 				if iconButton(c, "minus", loc.UnstageAll()) && idle {
 					a.unstageAll()
 				}
-			} else if iconButton(c, "plus", loc.StageAll()) && idle {
-				a.stageAll()
+			} else {
+				if iconButton(c, "plus", loc.StageAll()) && idle {
+					a.stageAll()
+				}
+			}
+		}
+		if !staged && len(a.staged)+len(a.unstaged) > 0 {
+			if iconButton(c, "save-to-local", loc.StashChanges()) && idle {
+				a.stashChanges()
 			}
 		}
 	})

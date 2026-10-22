@@ -59,7 +59,6 @@ type app struct {
 	stashes                  []git.Stash
 	stashList                ui.ListState
 	stashSel                 int
-	leftTab                  int // the left panel's: changes or the stash
 	staged                   []git.Change
 	unstaged                 []git.Change
 	genMarked                map[string]bool // the changes .gitattributes marks generated
@@ -92,15 +91,15 @@ type app struct {
 	submit      submitPlan
 	pullReviews map[int]*pullReview // the pull requests opened, with their reviews
 
-	busy      string // the operation running, as the toolbar says it
-	errMsg    string
-	notice    string // news that isn't an error, as an update check's
-	trustDir  string // a repository another user owns, dropped, to trust
-	sidebarW  float32
-	branchesW float32 // the branches' column's width
-	drawer    bool    // the diff's drawer, at the window's right
-	filesW    float32
-	stagedPct float32 // of the changes' room, the staged changes'
+	busy       string // the operation running, as the toolbar says it
+	errMsg     string
+	notice     string // news that isn't an error, as an update check's
+	trustDir   string // a repository another user owns, dropped, to trust
+	sidebarW   float32
+	branchesW  float32 // the branches' column's width
+	drawer     bool    // the diff's drawer, at the window's right
+	filesW     float32
+	changesPct float32 // of the changes' room, the changes', above the staged
 }
 
 // detail is what the drawer at the window's right shows: a commit's files
@@ -136,7 +135,7 @@ type detail struct {
 
 func newApp(repo *git.Repo) *app {
 	return &app{repo: repo, online: make(chan struct{}, 1), logSel: -1, stagedSel: -1, unstagedSel: -1, stashSel: -1,
-		sidebarW: prefs.SidebarW, branchesW: prefs.BranchesW, filesW: prefs.FilesW, stagedPct: prefs.StagedPct,
+		sidebarW: prefs.SidebarW, branchesW: prefs.BranchesW, filesW: prefs.FilesW, changesPct: prefs.ChangesPct,
 		unfolded: map[string]bool{}, viewed: map[string]bool{}, foldFolders: map[string]bool{}, pullReviews: map[int]*pullReview{}}
 }
 
@@ -160,7 +159,7 @@ func (a *app) start() {
 			})
 		}
 		a.win.OnClosed(func() { // the next window opens as this one was laid out
-			prefs.SidebarW, prefs.BranchesW, prefs.FilesW, prefs.StagedPct = a.sidebarW, a.branchesW, a.filesW, a.stagedPct
+			prefs.SidebarW, prefs.BranchesW, prefs.FilesW, prefs.ChangesPct = a.sidebarW, a.branchesW, a.filesW, a.changesPct
 			prefs.save()
 		})
 		a.watch()

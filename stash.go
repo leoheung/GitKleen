@@ -9,20 +9,8 @@ import (
 	loc "mygit/locales"
 )
 
-// leftPanel is the working tree's changes, or the stash.
-func (a *app) leftPanel(c *ui.Context) {
-	ui.Column(c).Fill().Children(func() {
-		ui.Box(c).Padding(8, 10, 0, 10).Children(func() {
-			ui.Segmented(c, &a.leftTab, loc.ChangesTab(), loc.StashTab(len(a.stashes))).FillWidth()
-		})
-		if a.leftTab == 1 {
-			a.stashPanel(c)
-		} else {
-			a.changesPanel(c)
-		}
-	})
-}
-
+// stashPanel lists the stashes; kept for where they will show, as the
+// panel beside the history or the like.
 func (a *app) stashPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Grow(1).Basis(0).Children(func() {

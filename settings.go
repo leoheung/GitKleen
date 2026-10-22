@@ -27,7 +27,7 @@ type settings struct {
 	SidebarW         float32          `json:"sidebarW"`
 	FilesW           float32          `json:"filesW"`
 	BranchesW        float32          `json:"branchesW"`            // the branches' column's width
-	StagedPct        float32          `json:"stagedPct"`            // of the changes' room, the staged changes'
+	ChangesPct       float32          `json:"changesPct"`           // of the changes' room, the changes', above the staged
 	Proxy            string           `json:"proxy,omitempty"`      // the downloads', "" for the system's
 	Remotes          []string         `json:"remotes,omitempty"`    // repositories on other computers opened lately, host:dir
 	SSHKeys          []string         `json:"sshKeys,omitempty"`    // private keys tried for git's remote operations
@@ -35,7 +35,7 @@ type settings struct {
 	path             string
 }
 
-var prefs = &settings{SidebarW: 300, BranchesW: 200, FilesW: 260, StagedPct: 30}
+var prefs = &settings{SidebarW: 300, BranchesW: 200, FilesW: 260, ChangesPct: 70}
 
 func loadSettings() {
 	dir, err := os.UserConfigDir()

@@ -188,7 +188,6 @@ func (a *app) chooseChange(i int, staged bool) {
 	if !again && a.leaving(func() { a.chooseChange(indexOf(a.changes(staged), ch.Path), staged) }) {
 		return
 	}
-	a.leftTab = 0
 	if staged {
 		a.stagedSel, a.unstagedSel = i, -1
 	} else {

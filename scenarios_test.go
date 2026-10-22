@@ -561,18 +561,18 @@ func TestScenarioFilterChanges(t *testing.T) {
 	if tt.a.filter.query != "" || !tt.HasText("c.md") || !tt.HasText("notes.txt") {
 		t.Fatalf("cleared: %q", tt.Texts())
 	}
-	// The line between the staged changes and the others drags.
-	head, ok := tt.Find(loc.StageAll()) // the button in the changes' header
+	// The line between the changes and the staged changes drags.
+	head, ok := tt.Find(loc.UnstageAll()) // the button in the staged changes' header
 	if !ok {
-		t.Fatalf("no header of the changes: %q", tt.Texts())
+		t.Fatalf("no header of the staged changes: %q", tt.Texts())
 	}
-	before := tt.a.stagedPct
+	before := tt.a.changesPct
 	y := head.Y - 6 // the split's line, just above the header
 	tt.Press(100, y)
 	tt.Move(100, y+120)
 	tt.Release(100, y+120)
 	tt.Frame()
-	if tt.a.stagedPct <= before {
-		t.Fatalf("dragged down, the staged changes take %v%%, from %v%%", tt.a.stagedPct, before)
+	if tt.a.changesPct <= before {
+		t.Fatalf("dragged down, the changes take %v%%, from %v%%", tt.a.changesPct, before)
 	}
 }

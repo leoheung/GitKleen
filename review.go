@@ -336,7 +336,7 @@ func (a *app) commentsButton(c *ui.Context) {
 	if len(a.comments) == 0 {
 		return
 	}
-	ui.Button(c, loc.CommentsMenu(len(a.comments))+" ▾").Label(loc.CommentsMenu(len(a.comments))).Menu(func(m *ui.Menu) {
+	toolbarButton(c, loc.CommentsMenu(len(a.comments))+" ▾").Label(loc.CommentsMenu(len(a.comments))).Menu(func(m *ui.Menu) {
 		if m.Item(loc.CopyComments()).Chosen() {
 			a.copyComments()
 		}

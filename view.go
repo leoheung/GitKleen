@@ -19,6 +19,14 @@ import (
 
 const rowHeight = 26
 
+// The toolbar's header: a hardcoded slate, a deeper one of the same
+// family in the dark theme, with light content over it in both.
+var (
+	headerBg     = ui.RGB(0x46, 0x4E, 0x6A) // light mode, #464E6A
+	headerBgDark = ui.RGB(0x3B, 0x42, 0x58) // dark mode, #3B4258
+	headerFg     = ui.RGB(0xED, 0xEF, 0xF5) // the light content over it
+)
+
 func (a *app) view(c *ui.Context) {
 	t := c.Theme()
 	root := ui.Column(c).Fill().FontSize(12)
@@ -106,25 +114,40 @@ func (a *app) remoteBadge(c *ui.Context) {
 	})
 }
 
+// toolbarButton is a button on the toolbar's dark header: a light label
+// without a face, a faint wash under it while hovered.
+func toolbarButton(c *ui.Context, label string) ui.Element {
+	b := ui.Button(c, label)
+	bg := ui.Color{}
+	if b.Hovered() && !b.IsDisabled() {
+		bg = ui.RGB(255, 255, 255).Alpha(0.12)
+	}
+	return b.Background(bg).TextColor(headerFg)
+}
+
 func (a *app) toolbar(c *ui.Context) {
 	t := c.Theme()
 	st := a.status
-	titleBar(c).Background(t.Surface).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
+	bg := headerBg
+	if t.Dark {
+		bg = headerBgDark
+	}
+	titleBar(c).Background(bg).BorderWidth(0, 0, 1, 0).BorderColor(headerFg.Alpha(0.1)).Children(func() {
 		ui.Image(c, icon).Size(22, 22)
 		if a.ws != nil {
-			ui.Text(c, a.ws.name()+" /").FontSize(13).TextColor(t.TextMuted)
+			ui.Text(c, a.ws.name()+" /").FontSize(13).TextColor(headerFg.Alpha(0.6))
 		}
-		ui.Text(c, a.repo.Name()).FontSize(13).Bold().Tooltip(a.repo.Location())
+		ui.Text(c, a.repo.Name()).FontSize(13).Bold().TextColor(headerFg).Tooltip(a.repo.Location())
 		if !a.local() {
 			a.remoteBadge(c)
 		}
 		ui.Box(c).Grow(1)
 		if a.busy != "" {
 			ui.Spinner(c).Size(14, 14)
-			ui.Text(c, a.busy+"…").TextColor(t.TextMuted)
+			ui.Text(c, a.busy+"…").TextColor(headerFg.Alpha(0.6))
 		}
 		idle := a.busy == ""
-		ui.Button(c, loc.Fetch()+" ▾").Label(loc.Fetch()).Disabled(!idle).Menu(func(m *ui.Menu) {
+		toolbarButton(c, loc.Fetch()+" ▾").Label(loc.Fetch()).Disabled(!idle).Menu(func(m *ui.Menu) {
 			if m.Item(loc.FetchAll()).Chosen() {
 				a.run(loc.OpFetch(), a.repo.Fetch, nil)
 			}
@@ -137,7 +160,7 @@ func (a *app) toolbar(c *ui.Context) {
 				}
 			}
 		})
-		ui.Button(c, loc.Pull()+" ▾").Label(loc.Pull()).Disabled(!idle || st.Upstream == "").Menu(func(m *ui.Menu) {
+		toolbarButton(c, loc.Pull()+" ▾").Label(loc.Pull()).Disabled(!idle || st.Upstream == "").Menu(func(m *ui.Menu) {
 			pull := func(mode git.PullMode) {
 				a.run(loc.OpPull(), func(ctx context.Context) error { return a.repo.Pull(ctx, mode) }, nil)
 			}
@@ -151,14 +174,14 @@ func (a *app) toolbar(c *ui.Context) {
 				pull(git.PullMerge)
 			}
 		})
-		if ui.Button(c, loc.PushMenu()).Tooltip(loc.PushTooltip()).Disabled(!idle || st.Branch == "").Clicked() {
+		if toolbarButton(c, loc.PushMenu()).Tooltip(loc.PushTooltip()).Disabled(!idle || st.Branch == "").Clicked() {
 			a.openPush()
 		}
 		a.commentsButton(c)
-		if ui.Button(c, loc.Refresh()).Tooltip(shortcut("R")).Clicked() {
+		if toolbarButton(c, loc.Refresh()).Tooltip(shortcut("R")).Clicked() {
 			a.refresh()
 		}
-		ui.Button(c, "⋯").Label(loc.Repository()).Menu(a.repoMenu)
+		toolbarButton(c, "⋯").Label(loc.Repository()).Menu(a.repoMenu)
 	})
 }
 

@@ -8,7 +8,7 @@ import (
 )
 
 // titleBarHeight is the height of the title bars the windows draw.
-const titleBarHeight = 40
+const titleBarHeight = 80
 
 // customTitleBar hides a window's title bar, keeping its controls, so the
 // view draws the title bar: the traffic lights centered in it on macOS,

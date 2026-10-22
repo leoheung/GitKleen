@@ -614,11 +614,11 @@ func (msgs Messages) Delete() string {
 	return Catalog.Format(msgs.locale, "delete", nil)
 }
 
-// DeleteMenu says "Delete…"
+// DeleteMenu says "Delete"
 // in the language the app shows.
 func DeleteMenu() string { return In(i18n.Locale()).DeleteMenu() }
 
-// DeleteMenu says "Delete…"
+// DeleteMenu says "Delete"
 // in the language of msgs.
 func (msgs Messages) DeleteMenu() string {
 	return Catalog.Format(msgs.locale, "deleteMenu", nil)
@@ -634,11 +634,11 @@ func (msgs Messages) Save() string {
 	return Catalog.Format(msgs.locale, "save", nil)
 }
 
-// Edit says "Edit…"
+// Edit says "Edit"
 // in the language the app shows.
 func Edit() string { return In(i18n.Locale()).Edit() }
 
-// Edit says "Edit…"
+// Edit says "Edit"
 // in the language of msgs.
 func (msgs Messages) Edit() string {
 	return Catalog.Format(msgs.locale, "edit", nil)
@@ -674,11 +674,11 @@ func (msgs Messages) Rename() string {
 	return Catalog.Format(msgs.locale, "rename", nil)
 }
 
-// RenameMenu says "Rename…"
+// RenameMenu says "Rename"
 // in the language the app shows.
 func RenameMenu() string { return In(i18n.Locale()).RenameMenu() }
 
-// RenameMenu says "Rename…"
+// RenameMenu says "Rename"
 // in the language of msgs.
 func (msgs Messages) RenameMenu() string {
 	return Catalog.Format(msgs.locale, "renameMenu", nil)
@@ -734,11 +734,11 @@ func (msgs Messages) BranchSwitch() string {
 	return Catalog.Format(msgs.locale, "branchSwitch", nil)
 }
 
-// BranchNewFrom says "New Branch from Here…"
+// BranchNewFrom says "New Branch from Here"
 // in the language the app shows.
 func BranchNewFrom() string { return In(i18n.Locale()).BranchNewFrom() }
 
-// BranchNewFrom says "New Branch from Here…"
+// BranchNewFrom says "New Branch from Here"
 // in the language of msgs.
 func (msgs Messages) BranchNewFrom() string {
 	return Catalog.Format(msgs.locale, "branchNewFrom", nil)
@@ -774,11 +774,11 @@ func (msgs Messages) BranchCheckoutLocal() string {
 	return Catalog.Format(msgs.locale, "branchCheckoutLocal", nil)
 }
 
-// BranchDeleteRemote says "Delete Remote Branch…"
+// BranchDeleteRemote says "Delete Remote Branch"
 // in the language the app shows.
 func BranchDeleteRemote() string { return In(i18n.Locale()).BranchDeleteRemote() }
 
-// BranchDeleteRemote says "Delete Remote Branch…"
+// BranchDeleteRemote says "Delete Remote Branch"
 // in the language of msgs.
 func (msgs Messages) BranchDeleteRemote() string {
 	return Catalog.Format(msgs.locale, "branchDeleteRemote", nil)
@@ -826,11 +826,11 @@ func (msgs Messages) BranchSearch() string {
 	return Catalog.Format(msgs.locale, "branchSearch", nil)
 }
 
-// BranchNew says "+ New Branch…"
+// BranchNew says "+ New Branch"
 // in the language the app shows.
 func BranchNew() string { return In(i18n.Locale()).BranchNew() }
 
-// BranchNew says "+ New Branch…"
+// BranchNew says "+ New Branch"
 // in the language of msgs.
 func (msgs Messages) BranchNew() string {
 	return Catalog.Format(msgs.locale, "branchNew", nil)
@@ -996,21 +996,21 @@ func (msgs Messages) CopyMessage() string {
 	return Catalog.Format(msgs.locale, "copyMessage", nil)
 }
 
-// CommitNewBranch says "New Branch from Here…"
+// CommitNewBranch says "New Branch from Here"
 // in the language the app shows.
 func CommitNewBranch() string { return In(i18n.Locale()).CommitNewBranch() }
 
-// CommitNewBranch says "New Branch from Here…"
+// CommitNewBranch says "New Branch from Here"
 // in the language of msgs.
 func (msgs Messages) CommitNewBranch() string {
 	return Catalog.Format(msgs.locale, "commitNewBranch", nil)
 }
 
-// CommitNewTag says "New Tag…"
+// CommitNewTag says "New Tag"
 // in the language the app shows.
 func CommitNewTag() string { return In(i18n.Locale()).CommitNewTag() }
 
-// CommitNewTag says "New Tag…"
+// CommitNewTag says "New Tag"
 // in the language of msgs.
 func (msgs Messages) CommitNewTag() string {
 	return Catalog.Format(msgs.locale, "commitNewTag", nil)
@@ -1086,11 +1086,11 @@ func (msgs Messages) RevertCommit() string {
 	return Catalog.Format(msgs.locale, "revertCommit", nil)
 }
 
-// RebaseFromHere says "Interactively Rebase from Here…"
+// RebaseFromHere says "Interactively Rebase from Here"
 // in the language the app shows.
 func RebaseFromHere() string { return In(i18n.Locale()).RebaseFromHere() }
 
-// RebaseFromHere says "Interactively Rebase from Here…"
+// RebaseFromHere says "Interactively Rebase from Here"
 // in the language of msgs.
 func (msgs Messages) RebaseFromHere() string {
 	return Catalog.Format(msgs.locale, "rebaseFromHere", nil)
@@ -1126,11 +1126,11 @@ func (msgs Messages) ResetMixed() string {
 	return Catalog.Format(msgs.locale, "resetMixed", nil)
 }
 
-// ResetHard says "Hard: discard all changes…"
+// ResetHard says "Hard: discard all changes"
 // in the language the app shows.
 func ResetHard() string { return In(i18n.Locale()).ResetHard() }
 
-// ResetHard says "Hard: discard all changes…"
+// ResetHard says "Hard: discard all changes"
 // in the language of msgs.
 func (msgs Messages) ResetHard() string {
 	return Catalog.Format(msgs.locale, "resetHard", nil)
@@ -1206,11 +1206,11 @@ func (msgs Messages) CloneURL() string {
 	return Catalog.Format(msgs.locale, "cloneURL", nil)
 }
 
-// Change says "Change…"
+// Change says "Change"
 // in the language the app shows.
 func Change() string { return In(i18n.Locale()).Change() }
 
-// Change says "Change…"
+// Change says "Change"
 // in the language of msgs.
 func (msgs Messages) Change() string {
 	return Catalog.Format(msgs.locale, "change", nil)
@@ -1276,21 +1276,21 @@ func (msgs Messages) Tagline() string {
 	return Catalog.Format(msgs.locale, "tagline", nil)
 }
 
-// CloneMenu says "Clone Repository…"
+// CloneMenu says "Clone Repository"
 // in the language the app shows.
 func CloneMenu() string { return In(i18n.Locale()).CloneMenu() }
 
-// CloneMenu says "Clone Repository…"
+// CloneMenu says "Clone Repository"
 // in the language of msgs.
 func (msgs Messages) CloneMenu() string {
 	return Catalog.Format(msgs.locale, "cloneMenu", nil)
 }
 
-// InitMenu says "New Repository…"
+// InitMenu says "New Repository"
 // in the language the app shows.
 func InitMenu() string { return In(i18n.Locale()).InitMenu() }
 
-// InitMenu says "New Repository…"
+// InitMenu says "New Repository"
 // in the language of msgs.
 func (msgs Messages) InitMenu() string {
 	return Catalog.Format(msgs.locale, "initMenu", nil)
@@ -1700,41 +1700,41 @@ func (msgs Messages) FilterChanges() string {
 	return Catalog.Format(msgs.locale, "filterChanges", nil)
 }
 
-// FilterRepos says "Filter repositories…"
+// FilterRepos says "Filter repositories"
 // in the language the app shows.
 func FilterRepos() string { return In(i18n.Locale()).FilterRepos() }
 
-// FilterRepos says "Filter repositories…"
+// FilterRepos says "Filter repositories"
 // in the language of msgs.
 func (msgs Messages) FilterRepos() string {
 	return Catalog.Format(msgs.locale, "filterRepos", nil)
 }
 
-// FilterBranches says "Filter branches…"
+// FilterBranches says "Filter branches"
 // in the language the app shows.
 func FilterBranches() string { return In(i18n.Locale()).FilterBranches() }
 
-// FilterBranches says "Filter branches…"
+// FilterBranches says "Filter branches"
 // in the language of msgs.
 func (msgs Messages) FilterBranches() string {
 	return Catalog.Format(msgs.locale, "filterBranches", nil)
 }
 
-// FilterStash says "Filter stashes…"
+// FilterStash says "Filter stashes"
 // in the language the app shows.
 func FilterStash() string { return In(i18n.Locale()).FilterStash() }
 
-// FilterStash says "Filter stashes…"
+// FilterStash says "Filter stashes"
 // in the language of msgs.
 func (msgs Messages) FilterStash() string {
 	return Catalog.Format(msgs.locale, "filterStash", nil)
 }
 
-// FilterTags says "Filter tags…"
+// FilterTags says "Filter tags"
 // in the language the app shows.
 func FilterTags() string { return In(i18n.Locale()).FilterTags() }
 
-// FilterTags says "Filter tags…"
+// FilterTags says "Filter tags"
 // in the language of msgs.
 func (msgs Messages) FilterTags() string {
 	return Catalog.Format(msgs.locale, "filterTags", nil)
@@ -1760,11 +1760,11 @@ func (msgs Messages) MenuFile() string {
 	return Catalog.Format(msgs.locale, "menuFile", nil)
 }
 
-// MenuOpenRepo says "Open Repository…"
+// MenuOpenRepo says "Open Repository"
 // in the language the app shows.
 func MenuOpenRepo() string { return In(i18n.Locale()).MenuOpenRepo() }
 
-// MenuOpenRepo says "Open Repository…"
+// MenuOpenRepo says "Open Repository"
 // in the language of msgs.
 func (msgs Messages) MenuOpenRepo() string {
 	return Catalog.Format(msgs.locale, "menuOpenRepo", nil)
@@ -1810,11 +1810,11 @@ func (msgs Messages) MenuWindow() string {
 	return Catalog.Format(msgs.locale, "menuWindow", nil)
 }
 
-// RemotesMenu says "Remotes…"
+// RemotesMenu says "Remotes"
 // in the language the app shows.
 func RemotesMenu() string { return In(i18n.Locale()).RemotesMenu() }
 
-// RemotesMenu says "Remotes…"
+// RemotesMenu says "Remotes"
 // in the language of msgs.
 func (msgs Messages) RemotesMenu() string {
 	return Catalog.Format(msgs.locale, "remotesMenu", nil)
@@ -1840,11 +1840,11 @@ func (msgs Messages) OpenRepoInEditor() string {
 	return Catalog.Format(msgs.locale, "openRepoInEditor", nil)
 }
 
-// SettingsMenu says "Settings…"
+// SettingsMenu says "Settings"
 // in the language the app shows.
 func SettingsMenu() string { return In(i18n.Locale()).SettingsMenu() }
 
-// SettingsMenu says "Settings…"
+// SettingsMenu says "Settings"
 // in the language of msgs.
 func (msgs Messages) SettingsMenu() string {
 	return Catalog.Format(msgs.locale, "settingsMenu", nil)
@@ -2260,11 +2260,11 @@ func (msgs Messages) RemoteDeleteMessage() string {
 	return Catalog.Format(msgs.locale, "remoteDeleteMessage", nil)
 }
 
-// RemoteAddMenu says "Add Remote…"
+// RemoteAddMenu says "Add Remote"
 // in the language the app shows.
 func RemoteAddMenu() string { return In(i18n.Locale()).RemoteAddMenu() }
 
-// RemoteAddMenu says "Add Remote…"
+// RemoteAddMenu says "Add Remote"
 // in the language of msgs.
 func (msgs Messages) RemoteAddMenu() string {
 	return Catalog.Format(msgs.locale, "remoteAddMenu", nil)
@@ -2280,11 +2280,11 @@ func (msgs Messages) EditorSystem() string {
 	return Catalog.Format(msgs.locale, "editorSystem", nil)
 }
 
-// EditorOther says "Other…"
+// EditorOther says "Other"
 // in the language the app shows.
 func EditorOther() string { return In(i18n.Locale()).EditorOther() }
 
-// EditorOther says "Other…"
+// EditorOther says "Other"
 // in the language of msgs.
 func (msgs Messages) EditorOther() string {
 	return Catalog.Format(msgs.locale, "editorOther", nil)
@@ -2460,11 +2460,11 @@ func (msgs Messages) SshLoadHome() string {
 	return Catalog.Format(msgs.locale, "sshLoadHome", nil)
 }
 
-// SshAddKey says "Add Key…"
+// SshAddKey says "Add Key"
 // in the language the app shows.
 func SshAddKey() string { return In(i18n.Locale()).SshAddKey() }
 
-// SshAddKey says "Add Key…"
+// SshAddKey says "Add Key"
 // in the language of msgs.
 func (msgs Messages) SshAddKey() string {
 	return Catalog.Format(msgs.locale, "sshAddKey", nil)
@@ -2540,21 +2540,21 @@ func (msgs Messages) TagsNone() string {
 	return Catalog.Format(msgs.locale, "tagsNone", nil)
 }
 
-// StashChanges says "Stash Changes…"
+// StashChanges says "Stash Changes"
 // in the language the app shows.
 func StashChanges() string { return In(i18n.Locale()).StashChanges() }
 
-// StashChanges says "Stash Changes…"
+// StashChanges says "Stash Changes"
 // in the language of msgs.
 func (msgs Messages) StashChanges() string {
 	return Catalog.Format(msgs.locale, "stashChanges", nil)
 }
 
-// StashChange says "Stash This Change…"
+// StashChange says "Stash This Change"
 // in the language the app shows.
 func StashChange() string { return In(i18n.Locale()).StashChange() }
 
-// StashChange says "Stash This Change…"
+// StashChange says "Stash This Change"
 // in the language of msgs.
 func (msgs Messages) StashChange() string {
 	return Catalog.Format(msgs.locale, "stashChange", nil)
@@ -2610,11 +2610,11 @@ func (msgs Messages) StashPop() string {
 	return Catalog.Format(msgs.locale, "stashPop", nil)
 }
 
-// StashBranch says "New Branch from Here…"
+// StashBranch says "New Branch from Here"
 // in the language the app shows.
 func StashBranch() string { return In(i18n.Locale()).StashBranch() }
 
-// StashBranch says "New Branch from Here…"
+// StashBranch says "New Branch from Here"
 // in the language of msgs.
 func (msgs Messages) StashBranch() string {
 	return Catalog.Format(msgs.locale, "stashBranch", nil)
@@ -2710,11 +2710,11 @@ func (msgs Messages) OpResolved(op string) string {
 	return Catalog.Format(msgs.locale, "opResolved", map[string]any{"op": op})
 }
 
-// AbortMenu says "Abort…"
+// AbortMenu says "Abort"
 // in the language the app shows.
 func AbortMenu() string { return In(i18n.Locale()).AbortMenu() }
 
-// AbortMenu says "Abort…"
+// AbortMenu says "Abort"
 // in the language of msgs.
 func (msgs Messages) AbortMenu() string {
 	return Catalog.Format(msgs.locale, "abortMenu", nil)
@@ -2860,11 +2860,11 @@ func (msgs Messages) PullMerge() string {
 	return Catalog.Format(msgs.locale, "pullMerge", nil)
 }
 
-// PushMenu says "Push…"
+// PushMenu says "Push"
 // in the language the app shows.
 func PushMenu() string { return In(i18n.Locale()).PushMenu() }
 
-// PushMenu says "Push…"
+// PushMenu says "Push"
 // in the language of msgs.
 func (msgs Messages) PushMenu() string {
 	return Catalog.Format(msgs.locale, "pushMenu", nil)
@@ -3002,11 +3002,11 @@ func (msgs Messages) DiscardChanges() string {
 	return Catalog.Format(msgs.locale, "discardChanges", nil)
 }
 
-// DiscardMenu says "Discard Changes…"
+// DiscardMenu says "Discard Changes"
 // in the language the app shows.
 func DiscardMenu() string { return In(i18n.Locale()).DiscardMenu() }
 
-// DiscardMenu says "Discard Changes…"
+// DiscardMenu says "Discard Changes"
 // in the language of msgs.
 func (msgs Messages) DiscardMenu() string {
 	return Catalog.Format(msgs.locale, "discardMenu", nil)
@@ -3534,11 +3534,11 @@ func (msgs Messages) PaletteEmpty() string {
 	return Catalog.Format(msgs.locale, "paletteEmpty", nil)
 }
 
-// GoToFile says "Go to File…"
+// GoToFile says "Go to File"
 // in the language the app shows.
 func GoToFile() string { return In(i18n.Locale()).GoToFile() }
 
-// GoToFile says "Go to File…"
+// GoToFile says "Go to File"
 // in the language of msgs.
 func (msgs Messages) GoToFile() string {
 	return Catalog.Format(msgs.locale, "goToFile", nil)
@@ -3626,11 +3626,11 @@ func (msgs Messages) CommentsCopied(count int) string {
 	return Catalog.Format(msgs.locale, "commentsCopied", map[string]any{"count": count})
 }
 
-// ClearComments says "Delete All Comments…"
+// ClearComments says "Delete All Comments"
 // in the language the app shows.
 func ClearComments() string { return In(i18n.Locale()).ClearComments() }
 
-// ClearComments says "Delete All Comments…"
+// ClearComments says "Delete All Comments"
 // in the language of msgs.
 func (msgs Messages) ClearComments() string {
 	return Catalog.Format(msgs.locale, "clearComments", nil)
@@ -3686,11 +3686,11 @@ func (msgs Messages) PullRequests() string {
 	return Catalog.Format(msgs.locale, "pullRequests", nil)
 }
 
-// PullRequestsMenu says "Pull Requests…"
+// PullRequestsMenu says "Pull Requests"
 // in the language the app shows.
 func PullRequestsMenu() string { return In(i18n.Locale()).PullRequestsMenu() }
 
-// PullRequestsMenu says "Pull Requests…"
+// PullRequestsMenu says "Pull Requests"
 // in the language of msgs.
 func (msgs Messages) PullRequestsMenu() string {
 	return Catalog.Format(msgs.locale, "pullRequestsMenu", nil)
@@ -4302,11 +4302,11 @@ func (msgs Messages) ShortcutClick() string {
 	return Catalog.Format(msgs.locale, "shortcutClick", nil)
 }
 
-// SshMenu says "Open over SSH…"
+// SshMenu says "Open over SSH"
 // in the language the app shows.
 func SshMenu() string { return In(i18n.Locale()).SshMenu() }
 
-// SshMenu says "Open over SSH…"
+// SshMenu says "Open over SSH"
 // in the language of msgs.
 func (msgs Messages) SshMenu() string {
 	return Catalog.Format(msgs.locale, "sshMenu", nil)
@@ -4618,11 +4618,11 @@ func (msgs Messages) UpdateLater() string {
 	return Catalog.Format(msgs.locale, "updateLater", nil)
 }
 
-// CheckUpdatesMenu says "Check for Updates…"
+// CheckUpdatesMenu says "Check for Updates"
 // in the language the app shows.
 func CheckUpdatesMenu() string { return In(i18n.Locale()).CheckUpdatesMenu() }
 
-// CheckUpdatesMenu says "Check for Updates…"
+// CheckUpdatesMenu says "Check for Updates"
 // in the language of msgs.
 func (msgs Messages) CheckUpdatesMenu() string {
 	return Catalog.Format(msgs.locale, "checkUpdatesMenu", nil)

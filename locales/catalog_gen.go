@@ -2490,6 +2490,36 @@ func (msgs Messages) StashTab(count int) string {
 	return Catalog.Format(msgs.locale, "stashTab", map[string]any{"count": count})
 }
 
+// BranchTab says "Branch"
+// in the language the app shows.
+func BranchTab() string { return In(i18n.Locale()).BranchTab() }
+
+// BranchTab says "Branch"
+// in the language of msgs.
+func (msgs Messages) BranchTab() string {
+	return Catalog.Format(msgs.locale, "branchTab", nil)
+}
+
+// TagsTab says "Tags"
+// in the language the app shows.
+func TagsTab() string { return In(i18n.Locale()).TagsTab() }
+
+// TagsTab says "Tags"
+// in the language of msgs.
+func (msgs Messages) TagsTab() string {
+	return Catalog.Format(msgs.locale, "tagsTab", nil)
+}
+
+// TagsNone says "No tags"
+// in the language the app shows.
+func TagsNone() string { return In(i18n.Locale()).TagsNone() }
+
+// TagsNone says "No tags"
+// in the language of msgs.
+func (msgs Messages) TagsNone() string {
+	return Catalog.Format(msgs.locale, "tagsNone", nil)
+}
+
 // StashChanges says "Stash Changes…"
 // in the language the app shows.
 func StashChanges() string { return In(i18n.Locale()).StashChanges() }

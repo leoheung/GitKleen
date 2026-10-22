@@ -9,8 +9,8 @@ import (
 	loc "mygit/locales"
 )
 
-// stashPanel lists the stashes; kept for where they will show, as the
-// panel beside the history or the like.
+// stashPanel lists the stashes; the Stash tab of the branches' column
+// shows it.
 func (a *app) stashPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Grow(1).Basis(0).Children(func() {

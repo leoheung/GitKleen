@@ -307,6 +307,23 @@ func TestStashOneChange(t *testing.T) {
 	}
 }
 
+func TestTagsTab(t *testing.T) {
+	tt := newTester(t)
+	if _, err := tt.a.repo.Git(context.Background(), "tag", "v1"); err != nil {
+		t.Fatal(err)
+	}
+	tt.a.refresh()
+	tt.settle()
+	tt.click(t, loc.TagsTab()) // the tags' tab of the branches' column
+	if tt.a.branchesTab != 2 {
+		t.Fatalf("branchesTab %d, texts %q", tt.a.branchesTab, tt.Texts())
+	}
+	tt.click(t, "v1") // the row shows the commit it points at
+	if d := tt.a.detail; d.commit == nil || d.commit.Subject != "Merge the feature" {
+		t.Fatalf("tag detail %+v", d)
+	}
+}
+
 func TestConflictBar(t *testing.T) {
 	tt := newTester(t)
 	ctx := context.Background()

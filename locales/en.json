@@ -617,6 +617,9 @@
   "sshKeyDialog": "Choose a Private Key",
   "changesTab": "Changes",
   "stashTab": "Stash ({count})",
+  "branchTab": "Branch",
+  "tagsTab": "Tags",
+  "tagsNone": "No tags",
   "@stashTab": {
     "placeholders": {
       "count": {

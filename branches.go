@@ -107,51 +107,74 @@ func (a *app) switchTo(b string) {
 	a.run(loc.OpSwitchTo(b), func(ctx context.Context) error { return a.repo.Switch(ctx, b) }, nil)
 }
 
-// branchesPanel is the branches' column beside the workspace: the branch
-// checked out with its upstream on top, the filter narrowing the list and
-// the way to add a branch, the local branches in folders by their names'
-// first segment, and the remote ones under them. A row's click switches
-// to its branch, its menu acts on it.
+// branchesPanel is the column beside the workspace: tabs for the
+// branches, the stash and the tags. The branches' tab has the filter
+// narrowing the list and the way to add a branch, the local branches in
+// folders by their names' first segment, and the remote ones under them.
+// A row's click switches to its branch, its menu acts on it.
 func (a *app) branchesPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Fill().Children(func() {
-		// What the toolbar kept: the branch checked out, its upstream
-		// and how far apart they are.
-		ui.Column(c).Padding(10, 12, 8, 12).Gap(2).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
-			branch := a.status.Branch
-			if branch == "" {
-				branch = loc.Detached()
-			}
-			ui.Text(c, "⎇ "+branch).Bold().SingleLine()
-			if st := a.status; st.Upstream != "" {
-				ui.Text(c, fmt.Sprintf("%s  ↑%d ↓%d", st.Upstream, st.Ahead, st.Behind)).FontSize(11).TextColor(t.TextMuted).SingleLine()
-			}
+		ui.Box(c).Padding(8, 10, 0, 10).Children(func() {
+			ui.Segmented(c, &a.branchesTab, loc.BranchTab(), loc.StashTab(len(a.stashes)), loc.TagsTab()).FillWidth()
 		})
-		filterBar(c, &a.branchFilter, loc.FilterBranches(), loc.BranchNew(), func() { a.newBranch("") })
-		local, remote := matchFilter(a.branches, a.branchFilter), matchFilter(a.remotes, a.branchFilter)
-		ui.Scroll(c).Gap(1).Children(func() {
-			section := func(title string, n int, top float32) {
-				ui.Row(c).Gap(6).Padding(top, 8, 2, 8).AlignItems(ui.Center).Children(func() {
-					ui.Text(c, title).FontSize(11).Bold().TextColor(t.TextMuted)
-					ui.Badge(c, fmt.Sprint(n))
+		switch a.branchesTab {
+		case 1:
+			a.stashPanel(c)
+		case 2:
+			a.tagsPanel(c)
+		default:
+			filterBar(c, &a.branchFilter, loc.FilterBranches(), loc.BranchNew(), func() { a.newBranch("") })
+			local, remote := matchFilter(a.branches, a.branchFilter), matchFilter(a.remotes, a.branchFilter)
+			ui.Scroll(c).Gap(1).Children(func() {
+				section := func(title string, n int, top float32) {
+					ui.Row(c).Gap(6).Padding(top, 8, 2, 8).AlignItems(ui.Center).Children(func() {
+						ui.Text(c, title).FontSize(11).Bold().TextColor(t.TextMuted)
+						ui.Badge(c, fmt.Sprint(n))
+					})
+				}
+				section(loc.BranchesLocal(), len(local), 8)
+				// The local branches, in folders by their names' first
+				// segment, the folders mixed with the plain branches by name.
+				a.groupRows(c, local, 0, func(c *ui.Context, name, show string, indent float32) {
+					a.branchLine(c, name, show, indent)
 				})
-			}
-			section(loc.BranchesLocal(), len(local), 8)
-			// The local branches, in folders by their names' first
-			// segment, the folders mixed with the plain branches by name.
-			a.groupRows(c, local, 0, func(c *ui.Context, name, show string, indent float32) {
-				a.branchLine(c, name, show, indent)
+				section(loc.BranchesRemote(), len(remote), 44)
+				// The remote branches, in folders the same way, without
+				// their remote's name in front.
+				a.groupRows(c, remote, 1, func(c *ui.Context, name, show string, indent float32) {
+					branchMenuRow(c.Key(name), name, show, false, indent, func(m *ui.Menu) { a.remoteItems(m, name) })
+				})
+				if len(local)+len(remote) == 0 {
+					ui.Text(c, loc.BranchesNone()).TextColor(t.TextMuted).Padding(8)
+				}
 			})
-			section(loc.BranchesRemote(), len(remote), 44)
-			// The remote branches, in folders the same way, without
-			// their remote's name in front.
-			a.groupRows(c, remote, 1, func(c *ui.Context, name, show string, indent float32) {
-				branchMenuRow(c.Key(name), name, show, false, indent, func(m *ui.Menu) { a.remoteItems(m, name) })
+		}
+	})
+}
+
+// tagsPanel lists the tags; the Tags tab of the branches' column shows
+// it. A row's click shows the commit it points at.
+func (a *app) tagsPanel(c *ui.Context) {
+	t := c.Theme()
+	ui.Column(c).Grow(1).Basis(0).Children(func() {
+		tags := a.tags
+		l := ui.List(c.Key("tags"), &a.tagList, len(tags), func(i int) {
+			tg := tags[i]
+			row := ui.Column(c).Padding(6, 10).Gap(2)
+			row.Children(func() {
+				ui.Text(c, tg.Name).SingleLine()
+				ui.Text(c, tg.Time.Format("2006-01-02")+" · "+tg.Subject).FontSize(11).TextColor(t.TextMuted).SingleLine()
 			})
-			if len(local)+len(remote) == 0 {
-				ui.Text(c, loc.BranchesNone()).TextColor(t.TextMuted).Padding(8)
+		}).Grow(1).Basis(0).Children(func() {
+			if len(tags) == 0 {
+				ui.Text(c, loc.TagsNone()).TextColor(t.TextMuted).Padding(12)
 			}
 		})
+		if l.Changed() && a.tagSel >= 0 && a.tagSel < len(tags) {
+			a.showTag(tags[a.tagSel])
+			a.logSel = -1
+		}
 	})
 }
 

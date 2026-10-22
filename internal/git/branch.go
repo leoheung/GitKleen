@@ -4,6 +4,7 @@ import (
 	"context"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // Branches are the local branches, by name.
@@ -111,6 +112,36 @@ func (r *Repo) Push(ctx context.Context, st Status, force bool) error {
 func (r *Repo) PushTags(ctx context.Context) error {
 	_, err := r.Git(ctx, "push", "origin", "--tags")
 	return err
+}
+
+// Tag is a tag: its name, the commit it points at, and when it was made.
+type Tag struct {
+	Name, Hash string
+	Time       time.Time
+	Subject    string
+}
+
+// Tags lists the tags, newest first.
+func (r *Repo) Tags(ctx context.Context) ([]Tag, error) {
+	out, err := r.Git(ctx, "for-each-ref", "refs/tags", "--sort=-creatordate",
+		"--format=%(refname:short)\x1f%(*objectname)\x1f%(objectname)\x1f%(creatordate:unix)\x1f%(subject)")
+	if err != nil {
+		return nil, err
+	}
+	var list []Tag
+	for _, rec := range strings.Split(out, "\n") {
+		f := strings.Split(rec, "\x1f")
+		if len(f) != 5 {
+			continue
+		}
+		sec, _ := strconv.ParseInt(f[3], 10, 64)
+		hash := f[1] // an annotated tag names the commit it points at here, its own object beside
+		if hash == "" {
+			hash = f[2] // a lightweight tag's object is the commit
+		}
+		list = append(list, Tag{Name: f[0], Hash: hash, Time: time.Unix(sec, 0), Subject: f[4]})
+	}
+	return list, nil
 }
 
 // Refs sums up where HEAD and every ref point, to tell when the history

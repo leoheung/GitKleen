@@ -55,10 +55,14 @@ type app struct {
 	tracks                   map[string]git.BranchTrack
 	foldFolders              map[string]bool // the branch folders the column folds
 	branchFilter             string          // the column's filter, by the branches' names
+	branchesTab              int             // the column's tab: 0 the branches, 1 the stash, 2 the tags
 	op                       git.Operation
 	stashes                  []git.Stash
 	stashList                ui.ListState
 	stashSel                 int
+	tags                     []git.Tag
+	tagList                  ui.ListState
+	tagSel                   int
 	staged                   []git.Change
 	unstaged                 []git.Change
 	genMarked                map[string]bool // the changes .gitattributes marks generated
@@ -146,6 +150,7 @@ func (a *app) start() {
 	a.logList.Label = func(i int) string { return a.commits[a.commitAt(i)].Subject }
 	a.stagedList.Selected, a.unstagedList.Selected = &a.stagedRow, &a.unstagedRow
 	a.stashList.Selected = &a.stashSel
+	a.tagList.Selected = &a.tagSel
 	a.fileList.Selected = &a.detail.fileSel
 	if a.win != nil {
 		a.update = a.win.Update
@@ -254,6 +259,7 @@ type snapshot struct {
 	refs     string
 	op       git.Operation
 	stashes  []git.Stash
+	tags     []git.Tag
 	marked   map[string]bool // the changes .gitattributes marks generated
 }
 
@@ -275,11 +281,12 @@ func (a *app) refresh() {
 		rb, _ := a.repo.RemoteBranches(ctx)
 		tr, _ := a.repo.Tracks(ctx)
 		stashes, _ := a.repo.Stashes(ctx)
+		tags, _ := a.repo.Tags(ctx)
 		paths := make([]string, len(st.Changes))
 		for i, c := range st.Changes {
 			paths[i] = c.Path
 		}
-		return snapshot{st, b, rb, tr, a.repo.Refs(ctx), a.repo.Operation(ctx), stashes, a.repo.Generated(ctx, paths)}, nil
+		return snapshot{st, b, rb, tr, a.repo.Refs(ctx), a.repo.Operation(ctx), stashes, tags, a.repo.Generated(ctx, paths)}, nil
 	}, func(s snapshot, err error) {
 		a.refreshing = false
 		if a.again {
@@ -296,12 +303,13 @@ func (a *app) refresh() {
 		}
 		a.genMarked = s.marked
 		a.setStatus(s.status)
-		a.branches, a.remotes, a.op, a.stashes = s.branches, s.remotes, s.op, s.stashes
+		a.branches, a.remotes, a.op, a.stashes, a.tags = s.branches, s.remotes, s.op, s.stashes, s.tags
 		a.tracks = make(map[string]git.BranchTrack, len(s.tracks))
 		for _, tr := range s.tracks {
 			a.tracks[tr.Name] = tr
 		}
 		a.stashSel = min(a.stashSel, len(a.stashes)-1)
+		a.tagSel = min(a.tagSel, len(a.tags)-1)
 		if s.refs != a.refs || a.commits == nil && !a.loading {
 			a.refs = s.refs
 			a.loadLog()
@@ -450,6 +458,15 @@ func (a *app) showStash(s git.Stash) {
 	}
 	c := git.Commit{Hash: s.Hash, Time: s.Time, Subject: s.Subject, Refs: []string{s.Ref}}
 	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.StashShow(ctx, s.Ref) })
+}
+
+// showTag shows the commit a tag points at.
+func (a *app) showTag(t git.Tag) {
+	if a.leaving(func() { a.showTag(t) }) {
+		return
+	}
+	c := git.Commit{Hash: t.Hash, Time: t.Time, Subject: t.Subject, Refs: []string{t.Name}}
+	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, t.Hash, prefs.IgnoreWhitespace) })
 }
 
 // showPatch loads the files of a commit's patch, which load reads, and

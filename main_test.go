@@ -28,7 +28,7 @@ func testRepo(t *testing.T) *git.Repo {
 	dir := t.TempDir()
 	sh := func(args ...string) {
 		t.Helper()
-		cmd := exec.Command("git", args...)
+		cmd := exec.Command("git2", args...)
 		cmd.Dir = dir
 		cmd.Env = append(os.Environ(), "GIT_AUTHOR_NAME=Ada", "GIT_AUTHOR_EMAIL=a@example.com",
 			"GIT_COMMITTER_NAME=Ada", "GIT_COMMITTER_EMAIL=a@example.com")
@@ -281,7 +281,8 @@ func TestStashFlow(t *testing.T) {
 	if len(tt.a.stashes) != 1 || len(tt.a.unstaged) != 0 {
 		t.Fatalf("stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
 	}
-	tt.a.showStash(tt.a.stashes[0]) // the stash list shows elsewhere, not yet
+	tt.click(t, loc.StashTab())          // the stash list shows in its tab
+	tt.click(t, tt.a.stashes[0].Subject) // the row shows its diff
 	tt.settle()
 	if d := tt.a.detail; d.commit == nil || len(d.files) != 1 || d.files[0].NewName != "notes.txt" {
 		t.Fatalf("stash detail %+v", d)

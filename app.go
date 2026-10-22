@@ -457,6 +457,8 @@ func (a *app) showStash(s git.Stash) {
 	if a.leaving(func() { a.showStash(s) }) {
 		return
 	}
+	a.logSel = -1 // the diff is a stash's, no commit stays chosen
+	a.logChosen.Clear()
 	c := git.Commit{Hash: s.Hash, Time: s.Time, Subject: s.Subject, Refs: []string{s.Ref}}
 	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.StashShow(ctx, s.Ref) })
 }

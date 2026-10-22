@@ -32,7 +32,6 @@ func (a *app) stashPanel(c *ui.Context) {
 			if row.Clicked() {
 				a.stashSel = i
 				a.showStash(s)
-				a.logSel = -1
 			}
 		}).Grow(1).Basis(0).Children(func() {
 			if len(stashes) == 0 {
@@ -41,7 +40,6 @@ func (a *app) stashPanel(c *ui.Context) {
 		})
 		if l.Changed() && a.stashSel >= 0 && a.stashSel < len(stashes) {
 			a.showStash(stashes[a.stashSel])
-			a.logSel = -1
 		}
 		if l.Submitted() && a.stashSel >= 0 && a.stashSel < len(stashes) {
 			s := stashes[a.stashSel]

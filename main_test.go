@@ -281,9 +281,13 @@ func TestStashFlow(t *testing.T) {
 	if len(tt.a.stashes) != 1 || len(tt.a.unstaged) != 0 {
 		t.Fatalf("stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
 	}
+	tt.click(t, "Merge the feature")     // a commit chosen in the history
 	tt.click(t, loc.StashTab())          // the stash list shows in its tab
-	tt.click(t, tt.a.stashes[0].Subject) // the row shows its diff
+	tt.click(t, tt.a.stashes[0].Subject) // the row shows its diff, the history unchosen
 	tt.settle()
+	if tt.a.logSel != -1 || tt.a.logChosen.Len() != 0 {
+		t.Fatalf("logSel %d, logChosen %d", tt.a.logSel, tt.a.logChosen.Len())
+	}
 	if d := tt.a.detail; d.commit == nil || len(d.files) != 1 || d.files[0].NewName != "notes.txt" {
 		t.Fatalf("stash detail %+v", d)
 	}

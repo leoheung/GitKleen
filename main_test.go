@@ -328,10 +328,16 @@ func TestTagsTab(t *testing.T) {
 	if tt.a.logSel < 0 || tt.a.commits[tt.a.commitAt(tt.a.logSel)].Hash != d.commit.Hash {
 		t.Fatalf("logSel %d doesn't point at %s", tt.a.logSel, d.commit.Hash)
 	}
+	if !tt.a.logChosen.Has(tt.a.commits[tt.a.commitAt(tt.a.logSel)].Hash) {
+		t.Fatalf("logChosen doesn't hold the tag's commit")
+	}
 	tt.click(t, "Write main") // elsewhere in the history
 	tt.click(t, "v1")         // the same tag again jumps back
 	if tt.a.logSel < 0 || tt.a.commits[tt.a.commitAt(tt.a.logSel)].Subject != "Merge the feature" {
 		t.Fatalf("logSel %d doesn't point at the tag's commit", tt.a.logSel)
+	}
+	if tt.a.logChosen.Len() != 1 || !tt.a.logChosen.Has(tt.a.commits[tt.a.commitAt(tt.a.logSel)].Hash) {
+		t.Fatalf("logChosen doesn't hold just the tag's commit")
 	}
 }
 

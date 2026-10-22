@@ -138,7 +138,7 @@ type detail struct {
 }
 
 func newApp(repo *git.Repo) *app {
-	return &app{repo: repo, online: make(chan struct{}, 1), logSel: -1, stagedSel: -1, unstagedSel: -1, stashSel: -1,
+	return &app{repo: repo, online: make(chan struct{}, 1), logSel: -1, stagedSel: -1, unstagedSel: -1, stashSel: -1, tagSel: -1,
 		sidebarW: prefs.SidebarW, branchesW: prefs.BranchesW, filesW: prefs.FilesW, changesPct: prefs.ChangesPct,
 		unfolded: map[string]bool{}, viewed: map[string]bool{}, foldFolders: map[string]bool{}, pullReviews: map[int]*pullReview{}}
 }
@@ -460,8 +460,20 @@ func (a *app) showStash(s git.Stash) {
 	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.StashShow(ctx, s.Ref) })
 }
 
-// showTag shows the commit a tag points at.
+// showTag goes to the commit a tag points at, in the history; where it
+// isn't listed, its diff shows instead.
 func (a *app) showTag(t git.Tag) {
+	for row := range a.logCount() {
+		if ci := a.commitAt(row); a.commits[ci].Hash == t.Hash {
+			a.logSel = row
+			a.logChosen.Clear() // as a click on the row would choose it
+			a.logChosen.Add(t.Hash)
+			a.logList.ScrollIntoView(row)
+			a.showCommit(ci)
+			return
+		}
+	}
+	// Where the commit isn't listed, its diff shows on its own.
 	if a.leaving(func() { a.showTag(t) }) {
 		return
 	}

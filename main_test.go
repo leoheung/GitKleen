@@ -317,12 +317,21 @@ func TestTagsTab(t *testing.T) {
 	tt.a.refresh()
 	tt.settle()
 	tt.click(t, loc.TagsTab()) // the tags' tab of the branches' column
-	if tt.a.branchesTab != 2 {
-		t.Fatalf("branchesTab %d, texts %q", tt.a.branchesTab, tt.Texts())
+	if tt.a.branchesTab != 2 || tt.a.tagSel != -1 {
+		t.Fatalf("branchesTab %d, tagSel %d, texts %q", tt.a.branchesTab, tt.a.tagSel, tt.Texts())
 	}
-	tt.click(t, "v1") // the row shows the commit it points at
-	if d := tt.a.detail; d.commit == nil || d.commit.Subject != "Merge the feature" {
+	tt.click(t, "v1") // the row goes to the commit it points at
+	d := tt.a.detail
+	if d.commit == nil || d.commit.Subject != "Merge the feature" {
 		t.Fatalf("tag detail %+v", d)
+	}
+	if tt.a.logSel < 0 || tt.a.commits[tt.a.commitAt(tt.a.logSel)].Hash != d.commit.Hash {
+		t.Fatalf("logSel %d doesn't point at %s", tt.a.logSel, d.commit.Hash)
+	}
+	tt.click(t, "Write main") // elsewhere in the history
+	tt.click(t, "v1")         // the same tag again jumps back
+	if tt.a.logSel < 0 || tt.a.commits[tt.a.commitAt(tt.a.logSel)].Subject != "Merge the feature" {
+		t.Fatalf("logSel %d doesn't point at the tag's commit", tt.a.logSel)
 	}
 }
 

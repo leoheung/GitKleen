@@ -244,7 +244,7 @@
   "sshKeyRemove": "移除",
   "sshKeyDialog": "选择私钥",
   "changesTab": "更改",
-  "stashTab": "Stash ({count})",
+  "stashTab": "Stash",
   "branchTab": "分支",
   "tagsTab": "标签",
   "tagsNone": "没有标签",

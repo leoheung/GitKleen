@@ -2480,14 +2480,14 @@ func (msgs Messages) ChangesTab() string {
 	return Catalog.Format(msgs.locale, "changesTab", nil)
 }
 
-// StashTab says "Stash ({count})"
+// StashTab says "Stash"
 // in the language the app shows.
-func StashTab(count int) string { return In(i18n.Locale()).StashTab(count) }
+func StashTab() string { return In(i18n.Locale()).StashTab() }
 
-// StashTab says "Stash ({count})"
+// StashTab says "Stash"
 // in the language of msgs.
-func (msgs Messages) StashTab(count int) string {
-	return Catalog.Format(msgs.locale, "stashTab", map[string]any{"count": count})
+func (msgs Messages) StashTab() string {
+	return Catalog.Format(msgs.locale, "stashTab", nil)
 }
 
 // BranchTab says "Branch"

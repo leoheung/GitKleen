@@ -14,12 +14,6 @@ import (
 func (a *app) stashPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Grow(1).Basis(0).Children(func() {
-		ui.Row(c).Padding(8, 10).Children(func() {
-			changed := len(a.staged)+len(a.unstaged) > 0
-			if ui.Button(c, loc.StashChanges()).Disabled(!changed || a.busy != "").Grow(1).Clicked() {
-				a.stashChanges()
-			}
-		})
 		stashes := a.stashes
 		l := ui.List(c.Key("stash"), &a.stashList, len(stashes), func(i int) {
 			s := stashes[i]

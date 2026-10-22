@@ -276,7 +276,8 @@ func TestResetHardAsks(t *testing.T) {
 func TestStashFlow(t *testing.T) {
 	tt := newTester(t)
 	tt.click(t, loc.StashChanges()) // the button in the changes' header
-	tt.click(t, loc.OpStash())
+	tt.Key(0, ui.KeyEnter)          // the prompt's field is focused: Enter stashes
+	tt.settle()
 	if len(tt.a.stashes) != 1 || len(tt.a.unstaged) != 0 {
 		t.Fatalf("stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
 	}
@@ -301,7 +302,8 @@ func TestStashOneChange(t *testing.T) {
 	}
 	tt.click(t, "notes.txt") // the row's buttons come with its choice
 	tt.click(t, loc.StashChange())
-	tt.click(t, loc.OpStash())
+	tt.Key(0, ui.KeyEnter) // the prompt's field is focused: Enter stashes
+	tt.settle()
 	if len(tt.a.stashes) != 1 || len(tt.a.unstaged) != 1 || tt.a.unstaged[0].Path != "main.go" {
 		t.Fatalf("stashes %v, unstaged %v", tt.a.stashes, tt.a.unstaged)
 	}

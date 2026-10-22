@@ -116,7 +116,7 @@ func (a *app) branchesPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Fill().Children(func() {
 		ui.Box(c).Padding(8, 10, 0, 10).Children(func() {
-			ui.Segmented(c, &a.branchesTab, loc.BranchTab(), loc.StashTab(len(a.stashes)), loc.TagsTab()).FillWidth()
+			ui.Segmented(c, &a.branchesTab, loc.BranchTab(), loc.StashTab(), loc.TagsTab()).AlignSelf(ui.Center)
 		})
 		switch a.branchesTab {
 		case 1:

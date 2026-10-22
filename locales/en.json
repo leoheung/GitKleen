@@ -616,17 +616,10 @@
   "sshKeyRemove": "Remove",
   "sshKeyDialog": "Choose a Private Key",
   "changesTab": "Changes",
-  "stashTab": "Stash ({count})",
+  "stashTab": "Stash",
   "branchTab": "Branch",
   "tagsTab": "Tags",
   "tagsNone": "No tags",
-  "@stashTab": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "stashChanges": "Stash Changes…",
   "stashChange": "Stash This Change…",
   "stashTitle": "Stash changes",

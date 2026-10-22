@@ -110,7 +110,7 @@ func (a *app) remoteBadge(c *ui.Context) {
 	ui.Row(c).Gap(5).AlignItems(ui.Center).Padding(2, 8).Radius(10).Background(t.Accent.Alpha(0.16)).
 		TextColor(t.AccentText).Tooltip(tip).Children(func() {
 		ui.Icon(c, icons["server"]).Size(12, 12)
-		ui.Text(c, label).FontSize(12).Bold().TextColor(t.AccentText).SingleLine()
+		ui.Text(c, label).FontSize(13).Bold().TextColor(t.AccentText).SingleLine()
 	})
 }
 
@@ -132,56 +132,79 @@ func (a *app) toolbar(c *ui.Context) {
 	if t.Dark {
 		bg = headerBgDark
 	}
-	titleBar(c).Background(bg).BorderWidth(0, 0, 1, 0).BorderColor(headerFg.Alpha(0.1)).Children(func() {
-		ui.Image(c, icon).Size(22, 22)
-		if a.ws != nil {
-			ui.Text(c, a.ws.name()+" /").FontSize(13).TextColor(headerFg.Alpha(0.6))
-		}
-		ui.Text(c, a.repo.Name()).FontSize(13).Bold().TextColor(headerFg).Tooltip(a.repo.Location())
-		if !a.local() {
-			a.remoteBadge(c)
-		}
-		ui.Box(c).Grow(1)
-		if a.busy != "" {
-			ui.Spinner(c).Size(14, 14)
-			ui.Text(c, a.busy+"…").TextColor(headerFg.Alpha(0.6))
-		}
-		idle := a.busy == ""
-		toolbarButton(c, loc.Fetch()+" ▾").Label(loc.Fetch()).Disabled(!idle).Menu(func(m *ui.Menu) {
-			if m.Item(loc.FetchAll()).Chosen() {
-				a.run(loc.OpFetch(), a.repo.Fetch, nil)
+	titleBar(c).Background(bg).BorderWidth(0, 0, 1, 0).BorderColor(headerFg.Alpha(0.1)).FontSize(15).Children(func() {
+		// Left: the repository and the branches it is on.
+		ui.Row(c).Grow(1).Basis(0).Gap(8).AlignItems(ui.Center).Children(func() {
+			ui.Image(c, icon).Size(22, 22)
+			if a.ws != nil {
+				ui.Text(c, a.ws.name()+" /").TextColor(headerFg.Alpha(0.6)).SingleLine()
 			}
-			if names := a.remoteNames(); len(names) > 1 {
-				m.Separator()
-				for _, name := range names {
-					if m.Item(loc.FetchRemote(name)).Chosen() {
-						a.run(loc.OpFetchRemote(name), func(ctx context.Context) error { return a.repo.FetchRemote(ctx, name) }, nil)
+			ui.Text(c, a.repo.Name()).Bold().TextColor(headerFg).Tooltip(a.repo.Location()).SingleLine()
+			if !a.local() {
+				a.remoteBadge(c)
+			}
+			ui.Icon(c, icons["chevron-right"]).Size(14, 14) // the branches follow the repository's name
+			ui.Column(c).Gap(1).Children(func() {
+				name := st.Branch
+				if name == "" {
+					name = "-" // a detached HEAD has no branch
+				}
+				ui.Text(c, name).Bold().TextColor(headerFg).SingleLine()
+				ui.Icon(c, icons["chevron-down"]).Size(10, 10)
+				up := st.Upstream
+				if up == "" {
+					up = "-" // no remote branch tracks this one
+				}
+				ui.Text(c, up).TextColor(headerFg.Alpha(0.6)).SingleLine()
+			})
+			if a.busy != "" {
+				ui.Spinner(c).Size(14, 14)
+				ui.Text(c, a.busy+"…").TextColor(headerFg.Alpha(0.6))
+			}
+		})
+		// Center: the actions, at the middle of the window.
+		ui.Row(c).Gap(8).AlignItems(ui.Center).Shrink(0).Children(func() {
+			idle := a.busy == ""
+			toolbarButton(c, loc.Fetch()+" ▾").Label(loc.Fetch()).Disabled(!idle).Menu(func(m *ui.Menu) {
+				if m.Item(loc.FetchAll()).Chosen() {
+					a.run(loc.OpFetch(), a.repo.Fetch, nil)
+				}
+				if names := a.remoteNames(); len(names) > 1 {
+					m.Separator()
+					for _, name := range names {
+						if m.Item(loc.FetchRemote(name)).Chosen() {
+							a.run(loc.OpFetchRemote(name), func(ctx context.Context) error { return a.repo.FetchRemote(ctx, name) }, nil)
+						}
 					}
 				}
+			})
+			toolbarButton(c, loc.Pull()+" ▾").Label(loc.Pull()).Disabled(!idle || st.Upstream == "").Menu(func(m *ui.Menu) {
+				pull := func(mode git.PullMode) {
+					a.run(loc.OpPull(), func(ctx context.Context) error { return a.repo.Pull(ctx, mode) }, nil)
+				}
+				if m.Item(loc.PullFF()).Chosen() {
+					pull(git.PullFastForward)
+				}
+				if m.Item(loc.PullRebase()).Chosen() {
+					pull(git.PullRebase)
+				}
+				if m.Item(loc.PullMerge()).Chosen() {
+					pull(git.PullMerge)
+				}
+			})
+			if toolbarButton(c, loc.PushMenu()).Tooltip(loc.PushTooltip()).Disabled(!idle || st.Branch == "").Clicked() {
+				a.openPush()
+			}
+			if toolbarButton(c, loc.Refresh()).Tooltip(shortcut("R")).Clicked() {
+				a.refresh()
 			}
 		})
-		toolbarButton(c, loc.Pull()+" ▾").Label(loc.Pull()).Disabled(!idle || st.Upstream == "").Menu(func(m *ui.Menu) {
-			pull := func(mode git.PullMode) {
-				a.run(loc.OpPull(), func(ctx context.Context) error { return a.repo.Pull(ctx, mode) }, nil)
-			}
-			if m.Item(loc.PullFF()).Chosen() {
-				pull(git.PullFastForward)
-			}
-			if m.Item(loc.PullRebase()).Chosen() {
-				pull(git.PullRebase)
-			}
-			if m.Item(loc.PullMerge()).Chosen() {
-				pull(git.PullMerge)
-			}
+		// Right: the rest of the actions, at the window's edge.
+		ui.Row(c).Grow(1).Basis(0).Gap(8).AlignItems(ui.Center).Children(func() {
+			ui.Box(c).Grow(1)
+			a.commentsButton(c)
+			toolbarButton(c, "⋯").Label(loc.Repository()).Menu(a.repoMenu)
 		})
-		if toolbarButton(c, loc.PushMenu()).Tooltip(loc.PushTooltip()).Disabled(!idle || st.Branch == "").Clicked() {
-			a.openPush()
-		}
-		a.commentsButton(c)
-		if toolbarButton(c, loc.Refresh()).Tooltip(shortcut("R")).Clicked() {
-			a.refresh()
-		}
-		toolbarButton(c, "⋯").Label(loc.Repository()).Menu(a.repoMenu)
 	})
 }
 

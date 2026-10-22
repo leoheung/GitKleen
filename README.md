@@ -22,14 +22,6 @@
   <b>English</b> · <a href="README.zh-CN.md">简体中文</a>
 </p>
 
-<p align="center">
-  <img src="docs/images/main-en.png" alt="GitKleen showing a repository's history and a commit's diff">
-</p>
-
-<p align="center">
-  <a href="site/assets/gitkleen-demo-en.mp4"><b>▶ Watch the demo</b></a>
-</p>
-
 ## Why GitKleen
 
 With an agent writing the code, most of your time in git goes to looking at what changed. GitKleen makes that quick:
@@ -48,7 +40,7 @@ GitKleen reads the repository, not an agent's session, so it works the same with
 
 ### Light, fast and modern
 
-GitKleen feels like the IDE you know: JetBrains' commit graph and history tools, VS Code's list of changes and way of staging, ⌘K for commands and ⌘P to go to a file, light and dark. Without the IDE: it's a single native binary drawn on the GPU by [MyGo](https://github.com/egoist/mygo), no webview, no JVM. Memory once a repository of 20,000 commits is open, every process of the app counted (Apple M4):
+GitKleen feels like the IDE you know: JetBrains' commit graph and history tools, VS Code's list of changes and way of staging, ⌘K for commands and ⌘P to go to a file, light and dark. Without the IDE: it's a single native binary drawn on the GPU by `https://github.com/egoist/mygo`, no webview, no JVM. Memory once a repository of 20,000 commits is open, every process of the app counted (Apple M4):
 
 | App | Memory |
 |---|---|
@@ -62,26 +54,44 @@ On the same repository, GitKleen reads the whole history and lays out its graph 
 
 GitKleen reads what `git` prints and lets `git` itself make every change, so a repository behaves in GitKleen exactly as it does in a terminal. The same app, with the same features, runs on macOS, Windows and Linux.
 
-## Features
+## A fork of MyGit
 
-<table>
-  <tr>
-    <td width="50%"><img src="docs/images/changes-en.png" alt="Editing a change in the diff"></td>
-    <td width="50%"><img src="docs/images/merge-en.png" alt="Resolving a conflict"></td>
-  </tr>
-  <tr>
-    <td><b>Stage what you mean.</b> Stage files, changes or single lines, and edit the working tree right in the diff.</td>
-    <td><b>Resolve conflicts side by side.</b> Ours, the result and theirs, a conflict at a time.</td>
-  </tr>
-  <tr>
-    <td><img src="docs/images/branches-en.png" alt="Searching branches"></td>
-    <td><img src="docs/images/welcome-en.png" alt="The welcome window"></td>
-  </tr>
-  <tr>
-    <td><b>Find any branch.</b> Search local and remote branches, switch, merge, rebase or compare.</td>
-    <td><b>Open anything.</b> Drop a folder, clone, or pick a recent repository.</td>
-  </tr>
-</table>
+GitKleen is a fork of `https://github.com/Binaryify/MyGit` by Binaryify — itself already a light, fast, native git client for local and SSH remote repositories, under the MIT license. That foundation is worth keeping, so GitKleen keeps it: the same idea of reading what `git` prints and letting `git` itself make every change, the same features, the same single small binary.
+
+Two things are better done in a fork than upstream:
+
+- **Its own updates.** An installed app looks for updates where it was built to — MyGit's releases, signed with MyGit's key — so anything you build yourself is a dead end: the copies you hand out can never update to it. GitKleen signs its updates with its own key and serves them from its own releases, so what you install is what you keep.
+- **Its own direction.** The interface went on being reworked here — the branches column, the diff drawer, the tags and stashes panels, and the rest of what's new below — work easier to do on a fork than in someone else's project. The name and the icon too: `gitkleen .` on the command line, `~/.gitkleen` on computers reached over SSH.
+
+The license stays MIT, and MyGit's original copyright is kept in [LICENSE](LICENSE).
+
+## What's new in GitKleen
+
+Everything MyGit does, plus what GitKleen's [0.2.0](CHANGELOG.md) adds over MyGit 0.3.5, the last upstream release:
+
+**Tags and stashes**
+
+- Each tag's row shows its commit's hash under the name and its date at the right; clicking a row goes to that commit in the history and selects it
+- Stashes sort by time and filter by keyword; clicking one opens its diff right away, and a single change can be stashed from its own row
+- Choosing a row in tags or stashes unchooses the row picked before — there or in the history — so one thing is selected at a time, never one highlighted while another's diff shows
+
+**The window**
+
+- Branches moved out of the title bar's dropdown into a column beside the workspace, remote branches grouped in folders, with a search bar over branches and repositories
+- Branches, stashes and tags are tabs above the column
+- The diff opens in a drawer at the window's right
+- A taller slate title bar: the branches block, the actions centered, and pull and push counts where an arrow used to be
+- The changes panel: the two lists swap places, the commit box sits under them, and stashing lives in their header
+
+**Over SSH**
+
+- GitKleen tries the keys set for git's remote operations first, the default one before the rest, before it ever asks
+
+**And the name**
+
+- GitKleen's own name, icon and command line (`gitkleen .`); its helper lives in `~/.gitkleen` on computers it reaches over SSH; updates are signed with its own key and come from its own releases
+
+## Features
 
 - **Reading changes** — generated files (lockfiles, minified, `linguist-generated`) fold away; mark files viewed; changed pictures show before and after; comment on lines and copy the comments as Markdown for an agent or a colleague
 - **Staging** — stage, unstage or discard files, changes or selected lines; edit and save the working tree in the diff; filter thousands of changes by path
@@ -102,9 +112,9 @@ Download the latest release:
 
 | Platform | Download |
 |---|---|
-| macOS (Apple silicon) | [GitKleen-macos-arm64.dmg](https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-macos-arm64.dmg) |
-| Windows (x64) | [Installer](https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64-setup.exe) · [zip](https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64.zip) |
-| Linux (x64) | [.deb](https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-linux-amd64.deb), or the script below |
+| macOS (Apple silicon) | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-macos-arm64.dmg` |
+| Windows (x64) | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64-setup.exe` · `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64.zip` |
+| Linux (x64) | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-linux-amd64.deb`, or the script below |
 
 On Linux, this installs GitKleen for you in `~/.local`, without root:
 
@@ -120,7 +130,7 @@ xattr -dr com.apple.quarantine /Applications/GitKleen.app
 
 The Windows installer isn't code-signed yet either. If Windows says it protected your PC, choose **More info**, then **Run anyway**.
 
-GitKleen needs `git` on the `PATH`, and updates itself once installed. Intel Macs aren't supported. All releases are on the [releases page](https://github.com/leoheung/GitKleen/releases).
+GitKleen needs `git` on the `PATH`, and updates itself once installed. Intel Macs aren't supported. All releases are on the `https://github.com/leoheung/GitKleen/releases`.
 
 To build it from source instead, see [Development](#development).
 
@@ -144,21 +154,18 @@ To build it from source instead, see [Development](#development).
 ```bash
 git clone https://github.com/leoheung/GitKleen.git && cd GitKleen   # needs Go 1.27 or later
 go tool mygo dev      # run, reloading on changes
-go test ./...         # the tests, the UI's included, need no window
 go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64
 ```
 
 The texts live in [`locales/`](locales): `en.json` is the source and `zh-Hans.json` its Chinese. After changing them, run `go tool mygo generate`. Translations into other languages are welcome: add `locales/<tag>.json`.
 
-To release, describe the version in [`CHANGELOG.md`](CHANGELOG.md), whose section becomes the release notes, and push a tag such as `v0.2.0`: CI signs the updates with the `MYGO_UPDATER_PRIVATE_KEY` secret, builds the macOS disk image, the Windows installer and zip, and the Linux package, and publishes them in a release.
+To release, describe the version in [`CHANGELOG.md`](CHANGELOG.md), whose section becomes the release notes, and push a tag such as `v0.2.0`: CI signs the updates with the `MYGO_UPDATER_PRIVATE_KEY` secret, builds the macOS disk image, the Windows installer and zip, and the Linux package, and publishes them in a release. The signing key (`mygo-update.key`, from `mygo keygen`) lives in that secret — lose it and installed apps can't update again.
 
-Over SSH: a release also builds and signs the helper for six platforms (`gitkleen-helper-<os>-<arch>.gz`), which the app downloads and checks the first time it reaches a computer of each. To try local changes, `go run ./internal/tools/helpers` builds them into `build/helpers`; start the app with `GITKLEEN_HELPER_DIR=$PWD/build/helpers`. `GITKLEEN_E2E_HOST=<host> GITKLEEN_HELPER_DIR=$PWD/build/helpers go test ./internal/remote -run E2E -v` tests against a real computer.
-
-Benchmarks: `GITKLEEN_BENCH_REPO=<repo> GITKLEEN_BENCH_COMMIT=<commit> go test -run '^$' -bench .`
+Over SSH: a release also builds and signs the helper for six platforms (`gitkleen-helper-<os>-<arch>.gz`), which the app downloads and checks the first time it reaches a computer of each. To try local changes, `go run ./internal/tools/helpers` builds them into `build/helpers`; start the app with `GITKLEEN_HELPER_DIR=$PWD/build/helpers`.
 
 ## Credits
 
-Based on [MyGit](https://github.com/Binaryify/MyGit) by Binaryify, under the MIT license.
+Based on `https://github.com/Binaryify/MyGit` by Binaryify, under the MIT license.
 
 ## License
 

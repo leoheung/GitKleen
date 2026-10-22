@@ -161,16 +161,17 @@ func (a *app) tagsPanel(c *ui.Context) {
 		tags := a.tags
 		l := ui.List(c.Key("tags"), &a.tagList, len(tags), func(i int) {
 			tg := tags[i]
-			row := ui.ButtonBase(c.Key(tg.Name)).Padding(6, 10).Label(tg.Name)
+			row := ui.ButtonBase(c.Key(tg.Name)).Padding(6, 10).Label(tg.Name).Justify(ui.SpaceBetween)
 			if i == a.tagSel {
 				// the accent the list draws under it, hidden by an opaque soft blue
 				row.Background(t.Accent.Alpha(0.14).Over(t.Surface)).TextColor(t.Text)
 			}
 			row.Children(func() {
-				ui.Column(c).Gap(2).Grow(1).Basis(0).Children(func() {
+				ui.Column(c).Gap(2).Children(func() {
 					ui.Text(c, tg.Name).SingleLine()
-					ui.Text(c, tg.Time.Format("2006-01-02")+" · "+tg.Hash[:8]).FontSize(11).TextColor(t.TextMuted).SingleLine()
+					ui.Text(c, tg.Hash[:8]).FontSize(11).TextColor(t.TextMuted).SingleLine()
 				})
+				ui.Text(c, tg.Time.Format("2006-01-02")).FontSize(11).TextColor(t.TextMuted).SingleLine()
 			})
 			if row.Clicked() {
 				a.tagSel = i

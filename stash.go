@@ -22,7 +22,7 @@ func (a *app) stashPanel(c *ui.Context) {
 			row := ui.Row(c).Padding(6, 10).Justify(ui.SpaceBetween).AlignItems(ui.Center)
 			row.Children(func() {
 				ui.Text(c, s.Subject).SingleLine().Grow(1).Basis(0)
-				ui.Text(c, s.Ref+" · "+s.Time.Format("2006-01-02")).FontSize(11).TextColor(t.TextMuted).SingleLine()
+				ui.Text(c, s.Time.Format("2006-01-02")).FontSize(11).TextColor(t.TextMuted).SingleLine()
 			})
 			row.ContextMenu(func(m *ui.Menu) { a.stashMenu(m, s) })
 		}).Grow(1).Basis(0).Children(func() {

@@ -55,6 +55,7 @@ type app struct {
 	tracks                   map[string]git.BranchTrack
 	foldFolders              map[string]bool // the branch folders the column folds
 	branchFilter             string          // the column's filter, by the branches' names
+	stashFilter, tagFilter   string          // the other tabs' filters, by the stashes' messages and the tags' names
 	branchesTab              int             // the column's tab: 0 the branches, 1 the stash, 2 the tags
 	op                       git.Operation
 	stashes                  []git.Stash

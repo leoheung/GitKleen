@@ -2,6 +2,7 @@ package git
 
 import (
 	"context"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -141,6 +142,7 @@ func (r *Repo) Tags(ctx context.Context) ([]Tag, error) {
 		}
 		list = append(list, Tag{Name: f[0], Hash: hash, Time: time.Unix(sec, 0), Subject: f[4]})
 	}
+	slices.SortStableFunc(list, func(a, b Tag) int { return b.Time.Compare(a.Time) })
 	return list, nil
 }
 

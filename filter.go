@@ -88,8 +88,10 @@ func filterBar(c *ui.Context, query *string, placeholder, addLabel string, add f
 			ui.Icon(c, icons["search"]).Size(13, 13).TextColor(t.TextMuted)
 			ui.TextInputBase(c, query).Placeholder(placeholder).Label(placeholder).Grow(1)
 		})
-		if iconButton(c, "plus", addLabel) {
-			add()
+		if add != nil {
+			if iconButton(c, "plus", addLabel) {
+				add()
+			}
 		}
 	})
 }

@@ -2,6 +2,7 @@ package git
 
 import (
 	"context"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -29,6 +30,7 @@ func (r *Repo) Stashes(ctx context.Context) ([]Stash, error) {
 		sec, _ := strconv.ParseInt(f[2], 10, 64)
 		list = append(list, Stash{Ref: f[0], Hash: f[1], Time: time.Unix(sec, 0), Subject: f[3]})
 	}
+	slices.SortStableFunc(list, func(a, b Stash) int { return b.Time.Compare(a.Time) })
 	return list, nil
 }
 

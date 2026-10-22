@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"strings"
 
 	"github.com/egoist/mygo/ui"
 
@@ -14,13 +15,14 @@ import (
 func (a *app) stashPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Grow(1).Basis(0).Children(func() {
-		stashes := a.stashes
+		filterBar(c, &a.stashFilter, loc.FilterStash(), "", nil)
+		stashes := matchStash(a.stashes, a.stashFilter)
 		l := ui.List(c.Key("stash"), &a.stashList, len(stashes), func(i int) {
 			s := stashes[i]
-			row := ui.Column(c).Padding(6, 10).Gap(2)
+			row := ui.Row(c).Padding(6, 10).Justify(ui.SpaceBetween).AlignItems(ui.Center)
 			row.Children(func() {
-				ui.Text(c, s.Subject).SingleLine()
-				ui.Text(c, s.Ref+" · "+s.Time.Format("2006-01-02 15:04")).FontSize(11).TextColor(t.TextMuted)
+				ui.Text(c, s.Subject).SingleLine().Grow(1).Basis(0)
+				ui.Text(c, s.Ref+" · "+s.Time.Format("2006-01-02")).FontSize(11).TextColor(t.TextMuted).SingleLine()
 			})
 			row.ContextMenu(func(m *ui.Menu) { a.stashMenu(m, s) })
 		}).Grow(1).Basis(0).Children(func() {
@@ -37,6 +39,22 @@ func (a *app) stashPanel(c *ui.Context) {
 			a.run(loc.OpApply(s.Ref), func(ctx context.Context) error { return a.repo.StashApply(ctx, s.Ref, false) }, nil)
 		}
 	})
+}
+
+// matchStash narrows the stashes to those whose messages have the filter
+// in them, in lower case; all of them while it is empty.
+func matchStash(list []git.Stash, q string) []git.Stash {
+	if q == "" {
+		return list
+	}
+	q = strings.ToLower(q)
+	var out []git.Stash
+	for _, s := range list {
+		if strings.Contains(strings.ToLower(s.Subject), q) {
+			out = append(out, s)
+		}
+	}
+	return out
 }
 
 // stashChanges asks for a stash's message, then stashes the changes.

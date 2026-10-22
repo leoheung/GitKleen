@@ -339,6 +339,12 @@ func TestTagsTab(t *testing.T) {
 	if tt.a.logChosen.Len() != 1 || !tt.a.logChosen.Has(tt.a.commits[tt.a.commitAt(tt.a.logSel)].Hash) {
 		t.Fatalf("logChosen doesn't hold just the tag's commit")
 	}
+	tt.a.tagFilter = "v1"
+	tt.settle()
+	tt.click(t, "v1") // the filter keeps the row clickable
+	if tt.a.logSel < 0 || tt.a.commits[tt.a.commitAt(tt.a.logSel)].Subject != "Merge the feature" {
+		t.Fatalf("logSel %d doesn't point at the tag's commit", tt.a.logSel)
+	}
 }
 
 func TestConflictBar(t *testing.T) {

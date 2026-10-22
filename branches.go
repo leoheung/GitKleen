@@ -158,7 +158,8 @@ func (a *app) branchesPanel(c *ui.Context) {
 func (a *app) tagsPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Grow(1).Basis(0).Children(func() {
-		tags := a.tags
+		filterBar(c, &a.tagFilter, loc.FilterTags(), "", nil)
+		tags := matchTags(a.tags, a.tagFilter)
 		l := ui.List(c.Key("tags"), &a.tagList, len(tags), func(i int) {
 			tg := tags[i]
 			row := ui.ButtonBase(c.Key(tg.Name)).Padding(6, 10).Label(tg.Name).Justify(ui.SpaceBetween)
@@ -199,6 +200,22 @@ func matchFilter(names []string, q string) []string {
 	for _, n := range names {
 		if strings.Contains(strings.ToLower(n), q) {
 			out = append(out, n)
+		}
+	}
+	return out
+}
+
+// matchTags narrows the tags to those whose names the filter matches, in
+// lower case; all of them while it is empty.
+func matchTags(list []git.Tag, q string) []git.Tag {
+	if q == "" {
+		return list
+	}
+	q = strings.ToLower(q)
+	var out []git.Tag
+	for _, tg := range list {
+		if strings.Contains(strings.ToLower(tg.Name), q) {
+			out = append(out, tg)
 		}
 	}
 	return out

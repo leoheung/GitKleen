@@ -1720,6 +1720,26 @@ func (msgs Messages) FilterBranches() string {
 	return Catalog.Format(msgs.locale, "filterBranches", nil)
 }
 
+// FilterStash says "Filter stashes…"
+// in the language the app shows.
+func FilterStash() string { return In(i18n.Locale()).FilterStash() }
+
+// FilterStash says "Filter stashes…"
+// in the language of msgs.
+func (msgs Messages) FilterStash() string {
+	return Catalog.Format(msgs.locale, "filterStash", nil)
+}
+
+// FilterTags says "Filter tags…"
+// in the language the app shows.
+func FilterTags() string { return In(i18n.Locale()).FilterTags() }
+
+// FilterTags says "Filter tags…"
+// in the language of msgs.
+func (msgs Messages) FilterTags() string {
+	return Catalog.Format(msgs.locale, "filterTags", nil)
+}
+
 // ClearSearch says "Clear search"
 // in the language the app shows.
 func ClearSearch() string { return In(i18n.Locale()).ClearSearch() }

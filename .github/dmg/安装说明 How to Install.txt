@@ -1,19 +1,19 @@
-安装 MyGit
+安装 GitKleen
 
-1. 把 MyGit 拖进「应用程序」（Applications）文件夹。
-2. MyGit 暂未经过 Apple 公证，第一次打开前，在「终端」里执行：
+1. 把 GitKleen 拖进「应用程序」（Applications）文件夹。
+2. GitKleen 暂未经过 Apple 公证，第一次打开前，在「终端」里执行：
 
-   xattr -dr com.apple.quarantine /Applications/MyGit.app
+   xattr -dr com.apple.quarantine /Applications/GitKleen.app
 
-3. 打开 MyGit。之后它会自己更新，不用再执行这一步。
+3. 打开 GitKleen。之后它会自己更新，不用再执行这一步。
 
 
-How to install MyGit
+How to install GitKleen
 
-1. Drag MyGit into the Applications folder.
-2. MyGit isn't notarized by Apple yet. Before opening it the first time, run
+1. Drag GitKleen into the Applications folder.
+2. GitKleen isn't notarized by Apple yet. Before opening it the first time, run
    this in Terminal:
 
-   xattr -dr com.apple.quarantine /Applications/MyGit.app
+   xattr -dr com.apple.quarantine /Applications/GitKleen.app
 
-3. Open MyGit. It updates itself from then on, without this step again.
+3. Open GitKleen. It updates itself from then on, without this step again.

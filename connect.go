@@ -10,10 +10,10 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/git"
-	"mygit/internal/helper"
-	"mygit/internal/remote"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	"gitkleen/internal/helper"
+	"gitkleen/internal/remote"
+	loc "gitkleen/locales"
 )
 
 // connectPlan is the dialog opening a repository on another computer: a

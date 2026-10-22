@@ -11,8 +11,8 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/patch"
-	loc "mygit/locales"
+	"gitkleen/internal/patch"
+	loc "gitkleen/locales"
 )
 
 // comment is a remark on lines of a file of a diff: kept to hand to a

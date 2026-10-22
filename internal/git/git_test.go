@@ -11,7 +11,7 @@ import (
 	"strings"
 	"testing"
 
-	"mygit/internal/helper"
+	"gitkleen/internal/helper"
 )
 
 // repo makes a repository in a temporary folder.
@@ -36,7 +36,7 @@ func repo(t *testing.T) *Repo {
 // testRunner is Local, or a helper over pipes when the tests run again
 // as another computer's would.
 func testRunner(t *testing.T) Runner {
-	if os.Getenv("MYGIT_TEST_HELPER") == "" {
+	if os.Getenv("GITKLEEN_TEST_HELPER") == "" {
 		return Local
 	}
 	toServer, fromClient := io.Pipe()
@@ -53,7 +53,7 @@ func testRunner(t *testing.T) Runner {
 // TestOverHelper runs the tests again with git run by a helper, as for a
 // repository on another computer.
 func TestOverHelper(t *testing.T) {
-	if os.Getenv("MYGIT_TEST_HELPER") != "" || testing.Short() {
+	if os.Getenv("GITKLEEN_TEST_HELPER") != "" || testing.Short() {
 		t.Skip()
 	}
 	exe, err := os.Executable()
@@ -61,7 +61,7 @@ func TestOverHelper(t *testing.T) {
 		t.Fatal(err)
 	}
 	cmd := exec.Command(exe, "-test.run", "^Test[^O]", "-test.count=1")
-	cmd.Env = append(os.Environ(), "MYGIT_TEST_HELPER=1")
+	cmd.Env = append(os.Environ(), "GITKLEEN_TEST_HELPER=1")
 	if out, err := cmd.CombinedOutput(); err != nil {
 		t.Fatalf("%v\n%s", err, out)
 	}

@@ -12,8 +12,8 @@ import (
 
 	"github.com/egoist/mygo"
 
-	"mygit/internal/remote"
-	loc "mygit/locales"
+	"gitkleen/internal/remote"
+	loc "gitkleen/locales"
 )
 
 // openInEditor opens a file, at a line from 1 when given, or a folder in

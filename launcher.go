@@ -7,15 +7,15 @@ import (
 
 	"github.com/egoist/mygo"
 
-	loc "mygit/locales"
+	loc "gitkleen/locales"
 )
 
-// launcherMark is in every mygit command MyGit writes, so that it removes
+// launcherMark is in every gitkleen command GitKleen writes, so that it removes
 // its own and leaves another program's of the name alone.
-const launcherMark = "Installed by MyGit"
+const launcherMark = "Installed by GitKleen"
 
-// installLauncher puts a mygit command on the PATH, as VS Code's "Install
-// 'code' command in PATH": `mygit .` in a terminal then opens the
+// installLauncher puts a gitkleen command on the PATH, as VS Code's "Install
+// 'code' command in PATH": `gitkleen .` in a terminal then opens the
 // repository there in the running app. It shows dialogs, which wait:
 // call it on a goroutine.
 func installLauncher() {
@@ -35,7 +35,7 @@ func installLauncher() {
 	launcherMessage(loc.LauncherDone(), msg)
 }
 
-// uninstallLauncher removes the mygit commands MyGit put on the PATH.
+// uninstallLauncher removes the gitkleen commands GitKleen put on the PATH.
 func uninstallLauncher() {
 	removed, err := removeLaunchers()
 	switch {
@@ -58,8 +58,8 @@ func appExecutable() (string, error) {
 	return filepath.EvalSymlinks(exe)
 }
 
-// ours tells whether the file at path is a mygit command MyGit wrote:
-// marked, or one of before the mark, which ran MyGit's executable.
+// ours tells whether the file at path is a gitkleen command GitKleen wrote:
+// marked, or one of before the mark, which ran GitKleen's executable.
 func ours(path string) bool {
 	b, err := os.ReadFile(path)
 	if err != nil || len(b) > 4096 {
@@ -67,7 +67,7 @@ func ours(path string) bool {
 	}
 	s := string(b)
 	return strings.Contains(s, launcherMark) ||
-		strings.HasPrefix(s, "#!/bin/sh\n") && strings.Contains(s, "MyGit") && strings.Contains(s, `"$dir"`)
+		strings.HasPrefix(s, "#!/bin/sh\n") && strings.Contains(s, "GitKleen") && strings.Contains(s, `"$dir"`)
 }
 
 func launcherMessage(title, msg string) {

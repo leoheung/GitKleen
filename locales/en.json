@@ -453,11 +453,11 @@
   "pushTags": "Push Tags",
   "push": "Push",
   "forcePushButton": "Force Push",
-  "launcherNoExe": "Can't find MyGit's executable",
+  "launcherNoExe": "Can't find GitKleen's executable",
   "launcherTitle": "Command line tool",
   "launcherFailed": "Couldn't install",
   "launcherDone": "Command line tool installed",
-  "launcherDoneMessage": "Now run, in a terminal:\n  mygit .\n\nThe command is {path}",
+  "launcherDoneMessage": "Now run, in a terminal:\n  gitkleen .\n\nThe command is {path}",
   "@launcherDoneMessage": {
     "placeholders": {
       "path": {
@@ -501,7 +501,7 @@
   "menuFile": "File",
   "menuOpenRepo": "Open Repository…",
   "menuRecent": "Open Recent",
-  "menuInstallCLI": "Install 'mygit' Command in PATH",
+  "menuInstallCLI": "Install 'gitkleen' Command in PATH",
   "menuEdit": "Edit",
   "menuWindow": "Window",
   "remotesMenu": "Remotes…",
@@ -804,7 +804,7 @@
       }
     }
   },
-  "updateAvailable": "MyGit {version} is available",
+  "updateAvailable": "GitKleen {version} is available",
   "@updateAvailable": {
     "placeholders": {
       "version": {
@@ -823,7 +823,7 @@
   },
   "updateCheck": "Check for Updates",
   "updateCheckFailed": "Couldn't check for updates: no network, or GitHub can't be reached",
-  "updateLatest": "MyGit {version} is the latest",
+  "updateLatest": "GitKleen {version} is the latest",
   "@updateLatest": {
     "placeholders": {
       "version": {
@@ -832,7 +832,7 @@
     }
   },
   "updateFailed": "The update failed: try again later, or download it from GitHub",
-  "about": "About MyGit",
+  "about": "About GitKleen",
   "aboutDetail": "A light, fast, native git client, for remote repositories too: the changes to stage and commit, their diffs, and the history with its graph, on this computer or over SSH.",
   "generatedTag": "Generated",
   "generatedFolded": "A generated file, folded",
@@ -1057,8 +1057,8 @@
       }
     }
   },
-  "menuUninstallCLI": "Uninstall 'mygit' Command from PATH",
-  "launcherDoneNewTerminal": "Open a new terminal, then run:\n  mygit .\n\nThe command is {path}",
+  "menuUninstallCLI": "Uninstall 'gitkleen' Command from PATH",
+  "launcherDoneNewTerminal": "Open a new terminal, then run:\n  gitkleen .\n\nThe command is {path}",
   "@launcherDoneNewTerminal": {
     "placeholders": {
       "path": {
@@ -1066,7 +1066,7 @@
       }
     }
   },
-  "launcherAddToPath": "Wrote {path}. Add {dir} to your PATH, then run in a terminal:\n  mygit .",
+  "launcherAddToPath": "Wrote {path}. Add {dir} to your PATH, then run in a terminal:\n  gitkleen .",
   "@launcherAddToPath": {
     "placeholders": {
       "path": {
@@ -1077,7 +1077,7 @@
       }
     }
   },
-  "launcherTaken": "{path} is another program's: MyGit leaves it alone.",
+  "launcherTaken": "{path} is another program's: GitKleen leaves it alone.",
   "@launcherTaken": {
     "placeholders": {
       "path": {
@@ -1087,7 +1087,7 @@
   },
   "launcherUninstalled": "Command line tool uninstalled",
   "launcherUninstallFailed": "Couldn't uninstall",
-  "launcherNotFound": "No mygit command MyGit installed is on the PATH.",
+  "launcherNotFound": "No gitkleen command GitKleen installed is on the PATH.",
   "launcherRemoved": "Removed:\n{paths}",
   "@launcherRemoved": {
     "placeholders": {
@@ -1138,7 +1138,7 @@
   "shortcutClick": "click",
   "sshMenu": "Open over SSH…",
   "sshTitle": "Open a Repository over SSH",
-  "sshHint": "The first time, MyGit installs its helper (about 3.5 MB) in ~/.mygit on that computer, and uses it again after. The helper runs git, reads and writes the files and watches them change there, for MyGit.",
+  "sshHint": "The first time, GitKleen installs its helper (about 3.5 MB) in ~/.gitkleen on that computer, and uses it again after. The helper runs git, reads and writes the files and watches them change there, for GitKleen.",
   "sshBadLocation": "Write the computer as user@host, or an alias of ~/.ssh/config.",
   "connect": "Connect",
   "connectionLost": "Lost the connection to {host}: {error}",
@@ -1229,5 +1229,5 @@
   },
   "updateLater": "Later",
   "checkUpdatesMenu": "Check for Updates…",
-  "menuApp": "MyGit"
+  "menuApp": "GitKleen"
 }

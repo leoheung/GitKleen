@@ -157,7 +157,7 @@ func TestWatch(t *testing.T) {
 }
 
 func TestAsk(t *testing.T) {
-	if os.Getenv("MYGIT_ASKPASS") != "" {
+	if os.Getenv("GITKLEEN_ASKPASS") != "" {
 		t.Skip()
 	}
 	exe := buildHelper(t)
@@ -191,8 +191,8 @@ func TestAsk(t *testing.T) {
 
 func buildHelper(t *testing.T) string {
 	t.Helper()
-	exe := filepath.Join(t.TempDir(), "mygit-helper")
-	if out, err := exec.Command("go", "build", "-o", exe, "mygit/cmd/mygit-helper").CombinedOutput(); err != nil {
+	exe := filepath.Join(t.TempDir(), "gitkleen-helper")
+	if out, err := exec.Command("go", "build", "-o", exe, "gitkleen/cmd/gitkleen-helper").CombinedOutput(); err != nil {
 		t.Fatal(string(out))
 	}
 	return exe

@@ -8,8 +8,8 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/git"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	loc "gitkleen/locales"
 )
 
 // isBinary tells whether a file's text is binary, as git tells it: a NUL

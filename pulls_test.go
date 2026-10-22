@@ -17,7 +17,7 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/github"
+	"gitkleen/internal/github"
 )
 
 // gitIn runs git in dir as Ada, and returns what it prints.

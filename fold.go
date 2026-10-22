@@ -8,8 +8,8 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/generated"
-	loc "mygit/locales"
+	"gitkleen/internal/generated"
+	loc "gitkleen/locales"
 )
 
 // isGenerated tells whether a file is one people don't write: by its name,

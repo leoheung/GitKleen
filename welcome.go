@@ -12,8 +12,8 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/git"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	loc "gitkleen/locales"
 )
 
 //go:embed resources/icon.png
@@ -65,7 +65,7 @@ func showWelcome() {
 	}
 	w := &welcome{recent: recentRepos()}
 	w.win = mygo.NewWindow(customTitleBar(mygo.WindowOptions{
-		Title:     "MyGit",
+		Title:     "GitKleen",
 		Width:     520,
 		Height:    640,
 		MinWidth:  420,
@@ -151,7 +151,7 @@ func (w *welcome) body(c *ui.Context) {
 	ui.Column(c).Grow(1).Basis(0).Padding(0, 28, 28, 28).Gap(18).Children(func() {
 		ui.Column(c).Gap(6).AlignItems(ui.Center).Children(func() {
 			ui.Image(c, icon).Size(96, 96)
-			ui.Text(c, "MyGit").FontSize(24).Bold()
+			ui.Text(c, "GitKleen").FontSize(24).Bold()
 			ui.Text(c, loc.Tagline()).TextColor(t.TextMuted)
 		})
 		w.dropZone(c)

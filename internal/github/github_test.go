@@ -13,7 +13,7 @@ import (
 
 func TestParseRemote(t *testing.T) {
 	for url, want := range map[string]string{
-		"git@github.com:Binaryify/MyGit.git":    "Binaryify/MyGit",
+		"git@github.com:leoheung/GitKleen.git":  "leoheung/GitKleen",
 		"https://github.com/egoist/mygo":        "egoist/mygo",
 		"https://github.com/egoist/mygo.git/":   "egoist/mygo",
 		"ssh://git@github.com/nkzw-tech/codiff": "nkzw-tech/codiff",

@@ -11,10 +11,10 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/git"
-	"mygit/internal/graph"
-	"mygit/internal/patch"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	"gitkleen/internal/graph"
+	"gitkleen/internal/patch"
+	loc "gitkleen/locales"
 )
 
 // logBatch is how many commits the history shows at a time as it loads.

@@ -12,8 +12,8 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/sysproxy"
-	loc "mygit/locales"
+	"gitkleen/internal/sysproxy"
+	loc "gitkleen/locales"
 )
 
 // settings are the choices kept between launches, shared by the windows,
@@ -42,7 +42,7 @@ func loadSettings() {
 	if err != nil {
 		return
 	}
-	prefs.path = filepath.Join(dir, "MyGit", "settings.json")
+	prefs.path = filepath.Join(dir, "GitKleen", "settings.json")
 	if data, err := os.ReadFile(prefs.path); err == nil {
 		_ = json.Unmarshal(data, prefs)
 	}

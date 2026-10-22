@@ -17,8 +17,8 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/git"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	loc "gitkleen/locales"
 )
 
 // testRepo makes a repository with a merged branch and a change in its
@@ -529,7 +529,7 @@ func TestWelcome(t *testing.T) {
 	dir := t.TempDir()
 	w := &welcome{recent: []string{filepath.Join(dir, "project")}}
 	tt := ui.NewTester(w.view, 520, 600)
-	for _, s := range []string{"MyGit", "把仓库文件夹拖到这里", "或点击选择文件夹", "最近打开", "project"} {
+	for _, s := range []string{"GitKleen", "把仓库文件夹拖到这里", "或点击选择文件夹", "最近打开", "project"} {
 		if !tt.HasText(s) {
 			t.Fatalf("no %q in %q", s, tt.Texts())
 		}

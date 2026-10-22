@@ -1,6 +1,6 @@
-// Serves the site at binaryify.com/mygit: the files of this folder, found
-// under the path past /mygit. Everything else on the domain is left alone.
-const BASE = "/mygit";
+// Serves the site at your domain's /gitkleen path: the files of this folder, found
+// under the path past /gitkleen. Everything else on the domain is left alone.
+const BASE = "/gitkleen";
 
 export default {
   async fetch(request, env) {

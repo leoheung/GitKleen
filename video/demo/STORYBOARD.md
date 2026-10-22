@@ -41,7 +41,7 @@ own camera ([x, y, zoom] of the screenshots).
 
 ## Frame 6: Opens at once (30-34s)
 - The graph, the branch search and the three-pane merge in quick cuts.
-- eyebrow: "$ mygit ."
+- eyebrow: "$ gitkleen ."
 - caption: "Opens at once. No IDE needed" / "终端一句命令，秒开，不用等 IDE"
 
 ## Frame 6b: Over SSH (34-40s)
@@ -52,12 +52,12 @@ own camera ([x, y, zoom] of the screenshots).
 - eyebrow: "$ ssh devbox"
 - caption: "Repos on other machines, too" / "其他机器上的仓库，SSH 直接打开"
 - sub: "Over SSH, to Linux, macOS or Windows. Only git needed there"
-- Shots rendered by `go test -run DumpSSH` (MYGIT_DUMP, MYGIT_LOCALE), given
+- Shots rendered by `go test -run DumpSSH` (GITKLEEN_DUMP, GITKLEEN_LOCALE), given
   the window's chrome of the screenshots.
 
 ## Frame 7: Fast, in a fraction of the memory (40-44s)
 - blueprint: dataviz-countup (rules: stat-bars-and-fills)
-- 0.13 s to read 20,000 commits, 0.24 s to open a 20 MB commit; then MyGit 109 MB, VS Code 1,000 MB, IntelliJ IDEA 2,300 MB.
+- 0.13 s to read 20,000 commits, 0.24 s to open a 20 MB commit; then GitKleen 109 MB, VS Code 1,000 MB, IntelliJ IDEA 2,300 MB.
 
 ## Frame 8: Outro (44-48s)
 - The logo, the name, the tagline, the platforms and languages, the address.

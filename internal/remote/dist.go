@@ -31,7 +31,7 @@ func (p Platform) String() string { return p.OS + "/" + p.Arch }
 
 // Asset is the name of the helper for p in a release, gzipped; its
 // signature is Asset + ".sig".
-func Asset(p Platform) string { return "mygit-helper-" + p.OS + "-" + p.Arch + ".gz" }
+func Asset(p Platform) string { return "gitkleen-helper-" + p.OS + "-" + p.Arch + ".gz" }
 
 // Store keeps the helpers of a version of the app on this computer,
 // downloading each the first time a computer of its platform is reached.

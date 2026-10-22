@@ -6,7 +6,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
-	loc "mygit/locales"
+	loc "gitkleen/locales"
 )
 
 // credPrompt is git's or ssh's question for a username, a password, a

@@ -1,9 +1,9 @@
-// MyGit is a light git client: the history with its graph, the working
+// GitKleen is a light git client: the history with its graph, the working
 // tree's changes to stage and commit, and the diffs of both.
 //
-//	mygit [dir]   open the repository dir is in; with none, the welcome page
+//	gitkleen [dir]   open the repository dir is in; with none, the welcome page
 //
-// A running MyGit opens the repositories later launches name, each in a
+// A running GitKleen opens the repositories later launches name, each in a
 // window of its own.
 package main
 
@@ -17,10 +17,10 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/askpass"
-	"mygit/internal/git"
-	"mygit/internal/sysproxy"
-	loc "mygit/locales"
+	"gitkleen/internal/askpass"
+	"gitkleen/internal/git"
+	"gitkleen/internal/sysproxy"
+	loc "gitkleen/locales"
 )
 
 // apps are the open repositories' windows, by working tree.
@@ -38,11 +38,11 @@ func main() {
 	if code, ok := askpass.Main(os.Args); ok {
 		os.Exit(code)
 	}
-	mygo.App.SetName("MyGit")
+	mygo.App.SetName("GitKleen")
 	sysproxy.Install() // downloads, the helpers' and the updates', through the system's proxy
 	loadSettings()
 	if !mygo.App.RequestSingleInstanceLock() {
-		return // the running MyGit opens it
+		return // the running GitKleen opens it
 	}
 	mygo.App.OnSecondInstance(func(args []string, cwd string) { openArg(args, cwd) })
 	// Folders dropped on the icon, Open Recent, the Dock menu: those that
@@ -142,7 +142,7 @@ func open(repo *git.Repo) {
 		a.win.Focus()
 		return
 	}
-	title := repo.Name() + " — MyGit"
+	title := repo.Name() + " — GitKleen"
 	if repo.Host() == "" {
 		_ = mygo.App.AddRecentDocument(repo.Dir)
 	} else {

@@ -1,4 +1,4 @@
-module mygit
+module gitkleen
 
 go 1.27.2
 

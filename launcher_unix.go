@@ -14,14 +14,14 @@ import (
 	"strings"
 	"time"
 
-	loc "mygit/locales"
+	loc "gitkleen/locales"
 )
 
-// launcherScript is the mygit command: it makes the folder absolute, as
+// launcherScript is the gitkleen command: it makes the folder absolute, as
 // the running app has another working folder, and opens it in the app
 // without holding the terminal.
 func launcherScript(exe string) string {
-	return fmt.Sprintf("#!/bin/sh\n# %s: `mygit [folder]` opens the folder's repository.\ndir=$(cd \"${1:-.}\" && pwd) || exit 1\n%s \"$dir\" >/dev/null 2>&1 &\n",
+	return fmt.Sprintf("#!/bin/sh\n# %s: `gitkleen [folder]` opens the folder's repository.\ndir=$(cd \"${1:-.}\" && pwd) || exit 1\n%s \"$dir\" >/dev/null 2>&1 &\n",
 		launcherMark, shellWord(exe))
 }
 
@@ -99,7 +99,7 @@ func launcherDir(dirs []string) (string, bool) {
 }
 
 func writable(dir string) bool {
-	f, err := os.CreateTemp(dir, ".mygit-*")
+	f, err := os.CreateTemp(dir, ".gitkleen-*")
 	if err != nil {
 		return false
 	}
@@ -116,18 +116,18 @@ func writeLauncher(exe string) (path, msg string, err error) {
 	script := launcherScript(exe)
 	dirs := shellPATH()
 	if dir, ok := launcherDir(dirs); ok {
-		path = filepath.Join(dir, "mygit")
+		path = filepath.Join(dir, "gitkleen")
 		if _, err := os.Stat(path); err == nil && !ours(path) {
 			return "", "", errors.New(loc.LauncherTaken(path))
 		}
 		return path, "", os.WriteFile(path, []byte(script), 0o755)
 	}
 	if runtime.GOOS == "darwin" {
-		path = "/usr/local/bin/mygit"
+		path = "/usr/local/bin/gitkleen"
 		if _, err := os.Stat(path); err == nil && !ours(path) {
 			return "", "", errors.New(loc.LauncherTaken(path))
 		}
-		tmp, err := os.CreateTemp("", "mygit-*")
+		tmp, err := os.CreateTemp("", "gitkleen-*")
 		if err != nil {
 			return "", "", err
 		}
@@ -141,16 +141,16 @@ func writeLauncher(exe string) (path, msg string, err error) {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", "", err
 	}
-	path = filepath.Join(dir, "mygit")
+	path = filepath.Join(dir, "gitkleen")
 	return path, loc.LauncherAddToPath(path, dir), os.WriteFile(path, []byte(script), 0o755)
 }
 
-// removeLaunchers removes the mygit commands MyGit wrote in the folders
+// removeLaunchers removes the gitkleen commands GitKleen wrote in the folders
 // of the PATH, as an administrator on macOS where the user can't.
 func removeLaunchers() ([]string, error) {
 	var removed []string
 	for _, d := range shellPATH() {
-		p := filepath.Join(d, "mygit")
+		p := filepath.Join(d, "gitkleen")
 		if d == "" || contains(removed, p) || !ours(p) {
 			continue
 		}

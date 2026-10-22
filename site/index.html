@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>MyGit — a light, fast, native git client</title>
+  <title>GitKleen — a light, fast, native git client</title>
   <meta name="description" content="A light, fast, native git client, for remote repositories too: JetBrains' commit graph and history, VS Code's way of staging, under 7 MB and open in a moment, for repositories on this computer or over SSH. Made for coding with agents too.">
-  <meta property="og:title" content="MyGit — a light, fast, native git client, for remote repositories too">
+  <meta property="og:title" content="GitKleen — a light, fast, native git client, for remote repositories too">
   <meta property="og:description" content="JetBrains' history, VS Code's staging, under 7 MB, local or over SSH. A native git client for macOS, Windows and Linux.">
   <meta property="og:image" content="assets/main-en.webp">
   <meta name="theme-color" content="#07090F">
@@ -20,9 +20,9 @@
 
   <header class="nav">
     <div class="nav-inner">
-      <a class="brand" href="#top" aria-label="MyGit">
+      <a class="brand" href="#top" aria-label="GitKleen">
         <img src="assets/logo.svg" alt="" width="28" height="28">
-        <span>MyGit</span>
+        <span>GitKleen</span>
       </a>
       <nav class="nav-links">
         <a href="#demo" data-i18n="nav.demo">Demo</a>
@@ -35,7 +35,7 @@
           <button type="button" data-lang="en">EN</button>
           <button type="button" data-lang="zh">中文</button>
         </div>
-        <a class="btn btn-ghost btn-sm" href="https://github.com/Binaryify/MyGit">
+        <a class="btn btn-ghost btn-sm" href="https://github.com/leoheung/GitKleen">
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
           GitHub
         </a>
@@ -52,9 +52,9 @@
         <span class="pill-arrow" aria-hidden="true">→</span>
       </a>
       <h1 data-i18n-html="hero.title">A light, native git client,<br><span class="grad">for remote repos too</span></h1>
-      <p class="lede" data-i18n-html="hero.lede">JetBrains' commit graph and history, VS Code's way of staging, under 7 MB and open in a moment — for repositories on this computer or over SSH. Made for coding with agents too: <code>mygit .</code> refreshes as the agent works.</p>
+      <p class="lede" data-i18n-html="hero.lede">JetBrains' commit graph and history, VS Code's way of staging, under 7 MB and open in a moment — for repositories on this computer or over SSH. Made for coding with agents too: <code>gitkleen .</code> refreshes as the agent works.</p>
       <div class="cta">
-        <a class="btn btn-primary" href="#install" data-i18n="hero.get">Get MyGit</a>
+        <a class="btn btn-primary" href="#install" data-i18n="hero.get">Get GitKleen</a>
         <a class="btn btn-ghost" href="#demo"><span aria-hidden="true">▶</span> <span data-i18n="hero.watch">Watch the demo</span></a>
       </div>
       <p class="platforms" data-i18n="hero.platforms">macOS · Windows · Linux</p>
@@ -63,7 +63,7 @@
         <div class="hero-glow" aria-hidden="true"></div>
         <figure class="hero-shot">
           <img data-shot="main" src="assets/main-en.webp" width="1568" height="1045"
-               alt="MyGit showing a repository's history, its commit graph and a commit's diff">
+               alt="GitKleen showing a repository's history, its commit graph and a commit's diff">
         </figure>
       </div>
     </section>
@@ -73,7 +73,7 @@
       <p class="eyebrow" data-i18n="demo.eyebrow">Demo</p>
       <h2 data-i18n="demo.title">See it in under a minute.</h2>
       <div class="video-frame card">
-        <video data-video="mygit-demo" src="assets/mygit-demo-en.mp4" poster="assets/mygit-demo-en.webp"
+        <video data-video="gitkleen-demo" src="assets/gitkleen-demo-en.mp4" poster="assets/gitkleen-demo-en.webp"
                width="1920" height="1080" playsinline preload="none"></video>
         <button type="button" class="play" aria-label="Play">
           <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg>
@@ -85,7 +85,7 @@
     <section id="why" class="section">
       <p class="eyebrow" data-i18n="flow.eyebrow">Made for coding with agents</p>
       <h2 data-i18n="flow.title">Most of your time in git is spent looking at what changed.</h2>
-      <p class="section-lede" data-i18n="flow.lede">MyGit makes that quick. It reads the repository, not an agent's session, so it works the same with any agent, with several at once, and with your own edits.</p>
+      <p class="section-lede" data-i18n="flow.lede">GitKleen makes that quick. It reads the repository, not an agent's session, so it works the same with any agent, with several at once, and with your own edits.</p>
 
       <ol class="steps reveal">
         <li class="card">
@@ -113,7 +113,7 @@
 
       <div class="compare compare-2 card reveal">
         <div class="compare-row compare-head">
-          <span data-i18n="vs.today">Today</span><b>MyGit</b>
+          <span data-i18n="vs.today">Today</span><b>GitKleen</b>
         </div>
         <div class="compare-row">
           <span data-i18n="vs.agent">The agent's own diff view</span>
@@ -134,12 +134,12 @@
     <section id="speed" class="section">
       <p class="eyebrow" data-i18n="why.eyebrow">Light, fast and modern</p>
       <h2 data-i18n="why.title">The IDE you know, in a fraction of the memory.</h2>
-      <p class="section-lede" data-i18n="why.lede">JetBrains' commit graph and history tools, VS Code's list of changes and way of staging, ⌘K for commands and ⌘P to go to a file, light and dark. Without the IDE: MyGit is one native binary, drawn on the GPU by MyGo — no webview, no JVM — under 7 MB to download, and it opens right away.</p>
+      <p class="section-lede" data-i18n="why.lede">JetBrains' commit graph and history tools, VS Code's list of changes and way of staging, ⌘K for commands and ⌘P to go to a file, light and dark. Without the IDE: GitKleen is one native binary, drawn on the GPU by MyGo — no webview, no JVM — under 7 MB to download, and it opens right away.</p>
 
       <div class="memory card reveal">
         <div class="bar-row">
-          <div class="bar-label"><b>MyGit</b></div>
-          <div class="bar"><span class="fill fill-mygit" style="--w: 4.7%"></span></div>
+          <div class="bar-label"><b>GitKleen</b></div>
+          <div class="bar"><span class="fill fill-gitkleen" style="--w: 4.7%"></span></div>
           <div class="bar-value"><span class="count" data-to="109">0</span> MB</div>
         </div>
         <div class="bar-row">
@@ -206,7 +206,7 @@
         <article class="card tile tile-2 reveal">
           <div class="tile-copy">
             <h3 data-i18n="f4.title">Open anything.</h3>
-            <p data-i18n-html="f4.body">Drop a folder on a window, clone, start a new repository, run <code>mygit .</code> in a terminal, or open one on another computer over SSH. Each repository gets a window of its own.</p>
+            <p data-i18n-html="f4.body">Drop a folder on a window, clone, start a new repository, run <code>gitkleen .</code> in a terminal, or open one on another computer over SSH. Each repository gets a window of its own.</p>
           </div>
           <img class="tile-shot tile-shot-crop" data-shot="welcome" src="assets/welcome-en.webp" width="1040" height="1280" loading="lazy" alt="The welcome window">
         </article>
@@ -245,7 +245,7 @@
     <!-- Install -->
     <section id="install" class="section">
       <p class="eyebrow" data-i18n="install.eyebrow">Install</p>
-      <h2 data-i18n="install.title">Get MyGit.</h2>
+      <h2 data-i18n="install.title">Get GitKleen.</h2>
       <p class="section-lede" data-i18n="install.lede">Free and open source. It needs git on your PATH, and updates itself once installed.</p>
 
       <div class="install-grid">
@@ -253,31 +253,31 @@
           <div class="downloads card reveal">
             <div class="dl-row">
               <div><b>macOS <small>5.8 MB</small></b><span data-i18n="install.mac">Apple silicon</span></div>
-              <a class="btn btn-primary btn-sm" href="https://github.com/Binaryify/MyGit/releases/latest/download/MyGit-macos-arm64.dmg" data-i18n="install.dmg">Download .dmg</a>
+              <a class="btn btn-primary btn-sm" href="https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-macos-arm64.dmg" data-i18n="install.dmg">Download .dmg</a>
             </div>
             <div class="dl-row">
               <div><b>Windows <small>5.2 MB</small></b><span>x64</span></div>
               <span class="dl-links">
-                <a class="btn btn-ghost btn-sm" href="https://github.com/Binaryify/MyGit/releases/latest/download/MyGit-windows-amd64.zip">.zip</a>
-                <a class="btn btn-primary btn-sm" href="https://github.com/Binaryify/MyGit/releases/latest/download/MyGit-windows-amd64-setup.exe" data-i18n="install.exe">Installer</a>
+                <a class="btn btn-ghost btn-sm" href="https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64.zip">.zip</a>
+                <a class="btn btn-primary btn-sm" href="https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64-setup.exe" data-i18n="install.exe">Installer</a>
               </span>
             </div>
             <div class="dl-row">
               <div><b>Linux <small>6.9 MB</small></b><span data-i18n="install.linux">x64 · or the script below</span></div>
-              <a class="btn btn-ghost btn-sm" href="https://github.com/Binaryify/MyGit/releases/latest/download/MyGit-linux-amd64.deb">.deb</a>
+              <a class="btn btn-ghost btn-sm" href="https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-linux-amd64.deb">.deb</a>
             </div>
-            <p class="dl-note"><span data-i18n="install.notarize">Not notarized by Apple yet. If macOS won't open it, run</span> <code>xattr -dr com.apple.quarantine /Applications/MyGit.app</code></p>
+            <p class="dl-note"><span data-i18n="install.notarize">Not notarized by Apple yet. If macOS won't open it, run</span> <code>xattr -dr com.apple.quarantine /Applications/GitKleen.app</code></p>
             <p class="dl-note" data-i18n="install.smartscreen">Not code-signed for Windows yet either. If Windows says it protected your PC, choose More info, then Run anyway.</p>
           </div>
 
           <div class="terminal card reveal">
             <div class="terminal-bar"><i></i><i></i><i></i><span>Linux</span>
               <button type="button" class="copy" data-i18n="install.copy">Copy</button></div>
-<pre><code><span class="prompt">$</span> curl -fsSL https://github.com/Binaryify/MyGit/releases/latest/download/install.sh | sh
+<pre><code><span class="prompt">$</span> curl -fsSL https://github.com/leoheung/GitKleen/releases/latest/download/install.sh | sh
 <span class="comment" data-i18n="install.script"># installs in ~/.local, without root</span></code></pre>
           </div>
 
-          <p class="dl-more"><a href="https://github.com/Binaryify/MyGit/releases" data-i18n="install.all">All releases →</a></p>
+          <p class="dl-more"><a href="https://github.com/leoheung/GitKleen/releases" data-i18n="install.all">All releases →</a></p>
         </div>
 
         <div class="keys card reveal">
@@ -301,7 +301,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <p class="footer-line"><img src="assets/logo.svg" alt="" width="20" height="20"> <span data-i18n-html="footer.made">Built with <a href="https://github.com/egoist/mygo">MyGo</a>, in Go.</span></p>
-      <a class="footer-link" href="https://github.com/Binaryify/MyGit">github.com/Binaryify/MyGit</a>
+      <a class="footer-link" href="https://github.com/leoheung/GitKleen">github.com/leoheung/GitKleen</a>
     </div>
   </footer>
 

@@ -1,21 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
-  <!-- MyGit: an M drawn as a commit graph, two branches that meet. -->
+  <!-- GitKleen: a check mark drawn as a commit graph, the changes checked and clean. -->
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1F3166"/>
-      <stop offset="1" stop-color="#0A1022"/>
+      <stop offset="0" stop-color="#1B2E5C"/>
+      <stop offset="1" stop-color="#0A1226"/>
     </linearGradient>
     <radialGradient id="glow" cx="0.5" cy="0.62" r="0.55">
-      <stop offset="0" stop-color="#6F8CFF" stop-opacity="0.35"/>
-      <stop offset="1" stop-color="#6F8CFF" stop-opacity="0"/>
+      <stop offset="0" stop-color="#5FE3C0" stop-opacity="0.30"/>
+      <stop offset="1" stop-color="#5FE3C0" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="blue" gradientUnits="userSpaceOnUse" x1="0" y1="760" x2="0" y2="270">
-      <stop offset="0" stop-color="#3D7BFF"/>
+    <linearGradient id="check" gradientUnits="userSpaceOnUse" x1="320" y1="680" x2="720" y2="360">
+      <stop offset="0" stop-color="#2FD9A8"/>
       <stop offset="1" stop-color="#7FB2FF"/>
-    </linearGradient>
-    <linearGradient id="green" gradientUnits="userSpaceOnUse" x1="0" y1="760" x2="0" y2="270">
-      <stop offset="0" stop-color="#1FBF7A"/>
-      <stop offset="1" stop-color="#6EF0B4"/>
     </linearGradient>
     <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.07"/>
@@ -34,21 +30,13 @@
   <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#sheen)"/>
   <rect x="101.5" y="101.5" width="821" height="821" rx="184.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="3"/>
 
-  <!-- The graph: a blue branch on the left, a green one on the right, each
-       running up and bending down to meet at the merge in the middle. -->
-  <g fill="none" stroke-width="62" stroke-linecap="round">
-    <path d="M330 716 V312" stroke="url(#blue)"/>
-    <path d="M330 312 C330 440 512 440 512 584" stroke="url(#blue)"/>
-    <path d="M694 716 V312" stroke="url(#green)"/>
-    <path d="M694 312 C694 440 512 440 512 584" stroke="url(#green)"/>
-  </g>
+  <!-- The check: a short stroke down to the corner, a long one up to the right,
+       drawn like a branch of commits, rounded as the graph lines are. -->
+  <path d="M318 548 L452 682 L718 374" fill="none" stroke="url(#check)"
+        stroke-width="76" stroke-linecap="round" stroke-linejoin="round"/>
 
-  <!-- Commits: rings in their branch's color, the merge solid white. -->
-  <g stroke-width="26">
-    <circle cx="330" cy="312" r="46" fill="#121B33" stroke="#8DBBFF"/>
-    <circle cx="330" cy="716" r="46" fill="#121B33" stroke="#3D7BFF"/>
-    <circle cx="694" cy="312" r="46" fill="#121B33" stroke="#7CF2BC"/>
-    <circle cx="694" cy="716" r="46" fill="#121B33" stroke="#1FBF7A"/>
-  </g>
-  <circle cx="512" cy="584" r="64" fill="#FFFFFF"/>
-  </svg>
+  <!-- Commits: rings at the two ends of the branch, the corner solid. -->
+  <circle cx="318" cy="548" r="52" fill="#101C36" stroke="#2FD9A8" stroke-width="24"/>
+  <circle cx="718" cy="374" r="52" fill="#101C36" stroke="#8DBBFF" stroke-width="24"/>
+  <circle cx="452" cy="682" r="46" fill="#FFFFFF"/>
+</svg>

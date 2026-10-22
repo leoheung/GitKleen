@@ -9,8 +9,8 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/git"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	loc "gitkleen/locales"
 )
 
 // clonePlan is the clone dialog: a URL, the folder to clone into, and the

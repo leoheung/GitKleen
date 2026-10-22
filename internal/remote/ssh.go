@@ -7,8 +7,8 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"gitkleen/internal/helper"
 	"io"
-	"mygit/internal/helper"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -58,7 +58,7 @@ func (s SSH) Dial(ctx context.Context, host string, known Platform) (*Conn, erro
 		return nil, err
 	}
 	sum := sha256.Sum256(bin)
-	dir := ".mygit/helper-" + hex.EncodeToString(sum[:6]) // in the home folder, where ssh starts
+	dir := ".gitkleen/helper-" + hex.EncodeToString(sum[:6]) // in the home folder, where ssh starts
 	c, err := s.start(ctx, host, p, dir)
 	if err == nil {
 		return c, nil
@@ -78,9 +78,9 @@ func (s SSH) Dial(ctx context.Context, host string, known Platform) (*Conn, erro
 // cmd or PowerShell: backslashes, which both read, and .\ to run it.
 func remote(p Platform, dir string) string {
 	if p.OS == "windows" {
-		return `.\` + strings.ReplaceAll(dir, "/", `\`) + `\mygit-helper.exe`
+		return `.\` + strings.ReplaceAll(dir, "/", `\`) + `\gitkleen-helper.exe`
 	}
-	return dir + "/mygit-helper"
+	return dir + "/gitkleen-helper"
 }
 
 // start runs the helper in dir, waiting for it until ctx ends; it then
@@ -143,7 +143,7 @@ func (s SSH) command(host, line string) *exec.Cmd {
 // Windows' ssh can't.
 func (s SSH) cmd(host, name string, args ...string) *exec.Cmd {
 	if runtime.GOOS != "windows" {
-		args = append([]string{"-o", "ControlMaster=auto", "-o", "ControlPath=/tmp/mygit-%C", "-o", "ControlPersist=60"}, args...)
+		args = append([]string{"-o", "ControlMaster=auto", "-o", "ControlPath=/tmp/gitkleen-%C", "-o", "ControlPersist=60"}, args...)
 	}
 	cmd := exec.Command(name, args...)
 	cmd.Env = os.Environ()
@@ -207,7 +207,7 @@ func (s SSH) platform(ctx context.Context, host string) (Platform, error) {
 	if err != nil {
 		return Platform{}, err
 	}
-	return Platform{}, fmt.Errorf("%s runs a system MyGit doesn't support: %s", host, strings.TrimSpace(out))
+	return Platform{}, fmt.Errorf("%s runs a system GitKleen doesn't support: %s", host, strings.TrimSpace(out))
 }
 
 // parseUname reads uname's line, the last: a shell's startup files may
@@ -237,7 +237,7 @@ func (s SSH) upload(ctx context.Context, host string, p Platform, dir string, bi
 		return err
 	}
 	_, _ = s.output(ctx, host, "mkdir "+strings.ReplaceAll(dir, "/", `\`), nil) // there already, it says so
-	tmp, err := os.CreateTemp("", "mygit-helper-*.exe")
+	tmp, err := os.CreateTemp("", "gitkleen-helper-*.exe")
 	if err != nil {
 		return err
 	}
@@ -250,7 +250,7 @@ func (s SSH) upload(ctx context.Context, host string, p Platform, dir string, bi
 		return err
 	}
 	// A path with a drive, C:/…, would read as a host: scp runs where it is.
-	cmd := s.cmd(host, "scp", "-q", "--", filepath.Base(tmp.Name()), host+":"+dir+"/mygit-helper.exe")
+	cmd := s.cmd(host, "scp", "-q", "--", filepath.Base(tmp.Name()), host+":"+dir+"/gitkleen-helper.exe")
 	cmd.Dir = filepath.Dir(tmp.Name())
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr

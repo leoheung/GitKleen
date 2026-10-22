@@ -1,6 +1,7 @@
-// Deploys the site to binaryify.com/mygit: npx wrangler deploy, from here.
+// Deploys the site to your own domain: npx wrangler deploy, from here.
+// Set the route below first, or leave it out to deploy to workers.dev.
 {
-  "name": "mygit-site",
+  "name": "gitkleen-site",
   "main": "worker.js",
   "compatibility_date": "2026-10-01",
   "assets": {
@@ -8,5 +9,5 @@
     "binding": "ASSETS",
     "run_worker_first": true
   },
-  "routes": [{ "pattern": "binaryify.com/mygit*", "zone_name": "binaryify.com" }]
+  // "routes": [{ "pattern": "example.com/gitkleen*", "zone_name": "example.com" }]
 }

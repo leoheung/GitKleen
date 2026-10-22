@@ -7,8 +7,8 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/git"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	loc "gitkleen/locales"
 )
 
 // rebasePlan is an interactive rebase being planned: the commits from one

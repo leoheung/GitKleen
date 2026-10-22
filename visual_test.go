@@ -1,10 +1,10 @@
 package main
 
 import (
+	"gitkleen/internal/git"
+	"gitkleen/internal/helper"
 	"image/color"
 	"image/png"
-	"mygit/internal/git"
-	"mygit/internal/helper"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -18,17 +18,17 @@ import (
 )
 
 // TestDumpThemes renders the window in the light and dark themes into
-// MYGIT_DUMP, to look at:
+// GITKLEEN_DUMP, to look at:
 //
-//	MYGIT_DUMP=/tmp go test -run DumpThemes
+//	GITKLEEN_DUMP=/tmp go test -run DumpThemes
 //
-// MYGIT_LOCALE renders it in another language, as en.
+// GITKLEEN_LOCALE renders it in another language, as en.
 func TestDumpThemes(t *testing.T) {
-	out := os.Getenv("MYGIT_DUMP")
+	out := os.Getenv("GITKLEEN_DUMP")
 	if out == "" {
 		t.Skip()
 	}
-	if l := os.Getenv("MYGIT_LOCALE"); l != "" {
+	if l := os.Getenv("GITKLEEN_LOCALE"); l != "" {
 		i18n.SetLocaleFunc(func() string { return l })
 		defer i18n.SetLocaleFunc(func() string { return "zh-Hans" })
 	}
@@ -49,10 +49,10 @@ func TestDumpThemes(t *testing.T) {
 }
 
 // TestDumpFeatures renders the views of the review features into
-// MYGIT_DUMP, as TestDumpThemes does: a generated file folded, a picture's
+// GITKLEEN_DUMP, as TestDumpThemes does: a generated file folded, a picture's
 // change, and the files of a commit some of them viewed.
 func TestDumpFeatures(t *testing.T) {
-	out := os.Getenv("MYGIT_DUMP")
+	out := os.Getenv("GITKLEEN_DUMP")
 	if out == "" {
 		t.Skip()
 	}
@@ -100,10 +100,10 @@ func TestDumpFeatures(t *testing.T) {
 	save(tt, "comment")
 }
 
-// TestDumpPull renders a pull request's review into MYGIT_DUMP: its
+// TestDumpPull renders a pull request's review into GITKLEEN_DUMP: its
 // header, a thread under its line and a comment of the review pending.
 func TestDumpPull(t *testing.T) {
-	out := os.Getenv("MYGIT_DUMP")
+	out := os.Getenv("GITKLEEN_DUMP")
 	if out == "" {
 		t.Skip()
 	}
@@ -127,15 +127,15 @@ func TestDumpPull(t *testing.T) {
 }
 
 // TestDumpSSH renders, for the demo film, a repository on another computer
-// into MYGIT_DUMP: the folders of devbox to choose it from (ssh-folders),
+// into GITKLEEN_DUMP: the folders of devbox to choose it from (ssh-folders),
 // and its window (ssh-remote), 1120×733 at 1.4×, as the film's shots are.
-// MYGIT_LOCALE renders them in another language, as en.
+// GITKLEEN_LOCALE renders them in another language, as en.
 func TestDumpSSH(t *testing.T) {
-	out := os.Getenv("MYGIT_DUMP")
+	out := os.Getenv("GITKLEEN_DUMP")
 	if out == "" {
 		t.Skip()
 	}
-	if l := os.Getenv("MYGIT_LOCALE"); l != "" {
+	if l := os.Getenv("GITKLEEN_LOCALE"); l != "" {
 		i18n.SetLocaleFunc(func() string { return l })
 		defer i18n.SetLocaleFunc(func() string { return "zh-Hans" })
 	}
@@ -243,15 +243,15 @@ func orbitRepo(t *testing.T) string {
 	return dir
 }
 
-// TestDumpWelcome renders the welcome window into MYGIT_DUMP, 520×640 at
+// TestDumpWelcome renders the welcome window into GITKLEEN_DUMP, 520×640 at
 // 2×, as the READMEs and the site show it: repositories opened lately, one
-// on another computer. MYGIT_LOCALE renders it in another language, as en.
+// on another computer. GITKLEEN_LOCALE renders it in another language, as en.
 func TestDumpWelcome(t *testing.T) {
-	out := os.Getenv("MYGIT_DUMP")
+	out := os.Getenv("GITKLEEN_DUMP")
 	if out == "" {
 		t.Skip()
 	}
-	if l := os.Getenv("MYGIT_LOCALE"); l != "" {
+	if l := os.Getenv("GITKLEEN_LOCALE"); l != "" {
 		i18n.SetLocaleFunc(func() string { return l })
 		defer i18n.SetLocaleFunc(func() string { return "zh-Hans" })
 	}

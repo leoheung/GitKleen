@@ -18,7 +18,7 @@ import (
 
 // Magic is the line the helper starts its output with, after which frames
 // come: what a shell's startup files print before it is skipped.
-const Magic = "MYGIT-HELPER 1\n"
+const Magic = "GITKLEEN-HELPER 1\n"
 
 const (
 	// From the app.

@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/egoist/mygo/ui"
 
-	loc "mygit/locales"
+	loc "gitkleen/locales"
 )
 
 // changeNav steps through the changes of the diff shown, and on to the

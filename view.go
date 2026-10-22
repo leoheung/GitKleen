@@ -11,10 +11,10 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/git"
-	"mygit/internal/patch"
-	"mygit/internal/remote"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	"gitkleen/internal/patch"
+	"gitkleen/internal/remote"
+	loc "gitkleen/locales"
 )
 
 const rowHeight = 26

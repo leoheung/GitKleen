@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/sys/windows/registry"
 
-	loc "mygit/locales"
+	loc "gitkleen/locales"
 )
 
 // launcherDir is where the command goes: a folder of the user's own,
@@ -20,13 +20,13 @@ func launcherDir() (string, error) {
 	if base == "" {
 		return "", fmt.Errorf("LOCALAPPDATA is not set")
 	}
-	return filepath.Join(base, "MyGit", "bin"), nil
+	return filepath.Join(base, "GitKleen", "bin"), nil
 }
 
-// launcherScript is mygit.cmd: it opens the folder given, else the
+// launcherScript is gitkleen.cmd: it opens the folder given, else the
 // terminal's, in the running app, and returns at once.
 func launcherScript(exe string) string {
-	return fmt.Sprintf("@echo off\r\nrem %s: mygit [folder] opens the folder's repository.\r\n"+
+	return fmt.Sprintf("@echo off\r\nrem %s: gitkleen [folder] opens the folder's repository.\r\n"+
 		"if \"%%~1\"==\"\" (start \"\" \"%s\" \"%%CD%%\") else (start \"\" \"%s\" \"%%~f1\")\r\n", launcherMark, exe, exe)
 }
 
@@ -38,7 +38,7 @@ func writeLauncher(exe string) (path, msg string, err error) {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", "", err
 	}
-	path = filepath.Join(dir, "mygit.cmd")
+	path = filepath.Join(dir, "gitkleen.cmd")
 	if err := os.WriteFile(path, []byte(launcherScript(exe)), 0o644); err != nil {
 		return "", "", err
 	}
@@ -59,7 +59,7 @@ func removeLaunchers() ([]string, error) {
 		return nil, err
 	}
 	var removed []string
-	path := filepath.Join(dir, "mygit.cmd")
+	path := filepath.Join(dir, "gitkleen.cmd")
 	if ours(path) {
 		if err := os.Remove(path); err != nil {
 			return nil, err

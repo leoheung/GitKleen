@@ -14,7 +14,7 @@ import (
 	"path"
 	"strings"
 
-	loc "mygit/locales"
+	loc "gitkleen/locales"
 )
 
 // Runner runs git and reaches the files of the computer a repository is

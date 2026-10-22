@@ -13,8 +13,8 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/git"
-	"mygit/internal/helper"
+	"gitkleen/internal/git"
+	"gitkleen/internal/helper"
 )
 
 // gitInit makes a repository in dir with a commit, and leaves a change.

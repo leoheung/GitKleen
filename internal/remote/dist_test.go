@@ -97,10 +97,10 @@ func TestParseUname(t *testing.T) {
 }
 
 func TestRemotePath(t *testing.T) {
-	if got := remote(Platform{"windows", "amd64"}, ".mygit/helper-ab"); got != `.\.mygit\helper-ab\mygit-helper.exe` {
+	if got := remote(Platform{"windows", "amd64"}, ".gitkleen/helper-ab"); got != `.\.gitkleen\helper-ab\gitkleen-helper.exe` {
 		t.Error(got)
 	}
-	if got := remote(Platform{"linux", "amd64"}, ".mygit/helper-ab"); got != ".mygit/helper-ab/mygit-helper" {
+	if got := remote(Platform{"linux", "amd64"}, ".gitkleen/helper-ab"); got != ".gitkleen/helper-ab/gitkleen-helper" {
 		t.Error(got)
 	}
 }

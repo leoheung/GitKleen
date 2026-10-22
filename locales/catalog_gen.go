@@ -1538,11 +1538,11 @@ func (msgs Messages) ForcePushButton() string {
 	return Catalog.Format(msgs.locale, "forcePushButton", nil)
 }
 
-// LauncherNoExe says "Can't find MyGit's executable"
+// LauncherNoExe says "Can't find GitKleen's executable"
 // in the language the app shows.
 func LauncherNoExe() string { return In(i18n.Locale()).LauncherNoExe() }
 
-// LauncherNoExe says "Can't find MyGit's executable"
+// LauncherNoExe says "Can't find GitKleen's executable"
 // in the language of msgs.
 func (msgs Messages) LauncherNoExe() string {
 	return Catalog.Format(msgs.locale, "launcherNoExe", nil)
@@ -1578,11 +1578,11 @@ func (msgs Messages) LauncherDone() string {
 	return Catalog.Format(msgs.locale, "launcherDone", nil)
 }
 
-// LauncherDoneMessage says "Now run, in a terminal:\n  mygit .\n\nThe command is {path}"
+// LauncherDoneMessage says "Now run, in a terminal:\n  gitkleen .\n\nThe command is {path}"
 // in the language the app shows.
 func LauncherDoneMessage(path string) string { return In(i18n.Locale()).LauncherDoneMessage(path) }
 
-// LauncherDoneMessage says "Now run, in a terminal:\n  mygit .\n\nThe command is {path}"
+// LauncherDoneMessage says "Now run, in a terminal:\n  gitkleen .\n\nThe command is {path}"
 // in the language of msgs.
 func (msgs Messages) LauncherDoneMessage(path string) string {
 	return Catalog.Format(msgs.locale, "launcherDoneMessage", map[string]any{"path": path})
@@ -1780,11 +1780,11 @@ func (msgs Messages) MenuRecent() string {
 	return Catalog.Format(msgs.locale, "menuRecent", nil)
 }
 
-// MenuInstallCLI says "Install 'mygit' Command in PATH"
+// MenuInstallCLI says "Install 'gitkleen' Command in PATH"
 // in the language the app shows.
 func MenuInstallCLI() string { return In(i18n.Locale()).MenuInstallCLI() }
 
-// MenuInstallCLI says "Install 'mygit' Command in PATH"
+// MenuInstallCLI says "Install 'gitkleen' Command in PATH"
 // in the language of msgs.
 func (msgs Messages) MenuInstallCLI() string {
 	return Catalog.Format(msgs.locale, "menuInstallCLI", nil)
@@ -3252,11 +3252,11 @@ func (msgs Messages) StageLinesTooltip() string {
 	return Catalog.Format(msgs.locale, "stageLinesTooltip", nil)
 }
 
-// UpdateAvailable says "MyGit {version} is available"
+// UpdateAvailable says "GitKleen {version} is available"
 // in the language the app shows.
 func UpdateAvailable(version string) string { return In(i18n.Locale()).UpdateAvailable(version) }
 
-// UpdateAvailable says "MyGit {version} is available"
+// UpdateAvailable says "GitKleen {version} is available"
 // in the language of msgs.
 func (msgs Messages) UpdateAvailable(version string) string {
 	return Catalog.Format(msgs.locale, "updateAvailable", map[string]any{"version": version})
@@ -3302,11 +3302,11 @@ func (msgs Messages) UpdateCheckFailed() string {
 	return Catalog.Format(msgs.locale, "updateCheckFailed", nil)
 }
 
-// UpdateLatest says "MyGit {version} is the latest"
+// UpdateLatest says "GitKleen {version} is the latest"
 // in the language the app shows.
 func UpdateLatest(version string) string { return In(i18n.Locale()).UpdateLatest(version) }
 
-// UpdateLatest says "MyGit {version} is the latest"
+// UpdateLatest says "GitKleen {version} is the latest"
 // in the language of msgs.
 func (msgs Messages) UpdateLatest(version string) string {
 	return Catalog.Format(msgs.locale, "updateLatest", map[string]any{"version": version})
@@ -3322,11 +3322,11 @@ func (msgs Messages) UpdateFailed() string {
 	return Catalog.Format(msgs.locale, "updateFailed", nil)
 }
 
-// About says "About MyGit"
+// About says "About GitKleen"
 // in the language the app shows.
 func About() string { return In(i18n.Locale()).About() }
 
-// About says "About MyGit"
+// About says "About GitKleen"
 // in the language of msgs.
 func (msgs Messages) About() string {
 	return Catalog.Format(msgs.locale, "about", nil)
@@ -4028,45 +4028,45 @@ func (msgs Messages) ReviewSubmitted(number int) string {
 	return Catalog.Format(msgs.locale, "reviewSubmitted", map[string]any{"number": number})
 }
 
-// MenuUninstallCLI says "Uninstall 'mygit' Command from PATH"
+// MenuUninstallCLI says "Uninstall 'gitkleen' Command from PATH"
 // in the language the app shows.
 func MenuUninstallCLI() string { return In(i18n.Locale()).MenuUninstallCLI() }
 
-// MenuUninstallCLI says "Uninstall 'mygit' Command from PATH"
+// MenuUninstallCLI says "Uninstall 'gitkleen' Command from PATH"
 // in the language of msgs.
 func (msgs Messages) MenuUninstallCLI() string {
 	return Catalog.Format(msgs.locale, "menuUninstallCLI", nil)
 }
 
-// LauncherDoneNewTerminal says "Open a new terminal, then run:\n  mygit .\n\nThe command is {path}"
+// LauncherDoneNewTerminal says "Open a new terminal, then run:\n  gitkleen .\n\nThe command is {path}"
 // in the language the app shows.
 func LauncherDoneNewTerminal(path string) string {
 	return In(i18n.Locale()).LauncherDoneNewTerminal(path)
 }
 
-// LauncherDoneNewTerminal says "Open a new terminal, then run:\n  mygit .\n\nThe command is {path}"
+// LauncherDoneNewTerminal says "Open a new terminal, then run:\n  gitkleen .\n\nThe command is {path}"
 // in the language of msgs.
 func (msgs Messages) LauncherDoneNewTerminal(path string) string {
 	return Catalog.Format(msgs.locale, "launcherDoneNewTerminal", map[string]any{"path": path})
 }
 
-// LauncherAddToPath says "Wrote {path}. Add {dir} to your PATH, then run in a terminal:\n  mygit ."
+// LauncherAddToPath says "Wrote {path}. Add {dir} to your PATH, then run in a terminal:\n  gitkleen ."
 // in the language the app shows.
 func LauncherAddToPath(path string, dir string) string {
 	return In(i18n.Locale()).LauncherAddToPath(path, dir)
 }
 
-// LauncherAddToPath says "Wrote {path}. Add {dir} to your PATH, then run in a terminal:\n  mygit ."
+// LauncherAddToPath says "Wrote {path}. Add {dir} to your PATH, then run in a terminal:\n  gitkleen ."
 // in the language of msgs.
 func (msgs Messages) LauncherAddToPath(path string, dir string) string {
 	return Catalog.Format(msgs.locale, "launcherAddToPath", map[string]any{"path": path, "dir": dir})
 }
 
-// LauncherTaken says "{path} is another program's: MyGit leaves it alone."
+// LauncherTaken says "{path} is another program's: GitKleen leaves it alone."
 // in the language the app shows.
 func LauncherTaken(path string) string { return In(i18n.Locale()).LauncherTaken(path) }
 
-// LauncherTaken says "{path} is another program's: MyGit leaves it alone."
+// LauncherTaken says "{path} is another program's: GitKleen leaves it alone."
 // in the language of msgs.
 func (msgs Messages) LauncherTaken(path string) string {
 	return Catalog.Format(msgs.locale, "launcherTaken", map[string]any{"path": path})
@@ -4092,11 +4092,11 @@ func (msgs Messages) LauncherUninstallFailed() string {
 	return Catalog.Format(msgs.locale, "launcherUninstallFailed", nil)
 }
 
-// LauncherNotFound says "No mygit command MyGit installed is on the PATH."
+// LauncherNotFound says "No gitkleen command GitKleen installed is on the PATH."
 // in the language the app shows.
 func LauncherNotFound() string { return In(i18n.Locale()).LauncherNotFound() }
 
-// LauncherNotFound says "No mygit command MyGit installed is on the PATH."
+// LauncherNotFound says "No gitkleen command GitKleen installed is on the PATH."
 // in the language of msgs.
 func (msgs Messages) LauncherNotFound() string {
 	return Catalog.Format(msgs.locale, "launcherNotFound", nil)
@@ -4322,11 +4322,11 @@ func (msgs Messages) SshTitle() string {
 	return Catalog.Format(msgs.locale, "sshTitle", nil)
 }
 
-// SshHint says "The first time, MyGit installs its helper (about 3.5 MB) in ~/.mygit on that computer, and uses it again after. The h…"
+// SshHint says "The first time, GitKleen installs its helper (about 3.5 MB) in ~/.gitkleen on that computer, and uses it again after.…"
 // in the language the app shows.
 func SshHint() string { return In(i18n.Locale()).SshHint() }
 
-// SshHint says "The first time, MyGit installs its helper (about 3.5 MB) in ~/.mygit on that computer, and uses it again after. The h…"
+// SshHint says "The first time, GitKleen installs its helper (about 3.5 MB) in ~/.gitkleen on that computer, and uses it again after.…"
 // in the language of msgs.
 func (msgs Messages) SshHint() string {
 	return Catalog.Format(msgs.locale, "sshHint", nil)
@@ -4628,11 +4628,11 @@ func (msgs Messages) CheckUpdatesMenu() string {
 	return Catalog.Format(msgs.locale, "checkUpdatesMenu", nil)
 }
 
-// MenuApp says "MyGit"
+// MenuApp says "GitKleen"
 // in the language the app shows.
 func MenuApp() string { return In(i18n.Locale()).MenuApp() }
 
-// MenuApp says "MyGit"
+// MenuApp says "GitKleen"
 // in the language of msgs.
 func (msgs Messages) MenuApp() string {
 	return Catalog.Format(msgs.locale, "menuApp", nil)

@@ -13,9 +13,9 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/git"
-	"mygit/internal/github"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	"gitkleen/internal/github"
+	loc "gitkleen/locales"
 )
 
 // pullReview is a pull request being reviewed: where its changes are,

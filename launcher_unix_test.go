@@ -13,13 +13,13 @@ import (
 
 func TestLauncherScript(t *testing.T) {
 	dir := t.TempDir()
-	// A stand-in for MyGit's executable, in a folder with a space, saying
+	// A stand-in for GitKleen's executable, in a folder with a space, saying
 	// what it was given.
-	app := filepath.Join(dir, "My Git", "MyGit")
+	app := filepath.Join(dir, "My Git", "GitKleen")
 	os.MkdirAll(filepath.Dir(app), 0o755)
 	got := filepath.Join(dir, "got")
 	os.WriteFile(app, []byte("#!/bin/sh\nprintf '%s' \"$1\" > '"+got+"'\n"), 0o755)
-	cmd := filepath.Join(dir, "mygit")
+	cmd := filepath.Join(dir, "gitkleen")
 	os.WriteFile(cmd, []byte(launcherScript(app)), 0o755)
 
 	repo := filepath.Join(dir, "repo")
@@ -32,7 +32,7 @@ func TestLauncherScript(t *testing.T) {
 		}
 		c.Dir = repo
 		if out, err := c.CombinedOutput(); err != nil {
-			t.Fatalf("mygit %s: %v %s", arg, err, out)
+			t.Fatalf("gitkleen %s: %v %s", arg, err, out)
 		}
 		var b []byte
 		for i := 0; i < 50 && len(b) == 0; i++ { // the app is started in the background
@@ -41,17 +41,17 @@ func TestLauncherScript(t *testing.T) {
 		}
 		want, _ = filepath.EvalSymlinks(want)
 		if g, _ := filepath.EvalSymlinks(string(b)); g != want {
-			t.Errorf("mygit %q opened %q, want %q", arg, b, want)
+			t.Errorf("gitkleen %q opened %q, want %q", arg, b, want)
 		}
 	}
 	if !ours(cmd) {
-		t.Error("the script isn't seen as MyGit's")
+		t.Error("the script isn't seen as GitKleen's")
 	}
 }
 
 func TestInstallAndUninstall(t *testing.T) {
 	home, _ := os.UserHomeDir()
-	own, err := os.MkdirTemp(home, ".mygit-test-bin-")
+	own, err := os.MkdirTemp(home, ".gitkleen-test-bin-")
 	if err != nil {
 		t.Skip("no folder to make in the home folder:", err)
 	}
@@ -62,24 +62,24 @@ func TestInstallAndUninstall(t *testing.T) {
 	defer func() { shellPATH = old }()
 
 	// The user's own folder before the system's.
-	path, _, err := writeLauncher("/Applications/MyGit.app/Contents/MacOS/MyGit")
-	if err != nil || path != filepath.Join(own, "mygit") {
+	path, _, err := writeLauncher("/Applications/GitKleen.app/Contents/MacOS/GitKleen")
+	if err != nil || path != filepath.Join(own, "gitkleen") {
 		t.Fatalf("installed at %q: %v", path, err)
 	}
 	b, _ := os.ReadFile(path)
-	if !strings.Contains(string(b), "'/Applications/MyGit.app/Contents/MacOS/MyGit' \"$dir\"") {
+	if !strings.Contains(string(b), "'/Applications/GitKleen.app/Contents/MacOS/GitKleen' \"$dir\"") {
 		t.Errorf("script:\n%s", b)
 	}
-	// Another program's mygit stays, and is never overwritten.
-	foreign := filepath.Join(other, "mygit")
-	os.WriteFile(foreign, []byte("#!/bin/sh\necho another mygit\n"), 0o755)
+	// Another program's gitkleen stays, and is never overwritten.
+	foreign := filepath.Join(other, "gitkleen")
+	os.WriteFile(foreign, []byte("#!/bin/sh\necho another gitkleen\n"), 0o755)
 	shellPATH = func() []string { return []string{own, other} }
-	if _, _, err := writeLauncher("/x/MyGit"); err != nil {
+	if _, _, err := writeLauncher("/x/GitKleen"); err != nil {
 		t.Fatalf("reinstalling over our own: %v", err)
 	}
 	shellPATH = func() []string { return []string{other} }
-	if _, _, err := writeLauncher("/x/MyGit"); err == nil || !strings.Contains(err.Error(), foreign) {
-		t.Errorf("overwrote another program's mygit: %v", err)
+	if _, _, err := writeLauncher("/x/GitKleen"); err == nil || !strings.Contains(err.Error(), foreign) {
+		t.Errorf("overwrote another program's gitkleen: %v", err)
 	}
 
 	shellPATH = func() []string { return []string{own, other} }
@@ -88,7 +88,7 @@ func TestInstallAndUninstall(t *testing.T) {
 		t.Fatalf("removed %v: %v", removed, err)
 	}
 	if _, err := os.Stat(foreign); err != nil {
-		t.Error("removed another program's mygit")
+		t.Error("removed another program's gitkleen")
 	}
 	if removed, _ := removeLaunchers(); len(removed) != 0 {
 		t.Errorf("removed again: %v", removed)
@@ -101,7 +101,7 @@ func TestLauncherDirPrefersTheUsual(t *testing.T) {
 	if !writable(local) {
 		t.Skip("no ~/.local/bin to write to")
 	}
-	tool, err := os.MkdirTemp(home, ".mygit-test-tool-")
+	tool, err := os.MkdirTemp(home, ".gitkleen-test-tool-")
 	if err != nil {
 		t.Skip(err)
 	}
@@ -112,9 +112,9 @@ func TestLauncherDirPrefersTheUsual(t *testing.T) {
 }
 
 func TestOursKnowsTheOldScript(t *testing.T) {
-	p := filepath.Join(t.TempDir(), "mygit")
-	os.WriteFile(p, []byte("#!/bin/sh\ndir=$(cd \"${1:-.}\" && pwd) || exit 1\n'/Applications/MyGit.app/Contents/MacOS/MyGit' \"$dir\" >/dev/null 2>&1 &\n"), 0o755)
+	p := filepath.Join(t.TempDir(), "gitkleen")
+	os.WriteFile(p, []byte("#!/bin/sh\ndir=$(cd \"${1:-.}\" && pwd) || exit 1\n'/Applications/GitKleen.app/Contents/MacOS/GitKleen' \"$dir\" >/dev/null 2>&1 &\n"), 0o755)
 	if !ours(p) {
-		t.Error("the script of before the mark isn't seen as MyGit's")
+		t.Error("the script of before the mark isn't seen as GitKleen's")
 	}
 }

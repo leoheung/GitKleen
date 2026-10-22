@@ -17,7 +17,7 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 
-	"mygit/internal/askpass"
+	"gitkleen/internal/askpass"
 )
 
 // server runs the app's calls on the helper's computer.

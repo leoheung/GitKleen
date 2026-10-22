@@ -21,8 +21,8 @@ import (
 )
 
 const (
-	addrVar = "MYGIT_ASKPASS"     // the running app's socket
-	tagVar  = "MYGIT_ASKPASS_TAG" // which window asked, a repository's folder
+	addrVar = "GITKLEEN_ASKPASS"     // the running app's socket
+	tagVar  = "GITKLEEN_ASKPASS_TAG" // which window asked, a repository's folder
 )
 
 type request struct {
@@ -50,7 +50,7 @@ func Listen(ask Asker) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	path := filepath.Join(os.TempDir(), "mygit-askpass-"+strconv.Itoa(os.Getpid())+".sock")
+	path := filepath.Join(os.TempDir(), "gitkleen-askpass-"+strconv.Itoa(os.Getpid())+".sock")
 	_ = os.Remove(path)
 	ln, err := net.Listen("unix", path)
 	if err != nil {
@@ -108,7 +108,7 @@ func Main(args []string) (code int, isAskpass bool) {
 	}
 	answer, err := Ask(addr, os.Getenv(tagVar), prompt)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "mygit askpass:", err)
+		fmt.Fprintln(os.Stderr, "gitkleen askpass:", err)
 		return 1, true
 	}
 	fmt.Println(answer)

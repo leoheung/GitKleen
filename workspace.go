@@ -13,8 +13,8 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/git"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	loc "gitkleen/locales"
 )
 
 // A workspace is a folder of repositories open in one window, as VS Code's
@@ -255,7 +255,7 @@ func openWorkspace(host, dir string, repos []*git.Repo) {
 		return
 	}
 	name := path.Base(strings.ReplaceAll(dir, `\`, "/"))
-	title := name + " — MyGit"
+	title := name + " — GitKleen"
 	if host == "" {
 		_ = mygo.App.AddRecentDocument(dir)
 	} else {

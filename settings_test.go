@@ -1,9 +1,9 @@
 package main
 
 import (
+	"gitkleen/internal/sysproxy"
+	loc "gitkleen/locales"
 	"image/png"
-	"mygit/internal/sysproxy"
-	loc "mygit/locales"
 	"net/http"
 	"os"
 	"testing"
@@ -22,7 +22,7 @@ func TestSettingsListShortcuts(t *testing.T) {
 			t.Fatalf("no %q in %q", s, tt.Texts())
 		}
 	}
-	if out := os.Getenv("MYGIT_DUMP"); out != "" {
+	if out := os.Getenv("GITKLEEN_DUMP"); out != "" {
 		tt.SetDark(true)
 		tt.Frame()
 		f, _ := os.Create(out + "/settings.png")
@@ -96,7 +96,7 @@ func TestWelcomeAppMenu(t *testing.T) {
 	tt := ui.NewTester(w.view, 520, 640)
 	tt.SetTitleBar(ui.TitleBar{Right: 138, Height: 32})
 	tt.Frame()
-	if err := tt.Click("MyGit"); err != nil {
+	if err := tt.Click("GitKleen"); err != nil {
 		t.Fatalf("%v; texts %q", err, tt.Texts())
 	}
 	tt.Frame()
@@ -112,7 +112,7 @@ func TestWelcomeAppMenu(t *testing.T) {
 		tt.SetDark(true)
 		tt.SetScale(2)
 		tt.Frame()
-		tt.Click("MyGit")
+		tt.Click("GitKleen")
 		tt.Frame()
 		f, _ := os.Create(out + "/welcome-windows.png")
 		png.Encode(f, tt.Image())
@@ -130,7 +130,7 @@ func TestWelcomeAppMenu(t *testing.T) {
 	w2 := &welcome{}
 	tt2 := ui.NewTester(w2.view, 520, 640)
 	tt2.Frame()
-	if tt2.HasText("MyGit") && tt2.Click("MyGit") == nil && len(tt2.Menu()) > 0 {
+	if tt2.HasText("GitKleen") && tt2.Click("GitKleen") == nil && len(tt2.Menu()) > 0 {
 		t.Error("the welcome window carries a menu beside macOS' menu bar")
 	}
 }

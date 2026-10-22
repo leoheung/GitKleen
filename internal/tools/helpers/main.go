@@ -1,11 +1,11 @@
-// Helpers builds the helper for every platform MyGit reaches over SSH,
+// Helpers builds the helper for every platform GitKleen reaches over SSH,
 // gzipped as a release publishes them, and signs each with the key of the
 // app's updates when MYGO_UPDATER_PRIVATE_KEY has it.
 //
 //	go run ./internal/tools/helpers [-o dir]
 //
 // The folder is where the app keeps the helpers it downloads, so pointing
-// MYGIT_HELPER_DIR at it tries helpers built here.
+// GITKLEEN_HELPER_DIR at it tries helpers built here.
 package main
 
 import (
@@ -18,7 +18,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"mygit/internal/remote"
+	"gitkleen/internal/remote"
 )
 
 var platforms = []remote.Platform{
@@ -34,14 +34,14 @@ func main() {
 	if err := os.MkdirAll(*out, 0o755); err != nil {
 		log.Fatal(err)
 	}
-	tmp, err := os.MkdirTemp("", "mygit-helpers")
+	tmp, err := os.MkdirTemp("", "gitkleen-helpers")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer os.RemoveAll(tmp)
 	for _, p := range platforms {
 		exe := filepath.Join(tmp, p.OS+"-"+p.Arch)
-		cmd := exec.Command("go", "build", "-trimpath", "-ldflags=-s -w", "-o", exe, "./cmd/mygit-helper")
+		cmd := exec.Command("go", "build", "-trimpath", "-ldflags=-s -w", "-o", exe, "./cmd/gitkleen-helper")
 		cmd.Env = append(os.Environ(), "GOOS="+p.OS, "GOARCH="+p.Arch, "CGO_ENABLED=0")
 		cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 		if err := cmd.Run(); err != nil {

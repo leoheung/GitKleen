@@ -1,4 +1,4 @@
-/* MyGit's site: one centred column on near-black, the logo's blue and green
+/* GitKleen's site: one centred column on near-black, the logo's blue and green
    as the only colour, cards for everything that isn't a heading. */
 
 :root {
@@ -253,7 +253,7 @@ html[lang="zh-CN"] .hero h1 { line-height: 1.18; letter-spacing: 0; font-size: c
 .bar { height: 12px; border-radius: 999px; background: rgba(255, 255, 255, .05); overflow: hidden; }
 .fill { display: block; height: 100%; width: 0; border-radius: inherit; transition: width 1.6s cubic-bezier(.2, .8, .2, 1); }
 .in .fill { width: var(--w); }
-.fill-mygit { background: linear-gradient(90deg, var(--green), var(--green-hi)); box-shadow: 0 0 18px rgba(52, 211, 153, .5); }
+.fill-gitkleen { background: linear-gradient(90deg, var(--green), var(--green-hi)); box-shadow: 0 0 18px rgba(52, 211, 153, .5); }
 .fill-other { background: linear-gradient(90deg, #3A4560, #56627E); }
 .bar-value { text-align: right; font: 500 18px var(--mono); }
 .bar-note { margin: 14px 0 0; color: var(--faint); font-size: 13px; }

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	loc "mygit/locales"
+	loc "gitkleen/locales"
 )
 
 // RebaseAction is what an interactive rebase does with a commit.
@@ -89,7 +89,7 @@ func (r *Repo) RebaseInteractive(ctx context.Context, base string, steps []Rebas
 		return err
 	}
 	// The files stay while the rebase may stop and go on.
-	dir := r.run.Join(r.GitDir, "mygit-rebase")
+	dir := r.run.Join(r.GitDir, "gitkleen-rebase")
 	_ = r.run.RemoveAll(ctx, dir)
 	var todo strings.Builder
 	for i, s := range steps {

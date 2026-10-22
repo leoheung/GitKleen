@@ -14,11 +14,11 @@ import (
 
 	"github.com/egoist/mygo"
 
-	"mygit/internal/askpass"
-	"mygit/internal/git"
-	"mygit/internal/helper"
-	"mygit/internal/remote"
-	loc "mygit/locales"
+	"gitkleen/internal/askpass"
+	"gitkleen/internal/git"
+	"gitkleen/internal/helper"
+	"gitkleen/internal/remote"
+	loc "gitkleen/locales"
 )
 
 // askServer takes git's and ssh's prompts on this computer, once started.
@@ -99,10 +99,10 @@ func closeHosts() {
 func sshDialer() remote.SSH {
 	cache, _ := os.UserCacheDir()
 	store := remote.Store{
-		Dir:     filepath.Join(cache, "MyGit", "helper", mygo.App.Version()),
-		BaseURL: "https://github.com/Binaryify/MyGit/releases/download/v" + mygo.App.Version(),
+		Dir:     filepath.Join(cache, "GitKleen", "helper", mygo.App.Version()),
+		BaseURL: "https://github.com/leoheung/GitKleen/releases/download/v" + mygo.App.Version(),
 	}
-	if dir := os.Getenv("MYGIT_HELPER_DIR"); dir != "" { // helpers built here, to try them
+	if dir := os.Getenv("GITKLEEN_HELPER_DIR"); dir != "" { // helpers built here, to try them
 		store.Dir = dir
 	}
 	return remote.SSH{

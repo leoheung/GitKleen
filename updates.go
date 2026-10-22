@@ -7,7 +7,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
-	loc "mygit/locales"
+	loc "gitkleen/locales"
 )
 
 // updates is what the app knows of a newer version, as MonitorBar has it:
@@ -180,7 +180,7 @@ func message(title, text string) {
 func about() {
 	_, _ = mygo.Dialog.Message(mygo.MessageOptions{
 		Title:   loc.About(),
-		Message: "MyGit " + mygo.App.Version(),
+		Message: "GitKleen " + mygo.App.Version(),
 		Detail:  loc.AboutDetail(),
 	})
 }

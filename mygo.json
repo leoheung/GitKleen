@@ -1,8 +1,8 @@
 {
-  "name": "MyGit",
-  "identifier": "io.github.binaryify.mygit",
-  "version": "0.3.6-dev",
-  "copyright": "Copyright © 2026 binaryify",
+  "name": "GitKleen",
+  "identifier": "io.github.leoheung.gitkleen",
+  "version": "0.2.0-dev",
+  "copyright": "Copyright © 2026 leoheung",
   "out": "build",
   "macos": {
     "infoPlist": {
@@ -23,7 +23,7 @@
     "source": "en"
   },
   "updates": {
-    "publicKey": "q5C+iL6+Y6YsRMOB9qGLiQyaz7RW3lwtF9eqh4q10fI=",
-    "github": "Binaryify/MyGit"
+    "publicKey": "Ewn3dqUgWLgmabM5XsaMu6JWRTRg1n40JvlWtDUv1sk=",
+    "github": "leoheung/GitKleen"
   }
 }

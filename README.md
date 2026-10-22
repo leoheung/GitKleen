@@ -1,17 +1,17 @@
 <p align="center">
-  <img src="docs/images/logo.png" width="128" height="128" alt="MyGit">
+  <img src="docs/images/logo.png" width="128" height="128" alt="GitKleen">
 </p>
 
-<h1 align="center">MyGit</h1>
+<h1 align="center">GitKleen</h1>
 
 <p align="center">
   <b>A light, fast, native git client, for remote repositories too</b><br>
   JetBrains' commit graph and history, VS Code's way of staging, under 7 MB and open in a moment; for repositories on this computer or over SSH.<br>
-  Made for coding with agents too: <code>mygit .</code> refreshes as the agent works, so you check its changes, stage what's right and hand the rest back.
+  Made for coding with agents too: <code>gitkleen .</code> refreshes as the agent works, so you check its changes, stage what's right and hand the rest back.
 </p>
 
 <p align="center">
-  <a href="https://github.com/Binaryify/MyGit/actions/workflows/ci.yml"><img src="https://github.com/Binaryify/MyGit/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/leoheung/GitKleen/actions/workflows/ci.yml"><img src="https://github.com/leoheung/GitKleen/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/macOS-Apple%20silicon-111?logo=apple" alt="macOS">
   <img src="https://img.shields.io/badge/Windows-x64-0078D4?logo=windows" alt="Windows">
   <img src="https://img.shields.io/badge/Linux-x64-FCC624?logo=linux&logoColor=111" alt="Linux">
@@ -19,28 +19,28 @@
 </p>
 
 <p align="center">
-  <a href="https://binaryify.com/mygit/">Website</a> · <b>English</b> · <a href="README.zh-CN.md">简体中文</a>
+  <b>English</b> · <a href="README.zh-CN.md">简体中文</a>
 </p>
 
 <p align="center">
-  <img src="docs/images/main-en.png" alt="MyGit showing a repository's history and a commit's diff">
+  <img src="docs/images/main-en.png" alt="GitKleen showing a repository's history and a commit's diff">
 </p>
 
 <p align="center">
-  <a href="site/assets/mygit-demo-en.mp4"><b>▶ Watch the demo</b></a>
+  <a href="site/assets/gitkleen-demo-en.mp4"><b>▶ Watch the demo</b></a>
 </p>
 
-## Why MyGit
+## Why GitKleen
 
-With an agent writing the code, most of your time in git goes to looking at what changed. MyGit makes that quick:
+With an agent writing the code, most of your time in git goes to looking at what changed. GitKleen makes that quick:
 
 1. **See** every change as it lands: the window refreshes while the agent works, each file side by side with syntax highlighting. Lockfiles, minified and generated files fold away, and changed pictures show before and after.
 2. **Keep** what's right: fix a line right in the diff, stage the files, changes or lines you want, and commit.
 3. **Send back** what isn't: comment on the lines to redo, copy the comments as Markdown, each with its file, lines and code, and paste them to Claude Code, Codex or a colleague.
 
-MyGit reads the repository, not an agent's session, so it works the same with any agent, with several at once, and with your own edits.
+GitKleen reads the repository, not an agent's session, so it works the same with any agent, with several at once, and with your own edits.
 
-| How you look at an agent's changes today | What MyGit does instead |
+| How you look at an agent's changes today | What GitKleen does instead |
 |---|---|
 | The agent's own diff view | Works with every agent, and lets you stage single lines and fix the code before you commit |
 | Opening an IDE | Opens in a moment, in a fraction of the memory |
@@ -48,19 +48,19 @@ MyGit reads the repository, not an agent's session, so it works the same with an
 
 ### Light, fast and modern
 
-MyGit feels like the IDE you know: JetBrains' commit graph and history tools, VS Code's list of changes and way of staging, ⌘K for commands and ⌘P to go to a file, light and dark. Without the IDE: it's a single native binary drawn on the GPU by [MyGo](https://github.com/egoist/mygo), no webview, no JVM. Memory once a repository of 20,000 commits is open, every process of the app counted (Apple M4):
+GitKleen feels like the IDE you know: JetBrains' commit graph and history tools, VS Code's list of changes and way of staging, ⌘K for commands and ⌘P to go to a file, light and dark. Without the IDE: it's a single native binary drawn on the GPU by [MyGo](https://github.com/egoist/mygo), no webview, no JVM. Memory once a repository of 20,000 commits is open, every process of the app counted (Apple M4):
 
 | App | Memory |
 |---|---|
-| **MyGit** | **109 MB** |
+| **GitKleen** | **109 MB** |
 | A trimmed IntelliJ-based client | 750 MB |
 | VS Code, no extensions | 1,000 MB |
 | VS Code, 167 extensions | 1,400 MB |
 | IntelliJ IDEA 2026.2 | 2,300 MB |
 
-On the same repository, MyGit reads the whole history and lays out its graph in **0.13 s** and opens a commit with a 20 MB patch (5,677 files) in **0.24 s**.
+On the same repository, GitKleen reads the whole history and lays out its graph in **0.13 s** and opens a commit with a 20 MB patch (5,677 files) in **0.24 s**.
 
-MyGit reads what `git` prints and lets `git` itself make every change, so a repository behaves in MyGit exactly as it does in a terminal. The same app, with the same features, runs on macOS, Windows and Linux.
+GitKleen reads what `git` prints and lets `git` itself make every change, so a repository behaves in GitKleen exactly as it does in a terminal. The same app, with the same features, runs on macOS, Windows and Linux.
 
 ## Features
 
@@ -93,8 +93,8 @@ MyGit reads what `git` prints and lets `git` itself make every change, so a repo
 - **Stash, blame and remotes** — stash with untracked files, blame a file line by line, manage remotes, pull (fast-forward, rebase or merge), preview a push, force with lease
 - **Sign-ins** — when git needs a username, token or passphrase, the window asks
 - **Workspaces** — open a folder of repositories, as an agent's working folder over a few of them, and each shows in the sidebar with its own message, sync and changes, as VS Code's source control has them
-- **Over SSH** — open a repository on another computer (`host:/path/to/repo`, Linux, macOS or Windows) with your ssh config and keys; MyGit runs a small helper there, in `~/.mygit`, and needs only git on it. On Windows, the distributions of WSL open the same way, without sshd (`wsl+Ubuntu:~/repo`)
-- **Everywhere** — a window per repository, drag folders in, `mygit .` from a terminal, custom title bars, light and dark (the system's or chosen in Settings), English and 简体中文, signed auto-updates
+- **Over SSH** — open a repository on another computer (`host:/path/to/repo`, Linux, macOS or Windows) with your ssh config and keys; GitKleen runs a small helper there, in `~/.gitkleen`, and needs only git on it. On Windows, the distributions of WSL open the same way, without sshd (`wsl+Ubuntu:~/repo`)
+- **Everywhere** — a window per repository, drag folders in, `gitkleen .` from a terminal, custom title bars, light and dark (the system's or chosen in Settings), English and 简体中文, signed auto-updates
 
 ## Install
 
@@ -102,25 +102,25 @@ Download the latest release:
 
 | Platform | Download |
 |---|---|
-| macOS (Apple silicon) | [MyGit-macos-arm64.dmg](https://github.com/Binaryify/MyGit/releases/latest/download/MyGit-macos-arm64.dmg) |
-| Windows (x64) | [Installer](https://github.com/Binaryify/MyGit/releases/latest/download/MyGit-windows-amd64-setup.exe) · [zip](https://github.com/Binaryify/MyGit/releases/latest/download/MyGit-windows-amd64.zip) |
-| Linux (x64) | [.deb](https://github.com/Binaryify/MyGit/releases/latest/download/MyGit-linux-amd64.deb), or the script below |
+| macOS (Apple silicon) | [GitKleen-macos-arm64.dmg](https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-macos-arm64.dmg) |
+| Windows (x64) | [Installer](https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64-setup.exe) · [zip](https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64.zip) |
+| Linux (x64) | [.deb](https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-linux-amd64.deb), or the script below |
 
-On Linux, this installs MyGit for you in `~/.local`, without root:
+On Linux, this installs GitKleen for you in `~/.local`, without root:
 
 ```bash
-curl -fsSL https://github.com/Binaryify/MyGit/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/leoheung/GitKleen/releases/latest/download/install.sh | sh
 ```
 
-MyGit isn't notarized by Apple yet. If macOS says it can't be opened, move it to Applications and run:
+GitKleen isn't notarized by Apple yet. If macOS says it can't be opened, move it to Applications and run:
 
 ```bash
-xattr -dr com.apple.quarantine /Applications/MyGit.app
+xattr -dr com.apple.quarantine /Applications/GitKleen.app
 ```
 
 The Windows installer isn't code-signed yet either. If Windows says it protected your PC, choose **More info**, then **Run anyway**.
 
-MyGit needs `git` on the `PATH`, and updates itself once installed. Intel Macs aren't supported. All releases are on the [releases page](https://github.com/Binaryify/MyGit/releases).
+GitKleen needs `git` on the `PATH`, and updates itself once installed. Intel Macs aren't supported. All releases are on the [releases page](https://github.com/leoheung/GitKleen/releases).
 
 To build it from source instead, see [Development](#development).
 
@@ -142,7 +142,7 @@ To build it from source instead, see [Development](#development).
 ## Development
 
 ```bash
-git clone https://github.com/Binaryify/MyGit.git && cd MyGit   # needs Go 1.27 or later
+git clone https://github.com/leoheung/GitKleen.git && cd GitKleen   # needs Go 1.27 or later
 go tool mygo dev      # run, reloading on changes
 go test ./...         # the tests, the UI's included, need no window
 go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64
@@ -152,9 +152,13 @@ The texts live in [`locales/`](locales): `en.json` is the source and `zh-Hans.js
 
 To release, describe the version in [`CHANGELOG.md`](CHANGELOG.md), whose section becomes the release notes, and push a tag such as `v0.2.0`: CI signs the updates with the `MYGO_UPDATER_PRIVATE_KEY` secret, builds the macOS disk image, the Windows installer and zip, and the Linux package, and publishes them in a release.
 
-Over SSH: a release also builds and signs the helper for six platforms (`mygit-helper-<os>-<arch>.gz`), which the app downloads and checks the first time it reaches a computer of each. To try local changes, `go run ./internal/tools/helpers` builds them into `build/helpers`; start the app with `MYGIT_HELPER_DIR=$PWD/build/helpers`. `MYGIT_E2E_HOST=<host> MYGIT_HELPER_DIR=$PWD/build/helpers go test ./internal/remote -run E2E -v` tests against a real computer.
+Over SSH: a release also builds and signs the helper for six platforms (`gitkleen-helper-<os>-<arch>.gz`), which the app downloads and checks the first time it reaches a computer of each. To try local changes, `go run ./internal/tools/helpers` builds them into `build/helpers`; start the app with `GITKLEEN_HELPER_DIR=$PWD/build/helpers`. `GITKLEEN_E2E_HOST=<host> GITKLEEN_HELPER_DIR=$PWD/build/helpers go test ./internal/remote -run E2E -v` tests against a real computer.
 
-Benchmarks: `MYGIT_BENCH_REPO=<repo> MYGIT_BENCH_COMMIT=<commit> go test -run '^$' -bench .`
+Benchmarks: `GITKLEEN_BENCH_REPO=<repo> GITKLEEN_BENCH_COMMIT=<commit> go test -run '^$' -bench .`
+
+## Credits
+
+Based on [MyGit](https://github.com/Binaryify/MyGit) by Binaryify, under the MIT license.
 
 ## License
 

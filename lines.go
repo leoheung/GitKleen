@@ -6,8 +6,8 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/patch"
-	loc "mygit/locales"
+	"gitkleen/internal/patch"
+	loc "gitkleen/locales"
 )
 
 // reviewLines lets the lines of a change's diff be chosen, by their

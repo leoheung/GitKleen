@@ -23,7 +23,7 @@ with DSStore.open(path, "r+") as d:
     bwsp = d["."]["bwsp"]
     bwsp["WindowBounds"] = "{{200, 340}, {660, 540}}"
     d["."]["bwsp"] = bwsp
-    d["MyGit.app"]["Iloc"] = (180, 150)
+    d["GitKleen.app"]["Iloc"] = (180, 150)
     d["Applications"]["Iloc"] = (480, 145)
     d[readme]["Iloc"] = (330, 340)
 PY

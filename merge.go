@@ -6,9 +6,9 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/conflict"
-	"mygit/internal/git"
-	loc "mygit/locales"
+	"gitkleen/internal/conflict"
+	"gitkleen/internal/git"
+	loc "gitkleen/locales"
 )
 
 // merger resolves a file in conflict, as IntelliJ's merge window: our

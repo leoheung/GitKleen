@@ -5,9 +5,9 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"mygit/internal/git"
-	"mygit/internal/graph"
-	loc "mygit/locales"
+	"gitkleen/internal/git"
+	"gitkleen/internal/graph"
+	loc "gitkleen/locales"
 )
 
 const (

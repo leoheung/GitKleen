@@ -1,4 +1,4 @@
-// MyGit's site: its two languages, the nav's rule as the page scrolls,
+// GitKleen's site: its two languages, the nav's rule as the page scrolls,
 // the cards' pointer light, the demo's play button, and reveals.
 
 const zh = {
@@ -8,15 +8,15 @@ const zh = {
   "nav.install": "安装",
   "hero.pill": "原生 · 安装包不到 7 MB · 本地和 SSH 远程",
   "hero.title": "<span class=\"nw\">轻快的原生 Git 客户端</span><br><span class=\"grad nw\">远程仓库也能用</span>",
-  "hero.lede": "JetBrains 那样的分支图和历史，VS Code 那样的暂存，安装包不到 7 MB，秒开；本地和 SSH 远程的仓库都能用。也为 agent 写代码而做：终端里 <code>mygit .</code> 打开，agent 改到哪你看到哪。",
-  "hero.get": "获取 MyGit",
+  "hero.lede": "JetBrains 那样的分支图和历史，VS Code 那样的暂存，安装包不到 7 MB，秒开；本地和 SSH 远程的仓库都能用。也为 agent 写代码而做：终端里 <code>gitkleen .</code> 打开，agent 改到哪你看到哪。",
+  "hero.get": "获取 GitKleen",
   "hero.watch": "观看演示",
   "hero.platforms": "macOS · Windows · Linux",
   "demo.eyebrow": "演示",
-  "demo.title": "一分钟内看懂 MyGit。",
+  "demo.title": "一分钟内看懂 GitKleen。",
   "flow.eyebrow": "为 agent 写代码而做",
   "flow.title": "用 git 的大部分时间，都在看改了什么。",
-  "flow.lede": "MyGit 让这件事变快。它读的是仓库，不是某个 agent 的会话，所以换哪个 agent、同时用几个、还是你自己改的代码，用起来都一样。",
+  "flow.lede": "GitKleen 让这件事变快。它读的是仓库，不是某个 agent 的会话，所以换哪个 agent、同时用几个、还是你自己改的代码，用起来都一样。",
   "flow.s1.title": "看",
   "flow.s1.body": "文件一改，这里马上就能看到，不用手动刷新。每个文件并排对比、带语法高亮。锁文件和生成的文件自动折叠，图片改动显示前后对比。",
   "flow.s2.title": "留",
@@ -25,7 +25,7 @@ const zh = {
   "flow.s3.body": "在要返工的行上写一句，复制为 Markdown（每条带文件、行号和代码），粘给 Claude Code、Codex 或同事。",
   "why.eyebrow": "轻量、快速、现代",
   "why.title": "熟悉的 IDE 体验，内存只要零头。",
-  "why.lede": "JetBrains 的分支图和历史操作，VS Code 的改动列表和暂存方式，⌘K 打开命令栏，⌘P 转到文件，深浅色都有。但它不是 IDE：MyGit 是一个原生二进制文件，由 MyGo 用 GPU 绘制界面，没有 webview，也没有 JVM，安装包不到 7 MB，点开就能用。",
+  "why.lede": "JetBrains 的分支图和历史操作，VS Code 的改动列表和暂存方式，⌘K 打开命令栏，⌘P 转到文件，深浅色都有。但它不是 IDE：GitKleen 是一个原生二进制文件，由 MyGo 用 GPU 绘制界面，没有 webview，也没有 JVM，安装包不到 7 MB，点开就能用。",
   "why.other": "精简版 IntelliJ 客户端",
   "why.code": "VS Code，不带插件",
   "why.codeExt": "VS Code，167 个插件",
@@ -52,7 +52,7 @@ const zh = {
   "f3.title": "任何分支都能找到。",
   "f3.body": "边输入边搜索本地和远程分支，在每个分支的菜单里切换、合并、变基、比较、重命名或删除，也能从任意提交开始交互式变基。",
   "f4.title": "怎么打开都行。",
-  "f4.body": "把文件夹拖到窗口上、克隆、新建仓库、在终端里运行 <code>mygit .</code>，或者通过 SSH 打开其他电脑上的仓库。每个仓库都有自己的窗口。",
+  "f4.body": "把文件夹拖到窗口上、克隆、新建仓库、在终端里运行 <code>gitkleen .</code>，或者通过 SSH 打开其他电脑上的仓库。每个仓库都有自己的窗口。",
   "m1": "按说明、作者、哈希搜索历史，按分支或路径筛选",
   "m2": "带语法高亮的并排 diff，⌘ 点选两个提交即可比较",
   "m3": "拖动重排，改写说明、squash、fixup 或丢弃",
@@ -72,7 +72,7 @@ const zh = {
   "every.update": "签名的自动更新",
   "every.update2": "一键完成",
   "install.eyebrow": "安装",
-  "install.title": "获取 MyGit。",
+  "install.title": "获取 GitKleen。",
   "install.lede": "免费开源。需要 PATH 里有 git，安装后会自动更新。",
   "install.mac": "Apple 芯片",
   "install.dmg": "下载 .dmg",
@@ -105,7 +105,7 @@ en["install.copied"] = "Copied";
 
 function preferredLang() {
   try {
-    const saved = localStorage.getItem("mygit-lang");
+    const saved = localStorage.getItem("gitkleen-lang");
     if (saved === "en" || saved === "zh") return saved;
   } catch {}
   return (navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en";
@@ -135,7 +135,7 @@ function setLang(next) {
     v.closest(".video-frame").classList.remove("playing");
   });
   document.querySelectorAll(".lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === next)));
-  try { localStorage.setItem("mygit-lang", next); } catch {}
+  try { localStorage.setItem("gitkleen-lang", next); } catch {}
 }
 document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => setLang(b.dataset.lang)));
 setLang(preferredLang());
@@ -196,7 +196,7 @@ function countUp(el) {
 
 // Copying the install command, without the prompt and the comment.
 document.querySelector(".copy").addEventListener("click", async (e) => {
-  const text = "curl -fsSL https://github.com/Binaryify/MyGit/releases/latest/download/install.sh | sh\n";
+  const text = "curl -fsSL https://github.com/leoheung/GitKleen/releases/latest/download/install.sh | sh\n";
   try {
     await navigator.clipboard.writeText(text);
     e.target.textContent = (lang === "zh" ? zh : en)["install.copied"];

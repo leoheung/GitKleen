@@ -8,18 +8,18 @@ import (
 
 	"github.com/egoist/mygo/ui/editor"
 
-	"mygit/internal/git"
-	"mygit/internal/graph"
+	"gitkleen/internal/git"
+	"gitkleen/internal/graph"
 )
 
-// The benchmarks read a real repository, MYGIT_BENCH_REPO, and the commit
-// MYGIT_BENCH_COMMIT for the diff:
+// The benchmarks read a real repository, GITKLEEN_BENCH_REPO, and the commit
+// GITKLEEN_BENCH_COMMIT for the diff:
 //
-//	MYGIT_BENCH_REPO=~/src/linux MYGIT_BENCH_COMMIT=abc123 go test -bench . -run ^$
+//	GITKLEEN_BENCH_REPO=~/src/linux GITKLEEN_BENCH_COMMIT=abc123 go test -bench . -run ^$
 func benchRepo(b *testing.B) *git.Repo {
-	dir := os.Getenv("MYGIT_BENCH_REPO")
+	dir := os.Getenv("GITKLEEN_BENCH_REPO")
 	if dir == "" {
-		b.Skip("MYGIT_BENCH_REPO not set")
+		b.Skip("GITKLEEN_BENCH_REPO not set")
 	}
 	r, err := git.Open(dir)
 	if err != nil {
@@ -56,9 +56,9 @@ func BenchmarkLoadHistory(b *testing.B) {
 // diff of its largest file, as choosing it does.
 func BenchmarkShowCommit(b *testing.B) {
 	r := benchRepo(b)
-	hash := os.Getenv("MYGIT_BENCH_COMMIT")
+	hash := os.Getenv("GITKLEEN_BENCH_COMMIT")
 	if hash == "" {
-		b.Skip("MYGIT_BENCH_COMMIT not set")
+		b.Skip("GITKLEEN_BENCH_COMMIT not set")
 	}
 	for range b.N {
 		out, err := r.Show(context.Background(), hash, false)

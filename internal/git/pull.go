@@ -8,8 +8,8 @@ import (
 
 // PullRef is where a pull request's head is fetched to, apart from the
 // branches, and PullBaseRef its base branch.
-func PullRef(n int) string     { return fmt.Sprintf("refs/mygit/pull/%d", n) }
-func PullBaseRef(n int) string { return fmt.Sprintf("refs/mygit/pull/%d-base", n) }
+func PullRef(n int) string     { return fmt.Sprintf("refs/gitkleen/pull/%d", n) }
+func PullBaseRef(n int) string { return fmt.Sprintf("refs/gitkleen/pull/%d-base", n) }
 
 // FetchPull fetches a pull request's commits from a remote that has them
 // as GitHub's do, refs/pull/N/head, and its base branch's, and returns the

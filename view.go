@@ -149,8 +149,8 @@ func (a *app) toolbar(c *ui.Context) {
 			if !a.local() {
 				a.remoteBadge(c)
 			}
-			ui.Icon(c, icons["chevron-right"]).Size(18, 18).TextColor(headerFg) // the branches follow the repository's name
-			ui.Column(c).Gap(1).AlignItems(ui.Center).Children(func() {
+			ui.Icon(c, icons["chevron-right"]).Size(18, 18).TextColor(headerFg)      // the branches follow the repository's name
+			ui.Column(c).Gap(1).AlignItems(ui.Center).FontSize(13).Children(func() { // the branches, smaller than the bar's text
 				up := st.Upstream
 				if up == "" {
 					up = "-" // no remote branch tracks this one

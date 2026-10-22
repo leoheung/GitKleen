@@ -169,7 +169,7 @@ func (a *app) tagsPanel(c *ui.Context) {
 			row.Children(func() {
 				ui.Column(c).Gap(2).Grow(1).Basis(0).Children(func() {
 					ui.Text(c, tg.Name).SingleLine()
-					ui.Text(c, tg.Time.Format("2006-01-02")+" · "+tg.Subject).FontSize(11).TextColor(t.TextMuted).SingleLine()
+					ui.Text(c, tg.Time.Format("2006-01-02")+" · "+tg.Hash[:8]).FontSize(11).TextColor(t.TextMuted).SingleLine()
 				})
 			})
 			if row.Clicked() {

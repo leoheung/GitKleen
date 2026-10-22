@@ -14,7 +14,7 @@
   <a href="https://github.com/leoheung/GitKleen/actions/workflows/ci.yml"><img src="https://github.com/leoheung/GitKleen/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/macOS-Apple%20芯片-111?logo=apple" alt="macOS">
   <img src="https://img.shields.io/badge/Windows-x64-0078D4?logo=windows" alt="Windows">
-  <img src="https://img.shields.io/badge/Linux-x64-FCC624?logo=linux&logoColor=111" alt="Linux">
+  <img src="https://img.shields.io/badge/Linux-x64%20%C2%B7%20arm64-FCC624?logo=linux&logoColor=111" alt="Linux">
   <img src="https://img.shields.io/badge/built%20with-Go%20%2B%20MyGo-00ADD8?logo=go&logoColor=white" alt="Go">
 </p>
 
@@ -115,6 +115,7 @@ MyGit 有的都有，再加上 GitKleen 的 [0.2.0](CHANGELOG.md) 在 MyGit 0.3.
 | macOS（Apple 芯片） | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-macos-arm64.dmg` |
 | Windows（x64） | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64-setup.exe` · `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64.zip` |
 | Linux（x64） | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-linux-amd64.deb`，或用下面的脚本 |
+| Linux（arm64） | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-linux-arm64.deb`，或用下面的脚本 |
 
 Linux 上这条命令把 GitKleen 装到 `~/.local`，不需要 root：
 
@@ -154,7 +155,7 @@ GitKleen 需要 `PATH` 里有 `git`，安装后会自动更新。不支持 Intel
 ```bash
 git clone https://github.com/leoheung/GitKleen.git && cd GitKleen   # 需要 Go 1.27 或更新版本
 go tool mygo dev      # 运行，改动后自动重新加载
-go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64
+go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64,linux/arm64
 ```
 
 界面文字在 [`locales/`](locales) 里：`en.json` 是源语言，`zh-Hans.json` 是简体中文，改完运行 `go tool mygo generate`。欢迎贡献其他语言的翻译：新增 `locales/<语言标签>.json` 即可。

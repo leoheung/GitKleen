@@ -244,7 +244,9 @@ func (a *app) groupRows(c *ui.Context, names []string, drop int, row func(c *ui.
 			}
 			byFolder[folder] = append(byFolder[folder], n)
 		} else {
-			keys = append(keys, rest)
+			if plain[rest] == nil {
+				keys = append(keys, rest)
+			}
 			plain[rest] = append(plain[rest], n)
 		}
 	}

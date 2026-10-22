@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- CI 发布 Linux arm64 版本：`.deb`、更新包和更新清单（`update-linux-arm64.json`）都进了 Release；安装脚本本就识别 aarch64，同一条 `install.sh` 两种架构都能装
+- 修复：分支列里不同远程的同名分支（如 `origin/main` 和 `upstream/main`）渲染两遍、共享同一状态的问题
+
 ## 0.2.0
 
 GitKleen 的第一个正式版本：fork 自 MyGit，换了名字、图标和命令行命令（`gitkleen .`，辅助程序目录 `~/.gitkleen`），自动更新的签名密钥和下载地址都指向自己的仓库。另外整理了标签（tags）和 stash 的面板。

@@ -14,7 +14,7 @@
   <a href="https://github.com/leoheung/GitKleen/actions/workflows/ci.yml"><img src="https://github.com/leoheung/GitKleen/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/macOS-Apple%20silicon-111?logo=apple" alt="macOS">
   <img src="https://img.shields.io/badge/Windows-x64-0078D4?logo=windows" alt="Windows">
-  <img src="https://img.shields.io/badge/Linux-x64-FCC624?logo=linux&logoColor=111" alt="Linux">
+  <img src="https://img.shields.io/badge/Linux-x64%20%C2%B7%20arm64-FCC624?logo=linux&logoColor=111" alt="Linux">
   <img src="https://img.shields.io/badge/built%20with-Go%20%2B%20MyGo-00ADD8?logo=go&logoColor=white" alt="Go">
 </p>
 
@@ -115,6 +115,7 @@ Download the latest release:
 | macOS (Apple silicon) | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-macos-arm64.dmg` |
 | Windows (x64) | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64-setup.exe` · `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-windows-amd64.zip` |
 | Linux (x64) | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-linux-amd64.deb`, or the script below |
+| Linux (arm64) | `https://github.com/leoheung/GitKleen/releases/latest/download/GitKleen-linux-arm64.deb`, or the script below |
 
 On Linux, this installs GitKleen for you in `~/.local`, without root:
 
@@ -154,7 +155,7 @@ To build it from source instead, see [Development](#development).
 ```bash
 git clone https://github.com/leoheung/GitKleen.git && cd GitKleen   # needs Go 1.27 or later
 go tool mygo dev      # run, reloading on changes
-go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64
+go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64,linux/arm64
 ```
 
 The texts live in [`locales/`](locales): `en.json` is the source and `zh-Hans.json` its Chinese. After changing them, run `go tool mygo generate`. Translations into other languages are welcome: add `locales/<tag>.json`.

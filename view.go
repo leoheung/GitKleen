@@ -150,23 +150,20 @@ func (a *app) toolbar(c *ui.Context) {
 				a.remoteBadge(c)
 			}
 			ui.Icon(c, icons["chevron-right"]).Size(18, 18).TextColor(headerFg) // the branches follow the repository's name
-			ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {            // the branches, and how far apart
-				ui.Column(c).Gap(1).AlignItems(ui.Center).Children(func() {
-					up := st.Upstream
-					if up == "" {
-						up = "-" // no remote branch tracks this one
-					}
-					ui.Text(c, up).TextColor(headerFg.Alpha(0.6)).SingleLine()
-					ui.Icon(c, icons["chevron-up"]).Size(18, 18).TextColor(headerFg.Alpha(0.6))
-					name := st.Branch
-					if name == "" {
-						name = "-" // a detached HEAD has no branch
-					}
-					ui.Text(c, name).TextColor(headerFg.Alpha(0.6)).SingleLine()
-				})
+			ui.Column(c).Gap(1).AlignItems(ui.Center).Children(func() {
+				up := st.Upstream
+				if up == "" {
+					up = "-" // no remote branch tracks this one
+				}
+				ui.Text(c, up).TextColor(headerFg.Alpha(0.6)).SingleLine()
 				if st.Upstream != "" { // how far apart, as the branches' column says it
 					ui.Text(c, fmt.Sprintf("↑%d ↓%d", st.Ahead, st.Behind)).TextColor(headerFg.Alpha(0.6)).SingleLine()
 				}
+				name := st.Branch
+				if name == "" {
+					name = "-" // a detached HEAD has no branch
+				}
+				ui.Text(c, name).TextColor(headerFg.Alpha(0.6)).SingleLine()
 			})
 			if a.busy != "" {
 				ui.Spinner(c).Size(14, 14)

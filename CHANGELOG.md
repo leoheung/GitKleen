@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.3
+
+- 统一界面文案：按钮、菜单项和提示末尾不再带省略号「…」（如「推送…」变为「推送」、「Delete…」变为「Delete」）；「正在连接…」这类进行中的状态文本和「git@…」这类示例里的省略号保持不变
+
 ## 0.2.1
 
 - CI 发布 Linux arm64 版本：`.deb`、更新包和更新清单（`update-linux-arm64.json`）都进了 Release；安装脚本本就识别 aarch64，同一条 `install.sh` 两种架构都能装

@@ -149,8 +149,8 @@ func (a *app) toolbar(c *ui.Context) {
 				if name == "" {
 					name = "-" // a detached HEAD has no branch
 				}
-				ui.Text(c, name).Bold().TextColor(headerFg).SingleLine()
-				ui.Icon(c, icons["chevron-down"]).Size(18, 18).TextColor(headerFg)
+				ui.Text(c, name).TextColor(headerFg.Alpha(0.6)).SingleLine()
+				ui.Icon(c, icons["chevron-down"]).Size(18, 18).TextColor(headerFg.Alpha(0.6))
 				up := st.Upstream
 				if up == "" {
 					up = "-" // no remote branch tracks this one

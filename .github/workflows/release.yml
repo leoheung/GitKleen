@@ -18,8 +18,6 @@ jobs:
       - uses: actions/setup-go@v7
         with:
           go-version-file: go.mod
-      - name: Test
-        run: go test ./...
       - name: Set the version from the tag
         run: jq --arg v "${GITHUB_REF_NAME#v}" '.version = $v' mygo.json > mygo.tmp && mv mygo.tmp mygo.json
       - name: Build

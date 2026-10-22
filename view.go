@@ -128,7 +128,7 @@ func toolbarButton(c *ui.Context, label string) ui.Element {
 	if b.Hovered() && !b.IsDisabled() {
 		bg = ui.RGB(255, 255, 255).Alpha(0.12)
 	}
-	return b.Background(bg).TextColor(headerFg)
+	return b.Background(bg).TextColor(headerFg).Border(0, ui.Color{})
 }
 
 func (a *app) toolbar(c *ui.Context) {

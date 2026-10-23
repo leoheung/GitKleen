@@ -1096,6 +1096,56 @@ func (msgs Messages) CheckoutCommit() string {
 	return Catalog.Format(msgs.locale, "checkoutCommit", nil)
 }
 
+// RestoreCommit says "Restore as Local Changes"
+// in the language the app shows.
+func RestoreCommit() string { return In(i18n.Locale()).RestoreCommit() }
+
+// RestoreCommit says "Restore as Local Changes"
+// in the language of msgs.
+func (msgs Messages) RestoreCommit() string {
+	return Catalog.Format(msgs.locale, "restoreCommit", nil)
+}
+
+// OpRestore says "Restore {rev} as local changes"
+// in the language the app shows.
+func OpRestore(rev string) string { return In(i18n.Locale()).OpRestore(rev) }
+
+// OpRestore says "Restore {rev} as local changes"
+// in the language of msgs.
+func (msgs Messages) OpRestore(rev string) string {
+	return Catalog.Format(msgs.locale, "opRestore", map[string]any{"rev": rev})
+}
+
+// RestoreTitle says "Replace the working tree with {rev}?"
+// in the language the app shows.
+func RestoreTitle(rev string) string { return In(i18n.Locale()).RestoreTitle(rev) }
+
+// RestoreTitle says "Replace the working tree with {rev}?"
+// in the language of msgs.
+func (msgs Messages) RestoreTitle(rev string) string {
+	return Catalog.Format(msgs.locale, "restoreTitle", map[string]any{"rev": rev})
+}
+
+// RestoreMessage says "The index and the working tree will be replaced with this commit's content. Uncommitted changes will be lost. Untrack…"
+// in the language the app shows.
+func RestoreMessage() string { return In(i18n.Locale()).RestoreMessage() }
+
+// RestoreMessage says "The index and the working tree will be replaced with this commit's content. Uncommitted changes will be lost. Untrack…"
+// in the language of msgs.
+func (msgs Messages) RestoreMessage() string {
+	return Catalog.Format(msgs.locale, "restoreMessage", nil)
+}
+
+// Restore says "Restore"
+// in the language the app shows.
+func Restore() string { return In(i18n.Locale()).Restore() }
+
+// Restore says "Restore"
+// in the language of msgs.
+func (msgs Messages) Restore() string {
+	return Catalog.Format(msgs.locale, "restore", nil)
+}
+
 // CherryPick says "Cherry-Pick"
 // in the language the app shows.
 func CherryPick() string { return In(i18n.Locale()).CherryPick() }

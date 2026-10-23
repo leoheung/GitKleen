@@ -467,6 +467,11 @@ func (a *app) commitMenu(m *ui.Menu, cm git.Commit) {
 	if m.Item(loc.CheckoutCommit()).Chosen() {
 		a.run(loc.OpCheckout(cm.Short()), func(ctx context.Context) error { return a.repo.CheckoutDetached(ctx, cm.Hash) }, nil)
 	}
+	if m.Item(loc.RestoreCommit()).Chosen() {
+		a.ask(loc.RestoreTitle(cm.Short()), loc.RestoreMessage(), loc.Restore(), func() {
+			a.run(loc.OpRestore(cm.Short()), func(ctx context.Context) error { return a.repo.Restore(ctx, cm.Hash) }, nil)
+		})
+	}
 	m.Separator()
 	if m.Item(loc.CherryPick()).Chosen() {
 		a.run(loc.CherryPick()+" "+cm.Short(), func(ctx context.Context) error { return a.repo.CherryPick(ctx, cm) }, nil)

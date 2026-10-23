@@ -24,6 +24,13 @@ func (r *Repo) CheckoutDetached(ctx context.Context, hash string) error {
 	return err
 }
 
+// Restore puts a commit's content in the index and the working tree, as
+// local changes against HEAD, which doesn't move.
+func (r *Repo) Restore(ctx context.Context, hash string) error {
+	_, err := r.Git(ctx, "restore", "--source="+hash, "--staged", "--worktree", ".")
+	return err
+}
+
 // mainline picks a merge commit's first parent as the one its change is
 // taken against, as cherry-picking and reverting a merge need.
 func mainline(c Commit) []string {

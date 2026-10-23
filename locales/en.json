@@ -378,6 +378,25 @@
   "compareWorktree": "Compare with Working Tree",
   "worktree": "working tree",
   "checkoutCommit": "Check Out This Commit",
+  "restoreCommit": "Restore as Local Changes",
+  "opRestore": "Restore {rev} as local changes",
+  "@opRestore": {
+    "placeholders": {
+      "rev": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreTitle": "Replace the working tree with {rev}?",
+  "@restoreTitle": {
+    "placeholders": {
+      "rev": {
+        "type": "String"
+      }
+    }
+  },
+  "restoreMessage": "The index and the working tree will be replaced with this commit's content. Uncommitted changes will be lost. Untracked files are left alone.",
+  "restore": "Restore",
   "cherryPick": "Cherry-Pick",
   "revertCommit": "Revert Commit",
   "rebaseFromHere": "Interactively Rebase from Here",

@@ -175,20 +175,20 @@ func (a *app) toolbar(c *ui.Context) {
 			idle := a.busy == ""
 			toolbarButton(c, loc.Fetch()+" ▾").Label(loc.Fetch()).Disabled(!idle).Menu(func(m *ui.Menu) {
 				if m.Item(loc.FetchAll()).Chosen() {
-					a.run(loc.OpFetch(), a.repo.Fetch, nil)
+					a.runRemote(loc.OpFetch(), a.repo.Fetch, nil)
 				}
 				if names := a.remoteNames(); len(names) > 1 {
 					m.Separator()
 					for _, name := range names {
 						if m.Item(loc.FetchRemote(name)).Chosen() {
-							a.run(loc.OpFetchRemote(name), func(ctx context.Context) error { return a.repo.FetchRemote(ctx, name) }, nil)
+							a.runRemote(loc.OpFetchRemote(name), func(ctx context.Context) error { return a.repo.FetchRemote(ctx, name) }, nil)
 						}
 					}
 				}
 			})
 			toolbarButton(c, loc.Pull()+" ▾").Label(loc.Pull()).Disabled(!idle || st.Upstream == "").Menu(func(m *ui.Menu) {
 				pull := func(mode git.PullMode) {
-					a.run(loc.OpPull(), func(ctx context.Context) error { return a.repo.Pull(ctx, mode) }, nil)
+					a.runRemote(loc.OpPull(), func(ctx context.Context) error { return a.repo.Pull(ctx, mode) }, nil)
 				}
 				if m.Item(loc.PullFF()).Chosen() {
 					pull(git.PullFastForward)

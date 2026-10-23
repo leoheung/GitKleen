@@ -148,7 +148,7 @@ func (a *app) pushView(c *ui.Context) {
 			ui.Row(c).Gap(8).Justify(ui.End).Children(func() {
 				if ui.Button(c, loc.PushTags()).Tooltip("git push origin --tags").Clicked() {
 					p.open = false
-					a.run(loc.OpPushTags(), a.repo.PushTags, a.invalidateRemoteTags)
+					a.runRemote(loc.OpPushTags(), a.repo.PushTags, a.invalidateRemoteTags)
 				}
 				ui.Box(c).Grow(1)
 				if ui.Button(c, loc.Cancel()).Clicked() {
@@ -161,7 +161,7 @@ func (a *app) pushView(c *ui.Context) {
 				if ui.PrimaryButton(c, label).Disabled(p.loading || a.busy != "").Clicked() {
 					p.open = false
 					force := p.force
-					a.run(label, func(ctx context.Context) error { return a.repo.Push(ctx, st, force) }, nil)
+					a.runRemote(label, func(ctx context.Context) error { return a.repo.Push(ctx, st, force) }, nil)
 				}
 			})
 		})

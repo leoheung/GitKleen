@@ -238,7 +238,7 @@ func (a *app) tagItems(m *ui.Menu, name string) {
 	}
 	m.Separator()
 	if !onRemote && a.chose(m.Item(loc.PushTag())) {
-		a.run(loc.OpPushTag(name), func(ctx context.Context) error { return a.repo.PushTag(ctx, name) }, a.invalidateRemoteTags)
+		a.runRemote(loc.OpPushTag(name), func(ctx context.Context) error { return a.repo.PushTag(ctx, name) }, a.invalidateRemoteTags)
 	}
 }
 

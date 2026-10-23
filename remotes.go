@@ -81,7 +81,7 @@ func (a *app) remotesView(c *ui.Context) {
 						ui.Text(c, r.URL).FontSize(11).TextColor(t.TextMuted).SingleLine().Tooltip(r.URL)
 					})
 					if ui.Button(c, loc.Fetch()).Disabled(a.busy != "").Clicked() {
-						a.run(loc.OpFetchRemote(r.Name), func(ctx context.Context) error { return a.repo.FetchRemote(ctx, r.Name) }, nil)
+						a.runRemote(loc.OpFetchRemote(r.Name), func(ctx context.Context) error { return a.repo.FetchRemote(ctx, r.Name) }, nil)
 					}
 					if ui.Button(c, loc.Edit()).Clicked() {
 						a.editRemote(r)

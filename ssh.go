@@ -119,6 +119,11 @@ func sshDialer() remote.SSH {
 	}
 }
 
+// retrySSHKeys, when not nil, are the keys alone for gitSSHCommand: set
+// while a remote operation is retried after the server accepted a key of
+// another account, which has no access to the repository.
+var retrySSHKeys []string
+
 // gitSSHCommand is ssh trying the keys set for git's remote operations,
 // the default one first; "" when none is set, leaving git to its own.
 // IdentitiesOnly keeps ssh to these keys: the agent's and ssh's default
@@ -126,6 +131,9 @@ func sshDialer() remote.SSH {
 // keys were tried, leaving the keys after the first one untried.
 func gitSSHCommand() string {
 	keys := orderedSSHKeys()
+	if retrySSHKeys != nil {
+		keys = retrySSHKeys
+	}
 	if len(keys) == 0 {
 		return ""
 	}
@@ -134,6 +142,25 @@ func gitSSHCommand() string {
 		args = append(args, "-i", strconv.Quote(k))
 	}
 	return strings.Join(args, " ")
+}
+
+// runRemote runs a remote operation, retried with the keys after the one
+// the server accepted when git reports no access: ssh ends its
+// authentication once a key is accepted, even for another account, never
+// reaching the keys after it.
+func (a *app) runRemote(label string, fn func(ctx context.Context) error, then func()) {
+	a.run(label, func(ctx context.Context) error {
+		defer func() { retrySSHKeys = nil }()
+		keys := orderedSSHKeys()
+		for {
+			err := fn(ctx)
+			if err == nil || len(keys) < 2 || !strings.Contains(err.Error(), "denied to") {
+				return err
+			}
+			keys = keys[1:]
+			retrySSHKeys = keys
+		}
+	}, then)
 }
 
 // orderedSSHKeys is the keys set with the default one first.

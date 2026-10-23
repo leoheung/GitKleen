@@ -121,12 +121,15 @@ func sshDialer() remote.SSH {
 
 // gitSSHCommand is ssh trying the keys set for git's remote operations,
 // the default one first; "" when none is set, leaving git to its own.
+// IdentitiesOnly keeps ssh to these keys: the agent's and ssh's default
+// ones would go first, and a server cuts the connection once too many
+// keys were tried, leaving the keys after the first one untried.
 func gitSSHCommand() string {
 	keys := orderedSSHKeys()
 	if len(keys) == 0 {
 		return ""
 	}
-	args := []string{"ssh"}
+	args := []string{"ssh", "-o", "IdentitiesOnly=yes"}
 	for _, k := range keys {
 		args = append(args, "-i", strconv.Quote(k))
 	}

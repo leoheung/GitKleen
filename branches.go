@@ -154,12 +154,16 @@ func (a *app) branchesPanel(c *ui.Context) {
 }
 
 // tagsPanel lists the tags; the Tags tab of the branches' column shows
-// it. A row's click shows the commit it points at.
+// it. A row's click shows the commit it points at, its menu acts on it,
+// and a cloud tells whether origin has the tag.
 func (a *app) tagsPanel(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).Grow(1).Basis(0).Children(func() {
 		filterBar(c, &a.tagFilter, loc.FilterTags(), "", nil)
 		tags := matchTags(a.tags, a.tagFilter)
+		if len(tags) > 0 {
+			a.loadRemoteTags()
+		}
 		l := ui.List(c.Key("tags"), &a.tagList, len(tags), func(i int) {
 			tg := tags[i]
 			row := ui.ButtonBase(c.Key(tg.Name)).Padding(6, 10).Label(tg.Name).Justify(ui.SpaceBetween)
@@ -172,12 +176,18 @@ func (a *app) tagsPanel(c *ui.Context) {
 					ui.Text(c, tg.Name).SingleLine()
 					ui.Text(c, tg.Hash[:8]).FontSize(11).TextColor(t.TextMuted).SingleLine()
 				})
-				ui.Text(c, tg.Time.Format("2006-01-02")).FontSize(11).TextColor(t.TextMuted).SingleLine()
+				ui.Row(c).Gap(5).AlignItems(ui.Center).Children(func() {
+					ui.Text(c, tg.Time.Format("2006-01-02")).FontSize(11).TextColor(t.TextMuted).SingleLine()
+					if icon, ok := a.tagRemoteIcon(tg.Name); ok {
+						ui.Icon(c, icons[icon]).Size(13, 13).TextColor(t.TextMuted)
+					}
+				})
 			})
 			if row.Clicked() {
 				a.tagSel = i
 				a.showTag(tg)
 			}
+			row.ContextMenu(func(m *ui.Menu) { a.tagItems(m, tg.Name) })
 		}).Grow(1).Basis(0).Children(func() {
 			if len(tags) == 0 {
 				ui.Text(c, loc.TagsNone()).TextColor(t.TextMuted).Padding(12)
@@ -187,6 +197,49 @@ func (a *app) tagsPanel(c *ui.Context) {
 			a.showTag(tags[a.tagSel])
 		}
 	})
+}
+
+// tagRemoteIcon tells which cloud icon shows for a tag, and that none
+// does while origin hasn't been asked, or the asking failed.
+func (a *app) tagRemoteIcon(name string) (icon string, ok bool) {
+	if a.remoteTags == nil || a.remoteTagsFailed {
+		return "", false
+	}
+	if a.remoteTags[name] {
+		return "cloud", true
+	}
+	return "cloud-off", true
+}
+
+// tagItems are what a tag's menu does with it. The remote's items wait
+// for origin's tags to be known; without them, only pushing is offered,
+// which git leaves alone when it has the tag already.
+func (a *app) tagItems(m *ui.Menu, name string) {
+	if a.chose(m.Item(loc.DeleteTagLocal())) {
+		a.run(loc.OpDeleteTag(name), func(ctx context.Context) error { return a.repo.DeleteTag(ctx, name) }, a.invalidateRemoteTags)
+	}
+	onRemote := a.remoteTags != nil && !a.remoteTagsFailed && a.remoteTags[name]
+	if onRemote {
+		if a.chose(m.Item(loc.DeleteTagRemote())) {
+			a.ask(loc.DeleteTagRemoteTitle(name), loc.DeleteTagRemoteMessage(), loc.Delete(), func() {
+				a.run(loc.OpDeleteRemoteTag(name), func(ctx context.Context) error { return a.repo.DeleteRemoteTag(ctx, name) }, a.invalidateRemoteTags)
+			})
+		}
+		if a.chose(m.Item(loc.DeleteTagBoth())) {
+			a.ask(loc.DeleteTagBothTitle(name), loc.DeleteTagBothMessage(), loc.Delete(), func() {
+				a.run(loc.OpDeleteTagBoth(name), func(ctx context.Context) error {
+					if err := a.repo.DeleteTag(ctx, name); err != nil {
+						return err
+					}
+					return a.repo.DeleteRemoteTag(ctx, name)
+				}, a.invalidateRemoteTags)
+			})
+		}
+	}
+	m.Separator()
+	if !onRemote && a.chose(m.Item(loc.PushTag())) {
+		a.run(loc.OpPushTag(name), func(ctx context.Context) error { return a.repo.PushTag(ctx, name) }, a.invalidateRemoteTags)
+	}
 }
 
 // matchFilter narrows branch names to those the filter matches, in lower

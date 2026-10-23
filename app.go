@@ -65,6 +65,9 @@ type app struct {
 	tags                     []git.Tag
 	tagList                  ui.ListState
 	tagSel                   int
+	remoteTags               map[string]bool // the tags on origin; nil = not asked yet
+	remoteTagsLoading        bool
+	remoteTagsFailed         bool // asking failed, as offline: the icons hide, without a retry by itself
 	staged                   []git.Change
 	unstaged                 []git.Change
 	genMarked                map[string]bool // the changes .gitattributes marks generated
@@ -265,6 +268,29 @@ func (a *app) run(label string, fn func(ctx context.Context) error, then func())
 		}
 		a.refresh()
 	})
+}
+
+// loadRemoteTags asks origin for its tags, once, off the main thread.
+func (a *app) loadRemoteTags() {
+	if a.remoteTags != nil || a.remoteTagsLoading {
+		return
+	}
+	a.remoteTagsLoading = true
+	work(a, func(ctx context.Context) (map[string]bool, error) { return a.repo.RemoteTags(ctx) }, func(tags map[string]bool, err error) {
+		a.remoteTagsLoading = false
+		if err != nil {
+			a.remoteTags, a.remoteTagsFailed = map[string]bool{}, true
+		} else {
+			a.remoteTags, a.remoteTagsFailed = tags, false
+		}
+	})
+}
+
+// invalidateRemoteTags forgets the remote's tags, to ask for them again
+// after a tag changed.
+func (a *app) invalidateRemoteTags() {
+	a.remoteTags = nil
+	a.remoteTagsFailed = false
 }
 
 type snapshot struct {

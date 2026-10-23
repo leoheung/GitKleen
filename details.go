@@ -148,7 +148,7 @@ func (a *app) pushView(c *ui.Context) {
 			ui.Row(c).Gap(8).Justify(ui.End).Children(func() {
 				if ui.Button(c, loc.PushTags()).Tooltip("git push origin --tags").Clicked() {
 					p.open = false
-					a.run(loc.OpPushTags(), a.repo.PushTags, nil)
+					a.run(loc.OpPushTags(), a.repo.PushTags, a.invalidateRemoteTags)
 				}
 				ui.Box(c).Grow(1)
 				if ui.Button(c, loc.Cancel()).Clicked() {

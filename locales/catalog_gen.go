@@ -244,6 +244,36 @@ func (msgs Messages) OpPushTags() string {
 	return Catalog.Format(msgs.locale, "opPushTags", nil)
 }
 
+// OpPushTag says "Push tag {name}"
+// in the language the app shows.
+func OpPushTag(name string) string { return In(i18n.Locale()).OpPushTag(name) }
+
+// OpPushTag says "Push tag {name}"
+// in the language of msgs.
+func (msgs Messages) OpPushTag(name string) string {
+	return Catalog.Format(msgs.locale, "opPushTag", map[string]any{"name": name})
+}
+
+// OpDeleteRemoteTag says "Delete remote tag {name}"
+// in the language the app shows.
+func OpDeleteRemoteTag(name string) string { return In(i18n.Locale()).OpDeleteRemoteTag(name) }
+
+// OpDeleteRemoteTag says "Delete remote tag {name}"
+// in the language of msgs.
+func (msgs Messages) OpDeleteRemoteTag(name string) string {
+	return Catalog.Format(msgs.locale, "opDeleteRemoteTag", map[string]any{"name": name})
+}
+
+// OpDeleteTagBoth says "Delete tag {name} here and remotely"
+// in the language the app shows.
+func OpDeleteTagBoth(name string) string { return In(i18n.Locale()).OpDeleteTagBoth(name) }
+
+// OpDeleteTagBoth says "Delete tag {name} here and remotely"
+// in the language of msgs.
+func (msgs Messages) OpDeleteTagBoth(name string) string {
+	return Catalog.Format(msgs.locale, "opDeleteTagBoth", map[string]any{"name": name})
+}
+
 // OpResolve says "Resolve conflict"
 // in the language the app shows.
 func OpResolve() string { return In(i18n.Locale()).OpResolve() }
@@ -1174,6 +1204,86 @@ func DeleteTag(name string) string { return In(i18n.Locale()).DeleteTag(name) }
 // in the language of msgs.
 func (msgs Messages) DeleteTag(name string) string {
 	return Catalog.Format(msgs.locale, "deleteTag", map[string]any{"name": name})
+}
+
+// DeleteTagLocal says "Delete Local Tag"
+// in the language the app shows.
+func DeleteTagLocal() string { return In(i18n.Locale()).DeleteTagLocal() }
+
+// DeleteTagLocal says "Delete Local Tag"
+// in the language of msgs.
+func (msgs Messages) DeleteTagLocal() string {
+	return Catalog.Format(msgs.locale, "deleteTagLocal", nil)
+}
+
+// DeleteTagRemote says "Delete Remote Tag"
+// in the language the app shows.
+func DeleteTagRemote() string { return In(i18n.Locale()).DeleteTagRemote() }
+
+// DeleteTagRemote says "Delete Remote Tag"
+// in the language of msgs.
+func (msgs Messages) DeleteTagRemote() string {
+	return Catalog.Format(msgs.locale, "deleteTagRemote", nil)
+}
+
+// DeleteTagBoth says "Delete Local & Remote Tag"
+// in the language the app shows.
+func DeleteTagBoth() string { return In(i18n.Locale()).DeleteTagBoth() }
+
+// DeleteTagBoth says "Delete Local & Remote Tag"
+// in the language of msgs.
+func (msgs Messages) DeleteTagBoth() string {
+	return Catalog.Format(msgs.locale, "deleteTagBoth", nil)
+}
+
+// PushTag says "Push Tag"
+// in the language the app shows.
+func PushTag() string { return In(i18n.Locale()).PushTag() }
+
+// PushTag says "Push Tag"
+// in the language of msgs.
+func (msgs Messages) PushTag() string {
+	return Catalog.Format(msgs.locale, "pushTag", nil)
+}
+
+// DeleteTagRemoteTitle says "Delete tag {name} on the remote?"
+// in the language the app shows.
+func DeleteTagRemoteTitle(name string) string { return In(i18n.Locale()).DeleteTagRemoteTitle(name) }
+
+// DeleteTagRemoteTitle says "Delete tag {name} on the remote?"
+// in the language of msgs.
+func (msgs Messages) DeleteTagRemoteTitle(name string) string {
+	return Catalog.Format(msgs.locale, "deleteTagRemoteTitle", map[string]any{"name": name})
+}
+
+// DeleteTagRemoteMessage says "The tag will be deleted from the remote repository."
+// in the language the app shows.
+func DeleteTagRemoteMessage() string { return In(i18n.Locale()).DeleteTagRemoteMessage() }
+
+// DeleteTagRemoteMessage says "The tag will be deleted from the remote repository."
+// in the language of msgs.
+func (msgs Messages) DeleteTagRemoteMessage() string {
+	return Catalog.Format(msgs.locale, "deleteTagRemoteMessage", nil)
+}
+
+// DeleteTagBothTitle says "Delete tag {name} here and on the remote?"
+// in the language the app shows.
+func DeleteTagBothTitle(name string) string { return In(i18n.Locale()).DeleteTagBothTitle(name) }
+
+// DeleteTagBothTitle says "Delete tag {name} here and on the remote?"
+// in the language of msgs.
+func (msgs Messages) DeleteTagBothTitle(name string) string {
+	return Catalog.Format(msgs.locale, "deleteTagBothTitle", map[string]any{"name": name})
+}
+
+// DeleteTagBothMessage says "The tag will be deleted both here and on the remote repository."
+// in the language the app shows.
+func DeleteTagBothMessage() string { return In(i18n.Locale()).DeleteTagBothMessage() }
+
+// DeleteTagBothMessage says "The tag will be deleted both here and on the remote repository."
+// in the language of msgs.
+func (msgs Messages) DeleteTagBothMessage() string {
+	return Catalog.Format(msgs.locale, "deleteTagBothMessage", nil)
 }
 
 // CloneTitle says "Clone Repository"

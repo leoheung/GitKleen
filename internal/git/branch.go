@@ -115,6 +115,36 @@ func (r *Repo) PushTags(ctx context.Context) error {
 	return err
 }
 
+// RemoteTags lists the names of the tags on origin, by asking it.
+func (r *Repo) RemoteTags(ctx context.Context) (map[string]bool, error) {
+	out, err := r.Git(ctx, "ls-remote", "--tags", "origin")
+	if err != nil {
+		return nil, err
+	}
+	tags := map[string]bool{}
+	for _, line := range strings.Split(out, "\n") {
+		_, name, ok := strings.Cut(line, "refs/tags/")
+		if !ok || name == "" {
+			continue
+		}
+		name = strings.TrimSuffix(name, "^{}") // an annotated tag lists its commit once more
+		tags[name] = true
+	}
+	return tags, nil
+}
+
+// PushTag sends one tag to origin.
+func (r *Repo) PushTag(ctx context.Context, name string) error {
+	_, err := r.Git(ctx, "push", "origin", name)
+	return err
+}
+
+// DeleteRemoteTag deletes a tag on origin.
+func (r *Repo) DeleteRemoteTag(ctx context.Context, name string) error {
+	_, err := r.Git(ctx, "push", "origin", "--delete", name)
+	return err
+}
+
 // Tag is a tag: its name, the commit it points at, and when it was made.
 type Tag struct {
 	Name, Hash string

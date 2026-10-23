@@ -101,6 +101,30 @@
     }
   },
   "opPushTags": "Push tags",
+  "opPushTag": "Push tag {name}",
+  "@opPushTag": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "opDeleteRemoteTag": "Delete remote tag {name}",
+  "@opDeleteRemoteTag": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "opDeleteTagBoth": "Delete tag {name} here and remotely",
+  "@opDeleteTagBoth": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "opResolve": "Resolve conflict",
   "opRebaseInteractive": "Interactive rebase",
   "opSaveRemote": "Save remote",
@@ -386,6 +410,28 @@
       }
     }
   },
+  "deleteTagLocal": "Delete Local Tag",
+  "deleteTagRemote": "Delete Remote Tag",
+  "deleteTagBoth": "Delete Local & Remote Tag",
+  "pushTag": "Push Tag",
+  "deleteTagRemoteTitle": "Delete tag {name} on the remote?",
+  "@deleteTagRemoteTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteTagRemoteMessage": "The tag will be deleted from the remote repository.",
+  "deleteTagBothTitle": "Delete tag {name} here and on the remote?",
+  "@deleteTagBothTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteTagBothMessage": "The tag will be deleted both here and on the remote repository.",
   "cloneTitle": "Clone Repository",
   "cloneURLPlaceholder": "https://github.com/user/repo.git or git@…",
   "cloneURL": "Repository URL",

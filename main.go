@@ -39,6 +39,10 @@ func main() {
 		os.Exit(code)
 	}
 	mygo.App.SetName("GitKleen")
+	// An app started from the Finder or the Dock has the system's PATH
+	// alone; the login shell's has the tools the user installed, which the
+	// hooks of a repository call.
+	os.Setenv("PATH", git.Path())
 	sysproxy.Install() // downloads, the helpers' and the updates', through the system's proxy
 	loadSettings()
 	if !mygo.App.RequestSingleInstanceLock() {

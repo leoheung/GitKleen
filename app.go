@@ -73,8 +73,9 @@ type app struct {
 	stagedRow, unstagedRow   int // the rows of the changes chosen, as the filter shows them
 	filter                   changeFilter
 
-	message string
-	amend   bool
+	message   string
+	amend     bool
+	skipHooks bool // the pre-commit hooks left out of the next commit
 
 	detail   detail
 	fileList ui.ListState // of the commit's files
@@ -858,20 +859,20 @@ func (a *app) commit() {
 	if !a.canCommit() {
 		return
 	}
-	msg, amend := a.message, a.amend
-	a.run(loc.OpCommit(), func(ctx context.Context) error { return a.repo.Commit(ctx, msg, amend) }, func() {
+	msg, amend, skip := a.message, a.amend, a.skipHooks
+	a.run(loc.OpCommit(), func(ctx context.Context) error { return a.repo.Commit(ctx, msg, amend, skip) }, func() {
 		a.message, a.amend = "", false
 	})
 }
 
-// toggleAmend starts amending from HEAD's message, and stops with an
-// empty one.
-func (a *app) toggleAmend() {
-	if a.amend {
-		a.message = a.repo.LastMessage(context.Background())
-	} else if a.message == a.repo.LastMessage(context.Background()) {
-		a.message = ""
+// startAmend amends the last commit: its message comes back to the box, to
+// be changed, and the commit takes its place.
+func (a *app) startAmend() {
+	if a.busy != "" {
+		return
 	}
+	a.amend = true
+	a.message = a.repo.LastMessage(context.Background())
 }
 
 // remoteNames are the remotes the remotes' branches name.

@@ -2912,16 +2912,6 @@ func (msgs Messages) Message() string {
 	return Catalog.Format(msgs.locale, "message", nil)
 }
 
-// Amend says "Amend last commit"
-// in the language the app shows.
-func Amend() string { return In(i18n.Locale()).Amend() }
-
-// Amend says "Amend last commit"
-// in the language of msgs.
-func (msgs Messages) Amend() string {
-	return Catalog.Format(msgs.locale, "amend", nil)
-}
-
 // Commit says "Commit"
 // in the language the app shows.
 func Commit() string { return In(i18n.Locale()).Commit() }
@@ -2930,6 +2920,36 @@ func Commit() string { return In(i18n.Locale()).Commit() }
 // in the language of msgs.
 func (msgs Messages) Commit() string {
 	return Catalog.Format(msgs.locale, "commit", nil)
+}
+
+// SkipHooks says "Skip Hooks"
+// in the language the app shows.
+func SkipHooks() string { return In(i18n.Locale()).SkipHooks() }
+
+// SkipHooks says "Skip Hooks"
+// in the language of msgs.
+func (msgs Messages) SkipHooks() string {
+	return Catalog.Format(msgs.locale, "skipHooks", nil)
+}
+
+// SkipHooksHint says "Leave the pre-commit and commit-msg hooks out of this commit"
+// in the language the app shows.
+func SkipHooksHint() string { return In(i18n.Locale()).SkipHooksHint() }
+
+// SkipHooksHint says "Leave the pre-commit and commit-msg hooks out of this commit"
+// in the language of msgs.
+func (msgs Messages) SkipHooksHint() string {
+	return Catalog.Format(msgs.locale, "skipHooksHint", nil)
+}
+
+// AmendCommit says "Amend This Commit"
+// in the language the app shows.
+func AmendCommit() string { return In(i18n.Locale()).AmendCommit() }
+
+// AmendCommit says "Amend This Commit"
+// in the language of msgs.
+func (msgs Messages) AmendCommit() string {
+	return Catalog.Format(msgs.locale, "amendCommit", nil)
 }
 
 // CommitFiles says "{count, plural, one {Commit # File} other {Commit # Files}}"

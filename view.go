@@ -235,9 +235,7 @@ func (a *app) changesPanel(c *ui.Context) {
 		ui.Column(c).Gap(8).Padding(10).BorderWidth(1, 0, 0, 0).BorderColor(t.Border).Children(func() {
 			ui.TextArea(c, &a.message).Placeholder(loc.MessagePlaceholder(shortcut("↩"))).Label(loc.Message()).Lines(2, 8)
 			ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
-				if ui.Checkbox(c, &a.amend, loc.Amend()).Changed() {
-					a.toggleAmend()
-				}
+				ui.Checkbox(c, &a.skipHooks, loc.SkipHooks()).Tooltip(loc.SkipHooksHint())
 				ui.Box(c).Grow(1)
 				label := loc.Commit()
 				if n := len(a.staged); n > 0 {

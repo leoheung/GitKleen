@@ -172,11 +172,15 @@ func inBatches(paths []string, fn func(batch []string) error) error {
 	return nil
 }
 
-// Commit commits the index.
-func (r *Repo) Commit(ctx context.Context, message string, amend bool) error {
+// Commit commits the index. skipHooks leaves the pre-commit and commit-msg
+// hooks out, as --no-verify does.
+func (r *Repo) Commit(ctx context.Context, message string, amend, skipHooks bool) error {
 	args := []string{"commit", "-m", message}
 	if amend {
 		args = append(args, "--amend")
+	}
+	if skipHooks {
+		args = append(args, "--no-verify")
 	}
 	_, err := r.Git(ctx, args...)
 	return err

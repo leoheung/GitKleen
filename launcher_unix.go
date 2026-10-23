@@ -3,7 +3,6 @@
 package main
 
 import (
-	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -12,8 +11,8 @@ import (
 	"runtime"
 	"slices"
 	"strings"
-	"time"
 
+	"gitkleen/internal/git"
 	loc "gitkleen/locales"
 )
 
@@ -30,42 +29,7 @@ func shellWord(s string) string { return "'" + strings.ReplaceAll(s, "'", `'\''`
 // shellPATH is the PATH of the user's terminals: an app started from the
 // Finder or the Dock has the system's alone, so the login shell is asked,
 // as VS Code does. The app's own comes after it.
-var shellPATH = func() []string {
-	dirs := []string{}
-	shell := os.Getenv("SHELL")
-	if shell == "" {
-		shell = "/bin/sh"
-		if runtime.GOOS == "darwin" {
-			shell = "/bin/zsh"
-		}
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	// Between markers, as a shell's startup files may print too.
-	out, err := exec.CommandContext(ctx, shell, "-ilc", `printf '\n@@%s@@\n' "$PATH"`).Output()
-	if err == nil {
-		if _, rest, ok := strings.Cut(string(out), "\n@@"); ok {
-			if p, _, ok := strings.Cut(rest, "@@\n"); ok {
-				dirs = filepath.SplitList(p)
-			}
-		}
-	}
-	for _, d := range filepath.SplitList(os.Getenv("PATH")) {
-		if !contains(dirs, d) {
-			dirs = append(dirs, d)
-		}
-	}
-	return dirs
-}
-
-func contains(list []string, s string) bool {
-	for _, v := range list {
-		if v == s {
-			return true
-		}
-	}
-	return false
-}
+var shellPATH = git.ShellPath
 
 // launcherDir is the folder of the terminals' PATH the command goes in:
 // the usual ones for one's commands first (~/.local/bin, ~/bin, then
@@ -151,7 +115,7 @@ func removeLaunchers() ([]string, error) {
 	var removed []string
 	for _, d := range shellPATH() {
 		p := filepath.Join(d, "gitkleen")
-		if d == "" || contains(removed, p) || !ours(p) {
+		if d == "" || git.Contains(removed, p) || !ours(p) {
 			continue
 		}
 		err := os.Remove(p)

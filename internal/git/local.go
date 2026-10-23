@@ -20,7 +20,9 @@ type local struct{}
 func (*local) Exec(ctx context.Context, dir string, env []string, stdin io.Reader, stdout, stderr io.Writer, args ...string) error {
 	cmd := exec.CommandContext(ctx, "git", args...)
 	cmd.Dir = dir
-	cmd.Env = append(os.Environ(), env...)
+	// The PATH of the user's terminals, so the hooks of a repository find
+	// the tools they call: node, npx, and the rest.
+	cmd.Env = append(append(os.Environ(), "PATH="+Path()), env...)
 	if Env != nil {
 		cmd.Env = append(cmd.Env, Env(dir)...)
 	}

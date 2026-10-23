@@ -95,7 +95,7 @@ Everything MyGit does, plus what GitKleen's [0.2.0](CHANGELOG.md) adds over MyGi
 
 - **Reading changes** — generated files (lockfiles, minified, `linguist-generated`) fold away; mark files viewed; changed pictures show before and after; comment on lines and copy the comments as Markdown for an agent or a colleague
 - **Staging** — stage, unstage or discard files, changes or selected lines; edit and save the working tree in the diff; filter thousands of changes by path
-- **Commits** — whole messages, changed files and side-by-side diffs with syntax highlighting; a merge against any parent; compare two commits (⌘-click), a branch or the working tree
+- **Commits** — whole messages, changed files and side-by-side diffs with syntax highlighting; a merge against any parent; compare two commits (⌘-click), a branch or the working tree; amend the last commit from its menu; leave the hooks out when you mean to (`--no-verify`)
 - **History** — every branch, tag and remote with its graph, streamed as it loads; search by message, author or hash; filter by branch or path (file history)
 - **History tools** — branch, tag, check out, cherry-pick, revert, reset (soft / mixed / hard) and interactive rebase (reorder, reword, edit, squash, fixup, drop)
 - **Pull requests** — open a GitHub pull request, read and reply to its threads under their lines, resolve them, and submit a review: comment, approve or request changes

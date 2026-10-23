@@ -18,6 +18,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 
 	"gitkleen/internal/askpass"
+	"gitkleen/internal/git"
 )
 
 // server runs the app's calls on the helper's computer.
@@ -150,7 +151,9 @@ func (s *server) do(ctx context.Context, id uint32, c *call, req Request) (err e
 	case "exec":
 		cmd := exec.CommandContext(ctx, "git", req.Args...)
 		cmd.Dir = filepath.FromSlash(req.Dir)
-		cmd.Env = append(os.Environ(), req.Env...)
+		// The PATH of this computer's terminals, so the hooks of a
+		// repository find the tools they call.
+		cmd.Env = append(append(os.Environ(), "PATH="+git.Path()), req.Env...)
 		if s.env != nil {
 			cmd.Env = append(cmd.Env, s.env(req.Dir)...)
 		}

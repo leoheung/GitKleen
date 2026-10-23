@@ -732,8 +732,10 @@
   "refresh": "Refresh",
   "messagePlaceholder": "Commit message ({shortcut} to commit)",
   "message": "Commit message",
-  "amend": "Amend last commit",
   "commit": "Commit",
+  "skipHooks": "Skip Hooks",
+  "skipHooksHint": "Leave the pre-commit and commit-msg hooks out of this commit",
+  "amendCommit": "Amend This Commit",
   "commitFiles": "{count, plural, one {Commit # File} other {Commit # Files}}",
   "@commitFiles": {
     "placeholders": {

@@ -421,6 +421,10 @@ func (a *app) commitMenu(m *ui.Menu, cm git.Commit) {
 	if m.Item(loc.RevertCommit()).Chosen() {
 		a.run(loc.OpRevert(cm.Short()), func(ctx context.Context) error { return a.repo.Revert(ctx, cm) }, nil)
 	}
+	// Only the last commit can be amended, the rest are the rebase's.
+	if slices.Contains(cm.Refs, "HEAD") && m.Item(loc.AmendCommit()).Chosen() {
+		a.startAmend()
+	}
 	a.mergeItems(m, cm.Hash)
 	if m.Item(loc.RebaseFromHere()).Chosen() {
 		a.planRebase(cm)

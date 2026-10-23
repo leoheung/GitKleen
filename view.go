@@ -294,6 +294,11 @@ func (a *app) changeSection(c *ui.Context, title string, staged bool) {
 				a.stashChanges()
 			}
 		}
+		if !staged && n > 0 {
+			if iconButton(c, "undo", loc.DiscardAll()) && idle {
+				a.discardAll()
+			}
+		}
 	})
 	l := ui.List(c.Key(title), list, n, func(i int) {
 		ch := changes[at(i)]

@@ -584,6 +584,26 @@ func (msgs Messages) DiscardLinesMessage() string {
 	return Catalog.Format(msgs.locale, "discardLinesMessage", nil)
 }
 
+// DiscardAllTitle says "Discard all changes?"
+// in the language the app shows.
+func DiscardAllTitle() string { return In(i18n.Locale()).DiscardAllTitle() }
+
+// DiscardAllTitle says "Discard all changes?"
+// in the language of msgs.
+func (msgs Messages) DiscardAllTitle() string {
+	return Catalog.Format(msgs.locale, "discardAllTitle", nil)
+}
+
+// DiscardAllMessage says "These changes will be removed from the working tree. Untracked files are deleted. This can't be undone."
+// in the language the app shows.
+func DiscardAllMessage() string { return In(i18n.Locale()).DiscardAllMessage() }
+
+// DiscardAllMessage says "These changes will be removed from the working tree. Untracked files are deleted. This can't be undone."
+// in the language of msgs.
+func (msgs Messages) DiscardAllMessage() string {
+	return Catalog.Format(msgs.locale, "discardAllMessage", nil)
+}
+
 // Cancel says "Cancel"
 // in the language the app shows.
 func Cancel() string { return In(i18n.Locale()).Cancel() }
@@ -3160,6 +3180,16 @@ func StageAll() string { return In(i18n.Locale()).StageAll() }
 // in the language of msgs.
 func (msgs Messages) StageAll() string {
 	return Catalog.Format(msgs.locale, "stageAll", nil)
+}
+
+// DiscardAll says "Discard All"
+// in the language the app shows.
+func DiscardAll() string { return In(i18n.Locale()).DiscardAll() }
+
+// DiscardAll says "Discard All"
+// in the language of msgs.
+func (msgs Messages) DiscardAll() string {
+	return Catalog.Format(msgs.locale, "discardAll", nil)
 }
 
 // OpenFile says "Open File"

@@ -216,6 +216,13 @@ func (r *Repo) Discard(ctx context.Context, c Change) error {
 	return err
 }
 
+// DiscardPaths throws away the working tree's changes of the paths:
+// they go back to the index.
+func (r *Repo) DiscardPaths(ctx context.Context, paths ...string) error {
+	_, err := r.Git(ctx, append([]string{"restore", "--worktree", "--"}, paths...)...)
+	return err
+}
+
 // Stage is a version of a file in conflict, as the index holds it.
 type Stage int
 

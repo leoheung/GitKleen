@@ -859,6 +859,55 @@ func (a *app) discard(c git.Change) {
 	})
 }
 
+// discardAll throws every change the list shows away, once the user
+// says so: tracked files go back to the index, untracked ones to the
+// trash, or away over SSH.
+func (a *app) discardAll() {
+	rows := a.shownRows(false)
+	changes := a.unstaged
+	if rows != nil {
+		changes = nil
+		for _, r := range rows {
+			changes = append(changes, a.unstaged[r])
+		}
+	}
+	var tracked, untracked []string
+	for _, c := range changes {
+		if c.Conflict {
+			continue // the row's own discard skips these too
+		}
+		if c.Work == '?' {
+			untracked = append(untracked, c.Path)
+		} else {
+			tracked = append(tracked, c.Path)
+		}
+	}
+	if len(tracked)+len(untracked) == 0 {
+		return
+	}
+	a.ask(loc.DiscardAllTitle(), loc.DiscardAllMessage(), loc.Discard(), func() {
+		a.run(loc.OpDiscard(), func(ctx context.Context) error {
+			if len(tracked) > 0 {
+				if err := a.repo.DiscardPaths(ctx, tracked...); err != nil {
+					return err
+				}
+			}
+			for _, p := range untracked {
+				if !a.local() {
+					if err := a.repo.Remove(ctx, p); err != nil {
+						return err
+					}
+					continue
+				}
+				if err := trash(a.repo.Path(p)); err != nil {
+					return err
+				}
+			}
+			return nil
+		}, nil)
+	})
+}
+
 // stageAll and unstageAll act on a whole list, or with a filter on the
 // changes it shows.
 func (a *app) stageAll() {

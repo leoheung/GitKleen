@@ -11,3 +11,4 @@ mygo_windows_*.syso
 .claude/launch.json
 .wrangler/
 /.trae/documents/
+*test.go

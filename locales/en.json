@@ -283,6 +283,7 @@
   "branchSwitch": "Switch to This Branch",
   "branchNewFrom": "New Branch from Here",
   "branchHistory": "Show This Branch's History",
+  "copyBranchName": "Copy Branch Name",
   "branchRenameTitle": "Rename branch {name}",
   "@branchRenameTitle": {
     "placeholders": {

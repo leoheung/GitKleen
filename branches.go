@@ -56,6 +56,10 @@ func (a *app) promptView(c *ui.Context) {
 
 // branchItems are what a local branch's menu does with it.
 func (a *app) branchItems(m *ui.Menu, b string) {
+	if m.Item(loc.CopyBranchName()).Chosen() {
+		mygo.Clipboard.WriteText(b)
+	}
+	m.Separator()
 	cur := a.status.Branch
 	if b != cur && a.chose(m.Item(loc.BranchSwitch())) {
 		a.switchTo(b)
@@ -82,6 +86,10 @@ func (a *app) branchItems(m *ui.Menu, b string) {
 
 // remoteItems are what a remote branch's menu does with it.
 func (a *app) remoteItems(m *ui.Menu, rb string) {
+	if m.Item(loc.CopyBranchName()).Chosen() {
+		mygo.Clipboard.WriteText(rb)
+	}
+	m.Separator()
 	if a.chose(m.Item(loc.BranchCheckoutLocal())) {
 		a.run(loc.OpCheckout(rb), func(ctx context.Context) error { return a.repo.CheckoutRemote(ctx, rb) }, nil)
 	}

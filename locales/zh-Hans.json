@@ -77,6 +77,7 @@
   "branchSwitch": "切换到此分支",
   "branchNewFrom": "从此分支新建分支",
   "branchHistory": "显示此分支的历史",
+  "copyBranchName": "复制分支名",
   "branchRenameTitle": "重命名分支 {name}",
   "branchCheckoutLocal": "检出为本地分支",
   "branchDeleteRemote": "删除远程分支",

@@ -70,7 +70,10 @@ func showWelcome() {
 		Height:    640,
 		MinWidth:  420,
 		MinHeight: 520,
-		Content:   ui.View(w.view),
+		// A small helper window: never fullscreen, even when the app's
+		// other windows are, or macOS opens it fullscreen with them.
+		DisableFullScreen: true,
+		Content:           ui.View(w.view),
 	}))
 	dropMenuBar(w.win)
 	credAsker = w

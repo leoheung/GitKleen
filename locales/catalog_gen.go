@@ -804,6 +804,16 @@ func (msgs Messages) BranchHistory() string {
 	return Catalog.Format(msgs.locale, "branchHistory", nil)
 }
 
+// CopyBranchName says "Copy Branch Name"
+// in the language the app shows.
+func CopyBranchName() string { return In(i18n.Locale()).CopyBranchName() }
+
+// CopyBranchName says "Copy Branch Name"
+// in the language of msgs.
+func (msgs Messages) CopyBranchName() string {
+	return Catalog.Format(msgs.locale, "copyBranchName", nil)
+}
+
 // BranchRenameTitle says "Rename branch {name}"
 // in the language the app shows.
 func BranchRenameTitle(name string) string { return In(i18n.Locale()).BranchRenameTitle(name) }

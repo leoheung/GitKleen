@@ -27,6 +27,7 @@ type settings struct {
 	SidebarW         float32          `json:"sidebarW"`
 	FilesW           float32          `json:"filesW"`
 	BranchesW        float32          `json:"branchesW"`            // the branches' column's width
+	DrawerW          float32          `json:"drawerW"`              // the diff drawer's width, 0 for half the window
 	ChangesPct       float32          `json:"changesPct"`           // of the changes' room, the changes', above the staged
 	Proxy            string           `json:"proxy,omitempty"`      // the downloads', "" for the system's
 	Remotes          []string         `json:"remotes,omitempty"`    // repositories on other computers opened lately, host:dir

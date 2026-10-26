@@ -108,6 +108,7 @@ type app struct {
 	sidebarW   float32
 	branchesW  float32 // the branches' column's width
 	drawer     bool    // the diff's drawer, at the window's right
+	drawerW    float32 // the drawer's width, 0 for half the window
 	filesW     float32
 	changesPct float32 // of the changes' room, the changes', above the staged
 }
@@ -145,7 +146,7 @@ type detail struct {
 
 func newApp(repo *git.Repo) *app {
 	return &app{repo: repo, online: make(chan struct{}, 1), logSel: -1, stagedSel: -1, unstagedSel: -1, stashSel: -1, tagSel: -1,
-		sidebarW: prefs.SidebarW, branchesW: prefs.BranchesW, filesW: prefs.FilesW, changesPct: prefs.ChangesPct,
+		sidebarW: prefs.SidebarW, branchesW: prefs.BranchesW, filesW: prefs.FilesW, changesPct: prefs.ChangesPct, drawerW: prefs.DrawerW,
 		unfolded: map[string]bool{}, viewed: map[string]bool{}, foldFolders: map[string]bool{}, pullReviews: map[int]*pullReview{}}
 }
 
@@ -183,7 +184,7 @@ func (a *app) start() {
 			})
 		}
 		a.win.OnClosed(func() { // the next window opens as this one was laid out
-			prefs.SidebarW, prefs.BranchesW, prefs.FilesW, prefs.ChangesPct = a.sidebarW, a.branchesW, a.filesW, a.changesPct
+			prefs.SidebarW, prefs.BranchesW, prefs.FilesW, prefs.ChangesPct, prefs.DrawerW = a.sidebarW, a.branchesW, a.filesW, a.changesPct, a.drawerW
 			prefs.save()
 		})
 		a.watch()

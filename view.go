@@ -452,14 +452,33 @@ func changeName(code byte) string {
 }
 
 // drawerView is the drawer at the window's right: what was chosen last,
-// a commit's files and the diff of one, or the diff of a change, at half
-// the window's width.
+// a commit's files and the diff of one, or the diff of a change, at a width
+// dragged by its left edge, half the window's by default.
 func (a *app) drawerView(c *ui.Context) {
 	t := c.Theme()
 	w, _ := c.Size()
-	panel := ui.Column(c).Absolute().Top(0).Right(0).Bottom(0).Width(w/2).
+	// fitDrawer clamps v so both the drawer and the window's rest stay usable.
+	fitDrawer := func(v float32) float32 { return min(max(v, 360), max(w-360, 360)) }
+	panelW := fitDrawer(a.drawerW)
+	if a.drawerW == 0 {
+		panelW = w / 2
+	}
+	panel := ui.Column(c).Absolute().Top(0).Right(0).Bottom(0).Width(panelW).
 		Background(t.Surface).BorderWidth(0, 0, 0, 1).BorderColor(t.Border)
 	panel.Children(func() {
+		// The grip on the panel's left edge, dragging its width.
+		grip := t.Space(1.5)
+		handle := ui.Box(c.Key("drawerGrip")).Absolute().Top(0).Bottom(0).
+			Start(-(grip - 1) / 2).Width(grip).Cursor(ui.CursorResizeEW)
+		dx, _, held := handle.Dragged()
+		if held && dx != 0 {
+			a.drawerW = fitDrawer(panelW - dx) // the panel on the right: wider to the left
+		}
+		handle.Draw(func(p *ui.Painter, r ui.Rect) {
+			if held || handle.Hovered() {
+				p.Fill(ui.Rect{X: r.X, Y: r.Y, W: 1, H: r.H}, t.Accent, 0)
+			}
+		})
 		ui.Row(c).Padding(4, 8).AlignItems(ui.Center).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
 			ui.Box(c).Grow(1)
 			if ui.Button(c, loc.Close()).Clicked() {

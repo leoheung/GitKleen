@@ -103,8 +103,12 @@ func (w *welcome) startClone() {
 	ctx, cancel := context.WithCancel(context.Background())
 	p.running, p.fail, p.progress, p.cancel = true, "", loc.Connecting(), cancel
 	go func() {
-		err := git.Clone(ctx, parent, url, name, func(line string) {
-			w.win.Update(func() { w.clone.progress = line })
+		// The keys are retried as well: the one the server accepts may be
+		// of an account without access to the repository.
+		err := trySSHKeys(ctx, func(ctx context.Context) error {
+			return git.Clone(ctx, parent, url, name, func(line string) {
+				w.win.Update(func() { w.clone.progress = line })
+			})
 		})
 		w.win.Update(func() {
 			if ctx.Err() != nil {

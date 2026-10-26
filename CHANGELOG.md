@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.6
+
+- 修复克隆不换 key 重试：和 fetch/pull/push 一样，设置的 key 被服务器接受但对仓库无权限时（GitHub 报 Permission … denied to … 或 Repository not found），自动换下一个 key 重试，直到试完
+- 克隆失败的报错显示 git 的具体原因（哪个账号被拒、仓库不存在等），不再只有一句「Could not read from remote repository」
+
 ## 0.4.5
 
 - 修复应用图标四周的白色背景：图标导出时被压平到了白底上，现在四角透明、投影保留，和 macOS 的应用图标一致

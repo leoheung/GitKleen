@@ -104,12 +104,19 @@ func scanProgress(data []byte, atEOF bool) (int, []byte, error) {
 	return 0, nil, nil
 }
 
-// lastError is the fatal line of git's output, or err.
+// lastError is the first line of git's output saying why it failed, or
+// err: a server's line denying an account access comes ahead of the
+// fatal ones, which only echo it, and the retried keys read it too.
 func lastError(out string, err error) error {
 	lines := strings.Split(strings.TrimSpace(out), "\n")
-	for i := len(lines) - 1; i >= 0; i-- {
-		if strings.HasPrefix(lines[i], "fatal:") || strings.HasPrefix(lines[i], "error:") {
-			return textErr(lines[i])
+	for _, l := range lines {
+		if strings.Contains(l, "denied to") {
+			return textErr(l)
+		}
+	}
+	for _, l := range lines {
+		if low := strings.ToLower(l); strings.HasPrefix(low, "fatal:") || strings.HasPrefix(low, "error:") {
+			return textErr(l)
 		}
 	}
 	return err

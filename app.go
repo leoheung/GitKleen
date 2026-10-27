@@ -674,9 +674,10 @@ func (a *app) showChange(c git.Change, staged bool) {
 	byName := isGenerated(c.Path, a.genMarked, nil, nil)
 	unfolded := a.unfolded[foldKey("", c.Path)]
 	// The working tree's file, whole and editable, when it is changed in
-	// place and its patch, all of it, can be cut for staging; whole files
-	// asked for, the patch shows with every line instead, read only.
-	whole := !staged && c.Work == 'M' && !a.fullDiff
+	// place and whole files are asked for: its patch, all of it, can be
+	// cut for staging. Otherwise it shows as a patch, its lines cut for
+	// staging too.
+	whole := !staged && c.Work == 'M' && a.fullDiff
 	type result struct {
 		raw      string
 		patch    *editor.FilePatch

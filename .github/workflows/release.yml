@@ -43,7 +43,7 @@ jobs:
           mkdir dist
           # The downloads keep one name in every release, so the site can link
           # to releases/latest/download/<name>.
-          cp "build/darwin-arm64/GitKleen $VERSION arm64.dmg" dist/GitKleen-macos-arm64.dmg
+          cp build/darwin-arm64/*.dmg dist/GitKleen-macos-arm64.dmg
           cp build/linux-amd64/*.deb dist/GitKleen-linux-amd64.deb
           cp build/linux-arm64/*.deb dist/GitKleen-linux-arm64.deb
           cp build/linux-amd64/install.sh dist/
@@ -79,7 +79,7 @@ jobs:
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           mkdir dist
-          cp build/windows-amd64/*Setup*.exe dist/GitKleen-windows-amd64-setup.exe
+          cp build/windows-amd64/*[Ss]etup*.exe dist/GitKleen-windows-amd64-setup.exe
           (cd build/windows-amd64 && 7z a -bd ../../dist/GitKleen-windows-amd64.zip GitKleen.exe icon.png > /dev/null)
           cp build/windows-amd64/gitkleen-*.tar.gz build/windows-amd64/update-*.json dist/
           cp build/windows-amd64/*.delta dist/ 2>/dev/null || true

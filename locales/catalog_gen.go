@@ -2550,6 +2550,16 @@ func (msgs Messages) DiffViewUnified() string {
 	return Catalog.Format(msgs.locale, "diffViewUnified", nil)
 }
 
+// DiffWholeFile says "Whole file"
+// in the language the app shows.
+func DiffWholeFile() string { return In(i18n.Locale()).DiffWholeFile() }
+
+// DiffWholeFile says "Whole file"
+// in the language of msgs.
+func (msgs Messages) DiffWholeFile() string {
+	return Catalog.Format(msgs.locale, "diffWholeFile", nil)
+}
+
 // Language says "Language"
 // in the language the app shows.
 func Language() string { return In(i18n.Locale()).Language() }

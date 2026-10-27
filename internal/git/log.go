@@ -130,9 +130,18 @@ func splitNUL(data []byte, atEOF bool) (int, []byte, error) {
 }
 
 // Show is the patch a commit made to its first parent, or to nothing for
-// a root commit.
-func (r *Repo) Show(ctx context.Context, hash string) (string, error) {
-	return r.Git(ctx, "show", "--format=", "--patch", "-M", "--diff-merges=first-parent", hash)
+// a root commit; context lines around the changes, 0 for git's own three.
+func (r *Repo) Show(ctx context.Context, hash string, context int) (string, error) {
+	return r.Git(ctx, space("show", context, "--format=", "--patch", "-M", "--diff-merges=first-parent", hash)...)
+}
+
+// space adds the context lines asked for, then args.
+func space(cmd string, context int, args ...string) []string {
+	a := []string{cmd}
+	if context > 0 {
+		a = append(a, "-U"+strconv.Itoa(context))
+	}
+	return append(a, args...)
 }
 
 // Message is a commit's whole message.
@@ -143,13 +152,13 @@ func (r *Repo) Message(ctx context.Context, hash string) string {
 
 // DiffFrom is the patch from a commit to another, as a merge's change
 // against its second parent.
-func (r *Repo) DiffFrom(ctx context.Context, from, to string) (string, error) {
-	return r.Git(ctx, "diff", "-M", "--no-ext-diff", from, to)
+func (r *Repo) DiffFrom(ctx context.Context, from, to string, context int) (string, error) {
+	return r.Git(ctx, space("diff", context, "-M", "--no-ext-diff", from, to)...)
 }
 
 // DiffWorktree is the patch from a commit to the working tree.
-func (r *Repo) DiffWorktree(ctx context.Context, rev string) (string, error) {
-	return r.Git(ctx, "diff", "-M", "--no-ext-diff", rev)
+func (r *Repo) DiffWorktree(ctx context.Context, rev string, context int) (string, error) {
+	return r.Git(ctx, space("diff", context, "-M", "--no-ext-diff", rev)...)
 }
 
 // Outgoing are the commits a push would send: those after the upstream,

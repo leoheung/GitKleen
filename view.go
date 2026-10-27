@@ -482,6 +482,9 @@ func (a *app) drawerView(c *ui.Context) {
 		ui.Row(c).Padding(4, 8).Gap(8).AlignItems(ui.Center).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
 			ui.Box(c).Grow(1)
 			a.diffLayoutSwitch(c)
+			if ui.Checkbox(c, &a.fullDiff, loc.DiffWholeFile()).Changed() {
+				a.reloadFullDiff()
+			}
 			ui.Box(c).Grow(1)
 			if ui.Button(c, loc.Close()).Clicked() {
 				a.drawer = false

@@ -86,6 +86,9 @@ type app struct {
 	unfolded map[string]bool // generated files whose diffs were asked for, by foldKey
 	viewed   map[string]bool // files marked viewed, by viewKey
 
+	fullDiff   bool // the diff shown with every unchanged line, not only the changes
+	reopenFile int  // the file of a commit shown again, as its patch comes again
+
 	confirm     confirmation
 	prompt      prompt
 	rebase      rebasePlan
@@ -472,7 +475,7 @@ func (a *app) showCommit(i int) {
 		return
 	}
 	c := a.commits[i]
-	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, c.Hash) })
+	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, c.Hash, a.fullContext()) })
 }
 
 // showCompare shows the change from one revision to another, the working
@@ -484,9 +487,9 @@ func (a *app) showCompare(label, from, to string) {
 	c := git.Commit{Hash: from + ".." + to, Subject: label}
 	a.showPatch(c, func(ctx context.Context) (string, error) {
 		if to == "" {
-			return a.repo.DiffWorktree(ctx, from)
+			return a.repo.DiffWorktree(ctx, from, a.fullContext())
 		}
-		return a.repo.DiffFrom(ctx, from, to)
+		return a.repo.DiffFrom(ctx, from, to, a.fullContext())
 	})
 }
 
@@ -533,7 +536,7 @@ func (a *app) showTag(t git.Tag) {
 		return
 	}
 	c := git.Commit{Hash: t.Hash, Time: t.Time, Subject: t.Subject, Refs: []string{t.Name}}
-	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, t.Hash) })
+	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, t.Hash, a.fullContext()) })
 	a.choose(t.Name)
 }
 
@@ -555,7 +558,7 @@ func (a *app) showParent(i int) {
 	parent := c.Parents[i]
 	a.detail = detail{commit: &c, parent: i, message: a.detail.message, gen: a.detail.gen + 1, loading: true}
 	a.loadPatch(func(ctx context.Context) (string, error) {
-		return a.repo.DiffFrom(ctx, parent, c.Hash)
+		return a.repo.DiffFrom(ctx, parent, c.Hash, a.fullContext())
 	})
 }
 
@@ -596,11 +599,18 @@ func (a *app) loadPatch(load func(ctx context.Context) (string, error)) {
 			a.detail.generated[i] = isGenerated(fileName(r.files[i]), r.marked, &r.files[i], nil)
 		}
 		a.detail.fileSel = -1
-		// The first file people wrote, past lockfiles and the like.
-		if first := slices.Index(a.detail.generated, false); first >= 0 {
+		// The file shown before, or the first people wrote, past lockfiles
+		// and the like.
+		first := slices.Index(a.detail.generated, false)
+		if first < 0 {
+			first = 0
+		}
+		if a.reopenFile >= 0 && a.reopenFile < len(r.files) {
+			first = a.reopenFile
+		}
+		a.reopenFile = -1
+		if len(r.files) > 0 {
 			a.showFile(first)
-		} else if len(r.files) > 0 {
-			a.showFile(0)
 		}
 	})
 }
@@ -688,7 +698,7 @@ func (a *app) showChange(c git.Change, staged bool) {
 			}
 			return result{raw: text, diff: textDiff(c.Path, "", text)}, nil
 		}
-		out, err := a.repo.Diff(ctx, c.Path, staged)
+		out, err := a.repo.Diff(ctx, c.Path, staged, a.fullContext())
 		if err != nil {
 			return result{}, err
 		}
@@ -969,5 +979,39 @@ func (a *app) reloadDiff() {
 		a.showChange(*d.change, d.staged)
 	case d.commit != nil && d.fileSel >= 0 && d.fileSel < len(d.files):
 		a.showFile(d.fileSel)
+	}
+}
+
+// fullContext is the context lines around the changes of a whole-file
+// diff: more than any file has, so its patch holds the file entire.
+func (a *app) fullContext() int {
+	if a.fullDiff {
+		return 1_000_000
+	}
+	return 0
+}
+
+// reloadFullDiff shows the diff asked for again: its patch comes with
+// every line of the files when fullDiff is set.
+func (a *app) reloadFullDiff() {
+	d := a.detail
+	switch {
+	case d.change != nil && d.merge == nil:
+		a.detail = detail{gen: d.gen}
+		a.showChange(*d.change, d.staged)
+	case d.commit != nil:
+		c := *d.commit
+		a.reopenFile = d.fileSel
+		if i := slices.IndexFunc(a.commits, func(x git.Commit) bool { return x.Hash == c.Hash }); i >= 0 {
+			a.showCommit(i) // its files come again from the history's commit
+			return
+		}
+		a.detail = detail{commit: &c, gen: d.gen + 1, loading: true}
+		if comparing(&c) { // from..to: a comparison's, or a pull request's
+			from, to, _ := strings.Cut(c.Hash, "..")
+			a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.DiffFrom(ctx, from, to, a.fullContext()) })
+		} else { // a tag's or a stash's commit, one of no history shown
+			a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, c.Hash, a.fullContext()) })
+		}
 	}
 }

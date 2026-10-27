@@ -89,9 +89,10 @@ func change(xy, path string) Change {
 }
 
 // Diff is the patch of a change: the index against HEAD when staged, else
-// the working tree against the index.
-func (r *Repo) Diff(ctx context.Context, path string, staged bool) (string, error) {
-	args := []string{"diff", "-M", "--no-ext-diff"}
+// the working tree against the index; context lines around the changes,
+// 0 for git's own three.
+func (r *Repo) Diff(ctx context.Context, path string, staged bool, context int) (string, error) {
+	args := space("diff", context, "-M", "--no-ext-diff")
 	if staged {
 		args = append(args, "--cached")
 	}

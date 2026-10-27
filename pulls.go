@@ -217,7 +217,7 @@ func (a *app) showPull(pr *pullReview) {
 	base, head := pr.base, pr.head
 	a.detail.commit = nil // shown again, though the same commits
 	a.showPatch(c, func(ctx context.Context) (string, error) {
-		return a.repo.DiffFrom(ctx, base, head)
+		return a.repo.DiffFrom(ctx, base, head, a.fullContext())
 	})
 	a.detail.pr = pr
 	a.loadThreads(pr)

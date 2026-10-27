@@ -672,6 +672,7 @@
   "editorLineHint": "Command line editors (code, zed…) open at the line.",
   "diffViewSplit": "Split",
   "diffViewUnified": "Unified",
+  "diffWholeFile": "Whole file",
   "language": "Language",
   "appearance": "Appearance",
   "appearanceAuto": "Match the System",

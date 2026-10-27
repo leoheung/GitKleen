@@ -472,7 +472,7 @@ func (a *app) showCommit(i int) {
 		return
 	}
 	c := a.commits[i]
-	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, c.Hash, prefs.IgnoreWhitespace) })
+	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, c.Hash) })
 }
 
 // showCompare shows the change from one revision to another, the working
@@ -482,12 +482,11 @@ func (a *app) showCompare(label, from, to string) {
 		return
 	}
 	c := git.Commit{Hash: from + ".." + to, Subject: label}
-	ignore := prefs.IgnoreWhitespace
 	a.showPatch(c, func(ctx context.Context) (string, error) {
 		if to == "" {
-			return a.repo.DiffWorktree(ctx, from, ignore)
+			return a.repo.DiffWorktree(ctx, from)
 		}
-		return a.repo.DiffFrom(ctx, from, to, ignore)
+		return a.repo.DiffFrom(ctx, from, to)
 	})
 }
 
@@ -534,7 +533,7 @@ func (a *app) showTag(t git.Tag) {
 		return
 	}
 	c := git.Commit{Hash: t.Hash, Time: t.Time, Subject: t.Subject, Refs: []string{t.Name}}
-	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, t.Hash, prefs.IgnoreWhitespace) })
+	a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.Show(ctx, t.Hash) })
 	a.choose(t.Name)
 }
 
@@ -556,7 +555,7 @@ func (a *app) showParent(i int) {
 	parent := c.Parents[i]
 	a.detail = detail{commit: &c, parent: i, message: a.detail.message, gen: a.detail.gen + 1, loading: true}
 	a.loadPatch(func(ctx context.Context) (string, error) {
-		return a.repo.DiffFrom(ctx, parent, c.Hash, prefs.IgnoreWhitespace)
+		return a.repo.DiffFrom(ctx, parent, c.Hash)
 	})
 }
 
@@ -662,12 +661,11 @@ func (a *app) showChange(c git.Change, staged bool) {
 		a.detail = detail{change: &c, staged: staged, gen: a.detail.gen + 1, loading: true}
 	}
 	gen := a.detail.gen
-	ignoreSpace := prefs.IgnoreWhitespace
 	byName := isGenerated(c.Path, a.genMarked, nil, nil)
 	unfolded := a.unfolded[foldKey("", c.Path)]
 	// The working tree's file, whole and editable, when it is changed in
 	// place and its patch, all of it, can be cut for staging.
-	whole := !staged && c.Work == 'M' && !ignoreSpace
+	whole := !staged && c.Work == 'M'
 	type result struct {
 		raw      string
 		patch    *editor.FilePatch
@@ -690,7 +688,7 @@ func (a *app) showChange(c git.Change, staged bool) {
 			}
 			return result{raw: text, diff: textDiff(c.Path, "", text)}, nil
 		}
-		out, err := a.repo.Diff(ctx, c.Path, staged, ignoreSpace)
+		out, err := a.repo.Diff(ctx, c.Path, staged)
 		if err != nil {
 			return result{}, err
 		}
@@ -750,7 +748,7 @@ func (a *app) showChange(c git.Change, staged bool) {
 		a.detail.raw, a.detail.patch, a.detail.diff, a.detail.whole = r.raw, r.patch, r.diff, whole && r.diff != nil
 		a.detail.folded, a.detail.binary, a.detail.disk = r.folded, r.binary, r.new
 		a.detail.change = &c
-		if r.patch != nil && patch.Partial(*r.patch) && !ignoreSpace {
+		if r.patch != nil && patch.Partial(*r.patch) {
 			a.reviewLines(r.diff)
 		}
 		// The file opens at its first change, or its last when ⇧F7 came

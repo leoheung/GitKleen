@@ -23,7 +23,6 @@ type settings struct {
 	Language         string           `json:"language"`        // the language chosen, "" for the system's
 	Theme            mygo.ThemeSource `json:"theme,omitempty"` // the appearance chosen, "" for the system's
 	Unified          bool             `json:"unified"`
-	IgnoreWhitespace bool             `json:"ignoreWhitespace"`
 	SidebarW         float32          `json:"sidebarW"`
 	FilesW           float32          `json:"filesW"`
 	BranchesW        float32          `json:"branchesW"`            // the branches' column's width
@@ -143,8 +142,6 @@ func (d *settingsDialog) view(c *ui.Context, withShortcuts bool, closed func()) 
 				languageSelect(c)
 				ui.Text(c, loc.Appearance()).Bold().TextColor(t.TextMuted)
 				themeSelect(c)
-				ui.Text(c, loc.DiffSection()).Bold().TextColor(t.TextMuted)
-				ui.Checkbox(c, &prefs.IgnoreWhitespace, loc.IgnoreWhitespace())
 				ui.Text(c, loc.SshKeys()).Bold().TextColor(t.TextMuted)
 				ui.Text(c, loc.SshKeysHint()).FontSize(11).TextColor(t.TextMuted).Wrap()
 				for _, k := range prefs.SSHKeys {

@@ -2530,16 +2530,6 @@ func (msgs Messages) EditorLineHint() string {
 	return Catalog.Format(msgs.locale, "editorLineHint", nil)
 }
 
-// DiffSection says "Diffs"
-// in the language the app shows.
-func DiffSection() string { return In(i18n.Locale()).DiffSection() }
-
-// DiffSection says "Diffs"
-// in the language of msgs.
-func (msgs Messages) DiffSection() string {
-	return Catalog.Format(msgs.locale, "diffSection", nil)
-}
-
 // DiffViewSplit says "Split"
 // in the language the app shows.
 func DiffViewSplit() string { return In(i18n.Locale()).DiffViewSplit() }
@@ -2558,16 +2548,6 @@ func DiffViewUnified() string { return In(i18n.Locale()).DiffViewUnified() }
 // in the language of msgs.
 func (msgs Messages) DiffViewUnified() string {
 	return Catalog.Format(msgs.locale, "diffViewUnified", nil)
-}
-
-// IgnoreWhitespace says "Ignore whitespace changes"
-// in the language the app shows.
-func IgnoreWhitespace() string { return In(i18n.Locale()).IgnoreWhitespace() }
-
-// IgnoreWhitespace says "Ignore whitespace changes"
-// in the language of msgs.
-func (msgs Messages) IgnoreWhitespace() string {
-	return Catalog.Format(msgs.locale, "ignoreWhitespace", nil)
 }
 
 // Language says "Language"

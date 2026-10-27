@@ -731,7 +731,7 @@ func (a *app) lineButtons(c *ui.Context) {
 		}
 		c.OnShortcut(ui.Cmd, ui.KeyS, a.saveFile)
 	}
-	if a.detail.patch == nil || !patch.Partial(*a.detail.patch) || prefs.IgnoreWhitespace {
+	if a.detail.patch == nil || !patch.Partial(*a.detail.patch) {
 		return
 	}
 	chosen := a.selectedLines()

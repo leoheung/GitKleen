@@ -19,20 +19,20 @@ import (
 // settings are the choices kept between launches, shared by the windows,
 // in a JSON file.
 type settings struct {
-	Editor           string           `json:"editor"`          // the command opening files, "" for the system's app
-	Language         string           `json:"language"`        // the language chosen, "" for the system's
-	Theme            mygo.ThemeSource `json:"theme,omitempty"` // the appearance chosen, "" for the system's
-	Unified          bool             `json:"unified"`
-	SidebarW         float32          `json:"sidebarW"`
-	FilesW           float32          `json:"filesW"`
-	BranchesW        float32          `json:"branchesW"`            // the branches' column's width
-	DrawerW          float32          `json:"drawerW"`              // the diff drawer's width, 0 for half the window
-	ChangesPct       float32          `json:"changesPct"`           // of the changes' room, the changes', above the staged
-	Proxy            string           `json:"proxy,omitempty"`      // the downloads', "" for the system's
-	Remotes          []string         `json:"remotes,omitempty"`    // repositories on other computers opened lately, host:dir
-	SSHKeys          []string         `json:"sshKeys,omitempty"`    // private keys tried for git's remote operations
-	SSHDefault       string           `json:"sshDefault,omitempty"` // the key tried first, one of sshKeys
-	path             string
+	Editor     string           `json:"editor"`          // the command opening files, "" for the system's app
+	Language   string           `json:"language"`        // the language chosen, "" for the system's
+	Theme      mygo.ThemeSource `json:"theme,omitempty"` // the appearance chosen, "" for the system's
+	Unified    bool             `json:"unified"`
+	SidebarW   float32          `json:"sidebarW"`
+	FilesW     float32          `json:"filesW"`
+	BranchesW  float32          `json:"branchesW"`            // the branches' column's width
+	DrawerW    float32          `json:"drawerW"`              // the diff drawer's width, 0 for half the window
+	ChangesPct float32          `json:"changesPct"`           // of the changes' room, the changes', above the staged
+	Proxy      string           `json:"proxy,omitempty"`      // the downloads', "" for the system's
+	Remotes    []string         `json:"remotes,omitempty"`    // repositories on other computers opened lately, host:dir
+	SSHKeys    []string         `json:"sshKeys,omitempty"`    // private keys tried for git's remote operations
+	SSHDefault string           `json:"sshDefault,omitempty"` // the key tried first, one of sshKeys
+	path       string
 }
 
 var prefs = &settings{SidebarW: 300, BranchesW: 200, FilesW: 260, ChangesPct: 70}

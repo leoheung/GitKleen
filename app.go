@@ -674,8 +674,9 @@ func (a *app) showChange(c git.Change, staged bool) {
 	byName := isGenerated(c.Path, a.genMarked, nil, nil)
 	unfolded := a.unfolded[foldKey("", c.Path)]
 	// The working tree's file, whole and editable, when it is changed in
-	// place and its patch, all of it, can be cut for staging.
-	whole := !staged && c.Work == 'M'
+	// place and its patch, all of it, can be cut for staging; whole files
+	// asked for, the patch shows with every line instead, read only.
+	whole := !staged && c.Work == 'M' && !a.fullDiff
 	type result struct {
 		raw      string
 		patch    *editor.FilePatch
@@ -1002,11 +1003,13 @@ func (a *app) reloadFullDiff() {
 	case d.commit != nil:
 		c := *d.commit
 		a.reopenFile = d.fileSel
+		// The commit's patch comes again: showPatch takes a diff of the
+		// same commit for shown already, so its place is cleared first.
+		a.detail = detail{gen: d.gen + 1, loading: true}
 		if i := slices.IndexFunc(a.commits, func(x git.Commit) bool { return x.Hash == c.Hash }); i >= 0 {
 			a.showCommit(i) // its files come again from the history's commit
 			return
 		}
-		a.detail = detail{commit: &c, gen: d.gen + 1, loading: true}
 		if comparing(&c) { // from..to: a comparison's, or a pull request's
 			from, to, _ := strings.Cut(c.Hash, "..")
 			a.showPatch(c, func(ctx context.Context) (string, error) { return a.repo.DiffFrom(ctx, from, to, a.fullContext()) })

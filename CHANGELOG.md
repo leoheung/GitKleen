@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.7
+
+- diff 的显示模式（并排 / 统一）从设置移到了 diff 视图上方，居中的分段按钮直接切换、立即生效，不再需要打开设置
+
 ## 0.4.6
 
 - 修复克隆不换 key 重试：和 fetch/pull/push 一样，设置的 key 被服务器接受但对仓库无权限时（GitHub 报 Permission … denied to … 或 Repository not found），自动换下一个 key 重试，直到试完

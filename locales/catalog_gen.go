@@ -2540,14 +2540,24 @@ func (msgs Messages) DiffSection() string {
 	return Catalog.Format(msgs.locale, "diffSection", nil)
 }
 
-// DiffUnified says "One above the other (else side by side)"
+// DiffViewSplit says "Split"
 // in the language the app shows.
-func DiffUnified() string { return In(i18n.Locale()).DiffUnified() }
+func DiffViewSplit() string { return In(i18n.Locale()).DiffViewSplit() }
 
-// DiffUnified says "One above the other (else side by side)"
+// DiffViewSplit says "Split"
 // in the language of msgs.
-func (msgs Messages) DiffUnified() string {
-	return Catalog.Format(msgs.locale, "diffUnified", nil)
+func (msgs Messages) DiffViewSplit() string {
+	return Catalog.Format(msgs.locale, "diffViewSplit", nil)
+}
+
+// DiffViewUnified says "Unified"
+// in the language the app shows.
+func DiffViewUnified() string { return In(i18n.Locale()).DiffViewUnified() }
+
+// DiffViewUnified says "Unified"
+// in the language of msgs.
+func (msgs Messages) DiffViewUnified() string {
+	return Catalog.Format(msgs.locale, "diffViewUnified", nil)
 }
 
 // IgnoreWhitespace says "Ignore whitespace changes"

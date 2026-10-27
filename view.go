@@ -479,7 +479,9 @@ func (a *app) drawerView(c *ui.Context) {
 				p.Fill(ui.Rect{X: r.X, Y: r.Y, W: 1, H: r.H}, t.Accent, 0)
 			}
 		})
-		ui.Row(c).Padding(4, 8).AlignItems(ui.Center).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
+		ui.Row(c).Padding(4, 8).Gap(8).AlignItems(ui.Center).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
+			ui.Box(c).Grow(1)
+			a.diffLayoutSwitch(c)
 			ui.Box(c).Grow(1)
 			if ui.Button(c, loc.Close()).Clicked() {
 				a.drawer = false
@@ -489,6 +491,20 @@ func (a *app) drawerView(c *ui.Context) {
 	})
 	if panel.OverlayShortcut(0, ui.KeyEscape) {
 		a.drawer = false
+	}
+}
+
+// diffLayoutSwitch picks how diffs lay their sides out, split or unified,
+// for every window; the diff shown lays out again at once.
+func (a *app) diffLayoutSwitch(c *ui.Context) {
+	layout := 0 // split
+	if prefs.Unified {
+		layout = 1
+	}
+	if ui.Segmented(c.Key("diffLayout"), &layout, loc.DiffViewSplit(), loc.DiffViewUnified()).Changed() {
+		prefs.Unified = layout == 1
+		prefs.save()
+		a.reloadDiff()
 	}
 }
 

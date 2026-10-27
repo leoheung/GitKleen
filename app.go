@@ -759,7 +759,7 @@ func (a *app) showChange(c git.Change, staged bool) {
 		a.detail.raw, a.detail.patch, a.detail.diff, a.detail.whole = r.raw, r.patch, r.diff, whole && r.diff != nil
 		a.detail.folded, a.detail.binary, a.detail.disk = r.folded, r.binary, r.new
 		a.detail.change = &c
-		if r.patch != nil && patch.Partial(*r.patch) {
+		if r.diff != nil && r.patch != nil && patch.Partial(*r.patch) {
 			a.reviewLines(r.diff)
 		}
 		// The file opens at its first change, or its last when ⇧F7 came
